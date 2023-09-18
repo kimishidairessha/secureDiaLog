@@ -20,6 +20,7 @@
 ///
 /// Authors: Ye Duan
 
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:securedialog/extensions/color_extensions.dart';
 
@@ -48,79 +49,85 @@ class GroupChartWidget extends StatefulWidget {
 }
 
 class _GroupChartWidgetState extends State<GroupChartWidget> {
-  late int showingTooltip;
-  late TooltipBehavior _tooltipBehavior;
-  late ZoomPanBehavior _zoomPanBehavior;
-  late double visibleMinimum;
-  late double visibleMaximum;
+  late List<BarChartGroupData> rawBarGroups;
+  late ScrollController scrollController;
+  late List<BarChartGroupData> visibleBarGroups;
+
+  int visibleLength = 7;
+
+  Widget bottomTitleWidget(double value, TitleMeta meta) {
+    const style = TextStyle(
+      color: Colors.teal,
+      fontWeight: FontWeight.bold,
+      fontSize: 12,
+    );
+    Widget text = Text('');
+    for (int i = 0; i < widget.xList.length; i++) {
+      if (value.toInt() == i) {
+        text = Text(
+          widget.xList[i],
+          style: style,
+        );
+      }
+    }
+    return SideTitleWidget(
+      axisSide: meta.axisSide,
+      space: 10,
+      child: text,
+    );
+  }
+
 
   @override
   void initState() {
-    showingTooltip = -1;
-    int index = widget.timeList.length - 1;
-    _zoomPanBehavior = ZoomPanBehavior(
-        enablePanning: true, zoomMode: ZoomMode.x, enablePinching: true);
-    _tooltipBehavior = TooltipBehavior(
-        activationMode: ActivationMode.singleTap,
-        enable: true,
-        color: Colors.teal,
-        header: widget.timeList[index],
-        textStyle: const TextStyle(color: Colors.white),
-        builder: (dynamic data, dynamic point, dynamic series, int pointIndex,
-            int seriesIndex) {
-          // Extracting the primary data
-          String showSystolic = widget.yList[pointIndex].toString();
-          String showDiastolic = widget.yList2[pointIndex].toString();
-          String time = widget.timeList[pointIndex];
-
-          // Using logic similar to getLineTooltipItem to build the tooltip string
-          String toolTipText =
-              "$time\nSystolic: $showSystolic\nDiastolic: $showDiastolic";
-
-          if (widget.toolTipsList.isNotEmpty &&
-              widget.toolTipsList[pointIndex].isNotEmpty) {
-            toolTipText += "\n--------------\nSystolic updating:";
-            for (ToolTip toolTip in widget.toolTipsList[pointIndex]) {
-              String additionalText =
-                  "\n${TimeUtils.convertHHmmToClock(toolTip.time)} - ${toolTip.val.toString()}";
-              toolTipText += additionalText;
-            }
-          }
-
-          if (widget.toolTipsList2.isNotEmpty &&
-              widget.toolTipsList2[pointIndex].isNotEmpty) {
-            toolTipText += "\n--------------\nDiastolic updating:";
-            for (ToolTip toolTip in widget.toolTipsList2[pointIndex]) {
-              String additionalText =
-                  "\n${TimeUtils.convertHHmmToClock(toolTip.time)} - ${toolTip.val.toString()}";
-              toolTipText += additionalText;
-            }
-          }
-
-          return Container(
-            padding: const EdgeInsets.all(8.0),
-            decoration: BoxDecoration(
-              color: Colors.green[600],
-              borderRadius: BorderRadius.circular(
-                  12.0), // Adjust this value to your liking
-            ),
-            child: SingleChildScrollView(
-              child: Text(toolTipText,
-                  style: const TextStyle(color: Colors.white)),
-            ),
-          );
-        });
     super.initState();
-    visibleMinimum = widget.xList.length > 6 ? widget.xList.length - 6 : 0;
-    visibleMaximum = widget.xList.length.toDouble();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      setState(() {
-        // Update your state variables here
-        visibleMinimum = 7.0; // New minimum value
-        visibleMaximum = 15.0; // New maximum value
+    // Initialize your data here...
+    rawBarGroups = [];
+    for (int i = 0; i < widget.yList.length; i++) {
+      rawBarGroups.add(
+        BarChartGroupData(
+          x: i,
+          barRods: [
+            BarChartRodData(
+              fromY: widget.yList2[i],
+              toY: widget.yList[i],
+              color: Colors.blue,
+            ),
+          ],
+          showingTooltipIndicators: [],
+        ),
+      );
+    }
+    // Create the scroll controller and add a listener to it
+    scrollController = ScrollController(initialScrollOffset: (rawBarGroups.length - visibleLength) * 15.0,)
+      ..addListener(() {
+        updateVisibleData();
       });
-    });
+
+    int initialIndex = (rawBarGroups.length > visibleLength) ? rawBarGroups.length - visibleLength : 0;
+    visibleBarGroups = rawBarGroups.sublist(initialIndex, rawBarGroups.length);
   }
+
+  int firstVisibleDataIndex = 8;
+
+  void updateVisibleData() {
+    print("updateVisibleData called");
+    int calculatedIndex = (scrollController.offset / 15).floor();
+    int maxFirstIndex = rawBarGroups.length - visibleLength;
+
+    // Constrain firstVisibleDataIndex within valid bounds
+    firstVisibleDataIndex = calculatedIndex.clamp(0, maxFirstIndex);
+    int lastVisibleDataIndex = firstVisibleDataIndex + visibleLength;
+
+    if (firstVisibleDataIndex >= 0 && lastVisibleDataIndex <= rawBarGroups.length) {
+      setState(() {
+        visibleBarGroups = rawBarGroups.sublist(
+            firstVisibleDataIndex, lastVisibleDataIndex);
+      });
+    }
+    print("First: $firstVisibleDataIndex, Last: $lastVisibleDataIndex");
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -133,55 +140,94 @@ class _GroupChartWidgetState extends State<GroupChartWidget> {
       );
     }
 
-    return AspectRatio(
-      aspectRatio: 2.5,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 0.0,
-          vertical: 10,
+    return SingleChildScrollView(
+      controller: scrollController,
+      scrollDirection: Axis.horizontal, // makes it horizontally scrollable
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          minWidth: 38 * rawBarGroups.length.toDouble(), // dynamic minWidth
         ),
-        child: SfCartesianChart(
-          tooltipBehavior: _tooltipBehavior,
-          zoomPanBehavior: _zoomPanBehavior,
-          primaryXAxis: CategoryAxis(
-            labelStyle: const TextStyle(
-              color: Colors.teal,
-              fontWeight: FontWeight.bold,
+        child: AspectRatio(
+          aspectRatio: 1.0,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 0.0,
+              vertical: 10,
             ),
-            edgeLabelPlacement:
-                EdgeLabelPlacement.shift, // Shift labels to the edge
-            majorGridLines: const MajorGridLines(width: 0),
-            visibleMinimum: visibleMinimum,
-            visibleMaximum: visibleMaximum,
+            child: BarChart(
+              BarChartData(
+                maxY: 220,
+                barGroups: visibleBarGroups,
+                barTouchData: BarTouchData(
+                  touchTooltipData: BarTouchTooltipData(
+                    tooltipBgColor: Colors.blueAccent,
+                    getTooltipItem: (group, groupIndex, rod, rodIndex) {
+                      print("Group index: $groupIndex, Rod index: $rodIndex");
+                      int adjustedGroupIndex = groupIndex + firstVisibleDataIndex;
+                      print(adjustedGroupIndex);
+                      String time = widget.timeList[adjustedGroupIndex];
+                      String systolic = widget.yList[adjustedGroupIndex].toString();
+                      String diastolic = widget.yList2[adjustedGroupIndex].toString();
+
+                      String tooltipText =
+                          "$time\nSystolic: $systolic\nDiastolic: $diastolic";
+
+                      if (widget.toolTipsList.isNotEmpty &&
+                          widget.toolTipsList[adjustedGroupIndex].isNotEmpty) {
+                        tooltipText += "\n--------------\nSystolic updating:";
+                        for (ToolTip toolTip in widget.toolTipsList[adjustedGroupIndex]) {
+                          String additionalText =
+                              "\n${toolTip.time} - ${toolTip.val.toString()}";
+                          tooltipText += additionalText;
+                        }
+                      }
+
+                      if (widget.toolTipsList2.isNotEmpty &&
+                          widget.toolTipsList2[adjustedGroupIndex].isNotEmpty) {
+                        tooltipText += "\n--------------\nDiastolic updating:";
+                        for (ToolTip toolTip in widget.toolTipsList2[adjustedGroupIndex]) {
+                          String additionalText =
+                              "\n${toolTip.time} - ${toolTip.val.toString()}";
+                          tooltipText += additionalText;
+                        }
+                      }
+
+                      return BarTooltipItem(tooltipText, TextStyle(color: Colors.white));
+                    },
+                    fitInsideVertically: true,
+                    fitInsideHorizontally: true,
+                  ),
+                  touchExtraThreshold: EdgeInsets.all(4),
+                ),
+                titlesData: FlTitlesData(
+                  show: true,
+                  rightTitles: AxisTitles(
+                    sideTitles: SideTitles(showTitles: false),
+                  ),
+                  bottomTitles: AxisTitles(
+                    sideTitles: SideTitles(
+                      showTitles: true,
+                      reservedSize: 40,
+                      getTitlesWidget: bottomTitleWidget,
+                    ),
+                  ),
+                  topTitles: AxisTitles(
+                    sideTitles: SideTitles(showTitles: false),
+                  ),
+                ),
+                borderData: FlBorderData(
+                  show: false,
+                ),
+                gridData: FlGridData(
+                  show: false,
+                ),
+              ),
+            ),
           ),
-          primaryYAxis: NumericAxis(
-              minimum: widget.minY,
-              labelStyle: const TextStyle(
-                fontWeight: FontWeight.bold,
-              ),
-              majorGridLines: const MajorGridLines(width: 0)),
-          series: <ChartSeries>[
-            RangeColumnSeries<_ChartData, String>(
-              width: 0.3,
-              enableTooltip: true,
-              dataSource: chartData,
-              xValueMapper: (_ChartData data, _) => data.x,
-              lowValueMapper: (_ChartData data, _) => data.y1,
-              highValueMapper: (_ChartData data, _) => data.y2,
-              gradient: LinearGradient(
-                colors: [
-                  Colors.blue.darken(20),
-                  Colors.cyan,
-                ],
-                begin: Alignment.bottomCenter,
-                end: Alignment.topCenter,
-              ),
-              borderRadius: BorderRadius.circular(6),
-            ),
-          ],
         ),
       ),
     );
+
   }
 
   List<_ChartData> _getChartData() {
