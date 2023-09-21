@@ -22,11 +22,8 @@
 
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:securedialog/extensions/color_extensions.dart';
-
 import '../../../model/tooltip.dart';
 import '../../../utils/constants.dart';
-import 'package:syncfusion_flutter_charts/charts.dart';
 
 import '../../../utils/time_utils.dart';
 
@@ -160,7 +157,7 @@ class _GroupChartWidgetState extends State<GroupChartWidget> {
                 barGroups: visibleBarGroups,
                 barTouchData: BarTouchData(
                   touchTooltipData: BarTouchTooltipData(
-                    tooltipBgColor: Colors.blueAccent,
+                    tooltipBgColor: Colors.green[600],
                     getTooltipItem: (group, groupIndex, rod, rodIndex) {
                       print("Group index: $groupIndex, Rod index: $rodIndex");
                       int adjustedGroupIndex = groupIndex + firstVisibleDataIndex;
