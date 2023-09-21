@@ -23,10 +23,12 @@
 import 'package:flutter/material.dart';
 import 'package:securedialog/model/chart_point.dart';
 import 'package:securedialog/model/survey_day_info.dart';
+import 'package:securedialog/ui/home_page/home_charts/DataTableWidget.dart';
 import 'package:securedialog/utils/base_widget.dart';
 import 'package:securedialog/utils/chart_utils.dart';
 import 'package:securedialog/utils/time_utils.dart';
 
+import '../../model/table_point.dart';
 import '../../model/tooltip.dart';
 import '../../service/home_page_service.dart';
 import '../../utils/constants.dart';
@@ -47,6 +49,7 @@ class HomeProfile extends StatefulWidget {
 
 class _HomeProfileState extends State<HomeProfile> {
   final HomePageService homePageService = HomePageService();
+  bool _showTable = false;
 
   @override
   Widget build(BuildContext context) {
@@ -135,7 +138,6 @@ class _HomeProfileState extends State<HomeProfile> {
                   List<String> systolicTimeList = [];
                   List<double> heartRateList = [];
                   List<String> heartRateTimeList = [];
-                  List<String> obTimeList = [];
                   List<String> timeList = [];
                   List<List<ToolTip>> strengthToolTipsList = [];
                   List<List<ToolTip>> fastingToolTipsList = [];
@@ -144,6 +146,28 @@ class _HomeProfileState extends State<HomeProfile> {
                   List<List<ToolTip>> weightToolTipsList = [];
                   List<List<ToolTip>> systolicToolTipsList = [];
                   List<List<ToolTip>> heartRateToolTipsList = [];
+                  List<double> strengthList1 = [];
+                  List<String> strengthTimeList1 = [];
+                  List<double> fastingList1 = [];
+                  List<String> fastingTimeList1 = [];
+                  List<double> postprandialList1 = [];
+                  List<String> postprandialTimeList1 = [];
+                  List<double> diastolicList1 = [];
+                  List<String> diastolicTimeList1 = [];
+                  List<double> weightList1 = [];
+                  List<String> weightTimeList1 = [];
+                  List<double> systolicList1 = [];
+                  List<String> systolicTimeList1 = [];
+                  List<double> heartRateList1 = [];
+                  List<String> heartRateTimeList1 = [];
+                  List<String> timeList1 = [];
+                  List<List<ToolTip>> strengthToolTipsList1 = [];
+                  List<List<ToolTip>> fastingToolTipsList1 = [];
+                  List<List<ToolTip>> postprandialToolTipsList1 = [];
+                  List<List<ToolTip>> diastolicToolTipsList1 = [];
+                  List<List<ToolTip>> weightToolTipsList1 = [];
+                  List<List<ToolTip>> systolicToolTipsList1 = [];
+                  List<List<ToolTip>> heartRateToolTipsList1 = [];
                   List<SurveyDayInfo>? surveyDayInfoList = snapshot.data;
                   if (surveyDayInfoList == null) {
                     return Column(
@@ -221,8 +245,6 @@ class _HomeProfileState extends State<HomeProfile> {
                     systolicTimeList.add(charPoint.systolicMaxTime);
                     heartRateList.add(charPoint.heartRateMax);
                     heartRateTimeList.add(charPoint.heartRateMaxTime);
-                    obTimeList.add(
-                        TimeUtils.convertDateToWeekDay(charPoint.obTimeDay));
                     timeList.add(TimeUtils.reformatDate(charPoint.obTimeDay));
                     strengthToolTipsList.add(charPoint.otherStrength);
                     fastingToolTipsList.add(charPoint.otherFasting);
@@ -231,6 +253,32 @@ class _HomeProfileState extends State<HomeProfile> {
                     weightToolTipsList.add(charPoint.otherWeight);
                     systolicToolTipsList.add(charPoint.otherSystolic);
                     heartRateToolTipsList.add(charPoint.otherHeartRate);
+                  }
+                  List<TablePoint> tableList = ChartUtils.parseToTable(
+                      surveyDayInfoList);
+                  for (TablePoint tablePoint in tableList) {
+                    strengthList1.add(tablePoint.strengthMax);
+                    strengthTimeList1.add(tablePoint.strengthMaxTime);
+                    fastingList1.add(tablePoint.fastingMax);
+                    fastingTimeList1.add(tablePoint.fastingMaxTime);
+                    postprandialList1.add(tablePoint.postprandialMax);
+                    postprandialTimeList1.add(tablePoint.postprandialMaxTime);
+                    diastolicList1.add(tablePoint.diastolicMax);
+                    diastolicTimeList1.add(tablePoint.diastolicMaxTime);
+                    weightList1.add(tablePoint.weightMax);
+                    weightTimeList1.add(tablePoint.weightMaxTime);
+                    systolicList1.add(tablePoint.systolicMax);
+                    systolicTimeList1.add(tablePoint.systolicMaxTime);
+                    heartRateList1.add(tablePoint.heartRateMax);
+                    heartRateTimeList1.add(tablePoint.heartRateMaxTime);
+                    timeList1.add(TimeUtils.reformatDate(tablePoint.obTimeDay));
+                    strengthToolTipsList1.add(tablePoint.otherStrength);
+                    fastingToolTipsList1.add(tablePoint.otherFasting);
+                    postprandialToolTipsList1.add(tablePoint.otherPostprandial);
+                    diastolicToolTipsList1.add(tablePoint.otherDiastolic);
+                    weightToolTipsList1.add(tablePoint.otherWeight);
+                    systolicToolTipsList1.add(tablePoint.otherSystolic);
+                    heartRateToolTipsList1.add(tablePoint.otherHeartRate);
                   }
                   return Column(
                     children: <Widget>[
@@ -251,7 +299,71 @@ class _HomeProfileState extends State<HomeProfile> {
                         ),
                       ),
                       BaseWidget.getPadding(15),
+                      TextButton(
+                        onPressed: (){
+                          setState(() {
+                            _showTable = !_showTable;
+                          });
+                        },
+                        child: const Text(
+                            "Show Table Data",
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: Colors.blueAccent,
+                            fontFamily: "KleeOne",
+                            decoration: TextDecoration.underline,
+                            fontStyle: FontStyle.italic,
+                          ),
+                        ),
+                      ),
+                      if (_showTable)...[
+                        DataTableWidget(
+                            timeList1,
+                            strengthTimeList1,
+                            strengthList1,
+                            fastingList1,
+                            fastingTimeList1,
+                            postprandialList1,
+                            postprandialTimeList1,
+                            diastolicList1,
+                            diastolicTimeList1,
+                            weightList1,
+                            weightTimeList1,
+                            systolicList1,
+                            systolicTimeList1,
+                            heartRateList1,
+                            heartRateTimeList1,
+                            strengthToolTipsList1,
+                            fastingToolTipsList1,
+                            postprandialToolTipsList1,
+                            diastolicToolTipsList1,
+                            weightToolTipsList1,
+                            systolicToolTipsList1,
+                            heartRateToolTipsList1),
+                        BaseWidget.getPadding(5),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            ElevatedButton(
+                                onPressed: () {
+                                  // Logic to export the table to a CSV file
+                                },
+                                child: Text("Export to CSV"),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                setState(() {
+                                  _showTable = false;
+                                });
+                              },
+                              child: Text("Close"),
+                            ),
+                          ],
+                        ),
+                      ],
+                      BaseWidget.getPadding(15),
                       BaseWidget.getQuestionText("Lacking in Strength Check"),
+                      BaseWidget.getPadding(5),
                       SizedBox(
                         height: 150,
                         width: MediaQuery.of(context).size.width,
