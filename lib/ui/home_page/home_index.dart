@@ -71,11 +71,6 @@ class _HomeIndexState extends State<HomeIndex> {
               ),
               const SizedBox(height: 8),
               _buildInstructionCard(
-                  Constants.subTitle1,
-                  Constants.indexPageInstructionText1,
-                  Icons.home,
-                  Constants.indexPage),
-              _buildInstructionCard(
                   Constants.subTitle3,
                   Constants.indexPageInstructionText3,
                   Icons.note_alt_outlined,
