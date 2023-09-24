@@ -1,4 +1,4 @@
-/// Provide the model of date information for the survey
+/// Data model for date information for the survey.
 ///
 /// Copyright (C) 2023 The Authors
 ///
