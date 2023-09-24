@@ -18,22 +18,23 @@
 // You should have received a copy of the GNU General Public License along with
 // this program.  If not, see <https://www.gnu.org/licenses/>.
 ///
-/// Authors: Bowen Yang, Ye Duan
+/// Authors: Bowen Yang, Ye Duan, Graham Williams
 
-import 'package:common_utils/common_utils.dart';
+import 'package:flutter/material.dart';
+
+import 'package:latlong2/latlong.dart';
+import 'package:solid_encrypt/solid_encrypt.dart';
+
 import 'package:securedialog/model/geo_info.dart';
+import 'package:securedialog/model/survey_day_info.dart';
 import 'package:securedialog/model/survey_info.dart';
 import 'package:securedialog/net/home_page_net.dart';
 import 'package:securedialog/utils/constants.dart';
+import 'package:securedialog/utils/encrpt_utils.dart';
 import 'package:securedialog/utils/geo_utils.dart';
 import 'package:securedialog/utils/solid_utils.dart';
 import 'package:securedialog/utils/survey_utils.dart';
 import 'package:securedialog/utils/time_utils.dart';
-import 'package:latlong2/latlong.dart';
-import 'package:solid_encrypt/solid_encrypt.dart';
-
-import '../model/survey_day_info.dart';
-import '../utils/encrpt_utils.dart';
 
 /// the model-view layer of home page, including all services the very view layer needs
 class HomePageService {
@@ -80,7 +81,7 @@ class HomePageService {
         surveyInfoList.add(surveyInfo);
       }
     } catch (e) {
-      LogUtil.e("Error on fetching survey data");
+      debugPrint("Error on fetching survey data: $e");
       return null;
     }
     // surveyInfoList to surveyDayInfoList
@@ -183,7 +184,7 @@ class HomePageService {
       setLastSurveyTime(
           podInfo, TimeUtils.getFormattedTimeYYYYmmDDHHmmSS(dateTime));
     } catch (e) {
-      LogUtil.e("Error on saving survey information");
+      debugPrint("Error on saving survey information: $e");
       return false;
     }
     return true;
@@ -251,18 +252,27 @@ class HomePageService {
       }
       return lastObTime;
     } catch (e) {
-      LogUtil.e("Error on fetching lastObTime");
+      debugPrint("Error on fetching lastObTime: $e");
       return Constants.none;
     }
   }
 
-  /// the method is to save the geographical information into a POD
-  /// @param latLng - geographical information collected from the device
-  ///        authData - the authentication Data received after login
-  ///        dateTime - the timestamp collected along with geographical information collection
-  /// @return isSuccess - TRUE is success and FALSE is failure
+  /// Save geographical information into a POD where [latLng] is the location
+  /// collected from the device, [authData] is the authentication data received
+  /// after login, and [dateTime] is the timestamp. It returns a [bool]
+  /// indicating success.
+
   Future<bool> saveGeoInfo(
-      LatLng latLng, Map<dynamic, dynamic>? authData, DateTime dateTime) async {
+    LatLng latLng,
+    Map<dynamic, dynamic>? authData,
+    DateTime dateTime,
+  ) async {
+    // 20230925 gjw For now let's turn off the automatic saving every minute of
+    // the location. TODO Add a settings to turn this on/off and test the value
+    // of the setting here.
+
+    return true;
+
     Map<String, dynamic> podInfo = SolidUtils.parseAuthData(authData);
     String? accessToken = podInfo[Constants.accessToken];
     String? webId = podInfo[Constants.webId];
@@ -273,6 +283,7 @@ class HomePageService {
     dynamic pubKeyJwk = podInfo[Constants.pubKeyJwk];
     EncryptClient? encryptClient =
         await EncryptUtils.getClient(authData!, webId!);
+
     Map<String, String> positionInfo =
         await GeoUtils.getFormattedPosition(latLng, dateTime, encryptClient!);
     try {
@@ -316,7 +327,7 @@ class HomePageService {
             curRecordFileURI, accessToken, rsa, pubKeyJwk, sparqlQuery);
       });
     } catch (e) {
-      LogUtil.e("Error on saving geographical information");
+      debugPrint("Error on saving geographical information: $e");
       return false;
     }
     return true;
@@ -380,7 +391,7 @@ class HomePageService {
             curRecordFileURI, accessToken, rsa, pubKeyJwk, sparqlQuery);
       });
     } catch (e) {
-      LogUtil.e("Error on saving geographical information");
+      debugPrint("Error on saving geographical information: $e");
       return false;
     }
     return true;
