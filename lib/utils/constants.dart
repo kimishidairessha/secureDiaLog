@@ -188,20 +188,17 @@ class Constants {
   static const String subTitle6 = "Data Page:";
 
   static const String indexPageInstructionText1 =
-      "The portal of this app, you can view "
-      "instructions and set your enc-key here";
+      "An overview of the functionality available.";
   static const String indexPageInstructionText2 =
-      "Here you can locate, collect, and modify "
-      "your location information into your POD.";
+      "Manage your location for your POD.";
   static const String indexPageInstructionText3 =
-      "You can submit your health report here everyday.";
+      "Submit your health report everyday.";
   static const String indexPageInstructionText4 =
-      "A useful data exhibition and analysis interface.";
+      "Review your health using charts.";
   static const String indexPageInstructionText5 =
       "You can check your information here and logout.";
   static const String indexPageInstructionText6 =
-      "Your data from the POD is available to be "
-      "reviewed and updated.";
+      "Review your data as securely stored in your POD.";
 
   // Week Day Name
   static const Map<int, String> weekMap = {
