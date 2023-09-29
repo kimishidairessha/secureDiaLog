@@ -23,7 +23,7 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:common_utils/common_utils.dart';
+//import 'package:common_utils/common_utils.dart';
 import 'package:current_location/current_location.dart';
 import 'package:current_location/model/location.dart';
 import 'package:flutter/material.dart';
@@ -46,7 +46,7 @@ import 'package:securedialog/utils/global.dart';
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
     if (task == Constants.simplePeriodicTask) {
-      LogUtil.e("Background task starts");
+      debugPrint("Background task starts");
       Position position = await GeoUtils.getCurrentLocation();
       String str = GeoUtils.positionToString(position);
       await DeviceFileUtils.writeContent("$str\n");
@@ -127,10 +127,10 @@ class _HomeOSMState extends State<HomeOSM> with WidgetsBindingObserver {
           maxZoom: Constants.maxZoom,
           keepAlive: true,
           onMapReady: () {
-            LogUtil.e("map init complete");
+            debugPrint("map init complete");
             timer = Timer.periodic(const Duration(seconds: Constants.interval),
                 (timer) async {
-              LogUtil.e("refresh the map and write position info into pod");
+              debugPrint("refresh the map and write position info into pod");
               if (autoGeo) {
                 if (Platform.isLinux ||
                     Platform.isWindows ||
@@ -170,7 +170,7 @@ class _HomeOSMState extends State<HomeOSM> with WidgetsBindingObserver {
           // 20230630 gjw The following results in
           //
           // ERROR: lib/ui/home_page/home_osm.dart:147:11: Error: The getter 'AttributionWidget' isn't defined for the class '_HomeOSMState'.
-          // ERROR:  - '_HomeOSMState' is from 'package:klee/ui/home_page/home_osm.dart' ('lib/ui/home_page/home_osm.dart').
+          // ERROR:  - '_HomeOSMState' is from 'package:securedialog/ui/home_page/home_osm.dart' ('lib/ui/home_page/home_osm.dart').
           // ERROR: Try correcting the name to the name of an existing getter, or defining a getter or field named 'AttributionWidget'.
           // ERROR:           AttributionWidget.defaultWidget(
           // ERROR:           ^^^^^^^^^^^^^^^^^
@@ -272,7 +272,7 @@ class _HomeOSMState extends State<HomeOSM> with WidgetsBindingObserver {
         children: [
           TileLayer(
             urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-            userAgentPackageName: 'onionoino.klee',
+            userAgentPackageName: 'com.togaware.securedialog',
           ),
           MarkerLayer(
             markers: [
@@ -294,7 +294,7 @@ class _HomeOSMState extends State<HomeOSM> with WidgetsBindingObserver {
   /// @return void
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    LogUtil.e("App lifecycle state monitor: $state");
+    debugPrint("App lifecycle state monitor: $state");
     switch (state) {
       case AppLifecycleState.resumed:
         Workmanager().cancelAll().then((value) async {
@@ -308,8 +308,8 @@ class _HomeOSMState extends State<HomeOSM> with WidgetsBindingObserver {
             await homePageService.saveBgGeoInfo(widget.authData, geoInfo);
           }
           await DeviceFileUtils.clear();
-          LogUtil.e("All bg-tasks have been canceled");
-          LogUtil.e("Local geographical info has been refreshed into POD");
+          debugPrint("All bg-tasks have been canceled");
+          debugPrint("Local geographical info has been refreshed into POD");
         });
         break;
       case AppLifecycleState.paused:
