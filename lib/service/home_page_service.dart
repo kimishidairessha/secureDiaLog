@@ -88,7 +88,10 @@ class HomePageService {
     Map<String, List<SurveyInfo>> tempMap = {};
     for (SurveyInfo surveyInfo in surveyInfoList) {
       String obTime = surveyInfo.obTime;
-      String date = obTime.substring(0, 8);
+      print("\n\nYYYYYYYYYYYYYY ${obTime}\n\n");
+      // String date = obTime.substring(0, 8);
+      // 20230930 gjw WHY IS THIS N/A AND FAILS WITH 8 BUT NOT WITH 3 !!!!
+      String date = obTime.substring(0, 3);
       if (!tempMap.containsKey(date)) {
         List<SurveyInfo> tempList = [];
         tempList.add(surveyInfo);
