@@ -20,6 +20,14 @@
 ///
 /// Authors: Bowen Yang, Ye Duan, Graham Williams
 
+// 20230930 gjw TODOD
+//
+// SPLIT OUT VARIOUS WIDGETS INTO OWN CLASSES TO REDUCE THIS FILE SIZE AND FOR
+// THE CODE TO BE MORE READABLE.
+//
+// REVIEW AND CLEANUP THE LAYOUT AND COMMENTS AND CHCEK THE DOCS GENERATION
+// PRODUCES USEFUL DOCUMENTATION.
+
 import 'package:flutter/material.dart';
 
 import 'package:securedialog/model/chart_point.dart';
@@ -32,11 +40,15 @@ import 'package:securedialog/utils/chart_utils.dart';
 import 'package:securedialog/utils/constants.dart';
 import 'package:securedialog/utils/time_utils.dart';
 
+// 20230930 gjw TODO CAN THESE BE REPLACED WITH THE PACKAGE:SECUREDIALOG USAGE?
+// IS THERE ANY REASON NOT TO DO THAT?
+
 import 'home_charts/group_chart_widget.dart';
 import 'home_charts/syncfusion_column_chart_widget.dart';
 import 'home_charts/syncfusion_line_chart_widget.dart';
 
-/// the view layer of profile widget in home page
+/// A view layer for the profile widget in the home page.
+
 class HomeProfile extends StatefulWidget {
   final Map<dynamic, dynamic>? authData;
 
@@ -62,9 +74,8 @@ class _HomeProfileState extends State<HomeProfile> {
               // request is complete
               if (snapshot.connectionState == ConnectionState.done) {
                 if (snapshot.hasError) {
-                  // request failed
-                  print("SNAPSHOT   XXXXXXXXXXXXXXXXXXXXXXXXXX\n\n");
-                  print(snapshot);
+                  // Request failed.
+
                   return Column(
                     children: <Widget>[
                       BaseWidget.getPadding(15.0),
