@@ -290,12 +290,14 @@ class HomePageService {
     Map<dynamic, dynamic>? authData,
     DateTime dateTime,
   ) async {
-    // 20230925 gjw For now let's turn off the automatic saving every minute of
-    // the location. TODO Add a settings to turn this on/off and test the value
-    // of the setting here.
+    // 20230925 gjw FOR NOW LET'S TURN OFF THE AUTOMATIC SAVING EVERY MINUTE OF
+    // THE LOCATION. TODO ADD A SETTINGS TO TURN THIS ON/OFF AND TEST THE VALUE
+    // OF THE SETTING HERE. SHOULD ROBABLY BE AN IN APP SETTING AND DEFAULT TO
+    // OFF.
 
     return true;
 
+    // ignore: dead_code
     Map<String, dynamic> podInfo = SolidUtils.parseAuthData(authData);
     String? accessToken = podInfo[Constants.accessToken];
     String? webId = podInfo[Constants.webId];
