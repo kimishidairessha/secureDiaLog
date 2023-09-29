@@ -105,8 +105,8 @@ class HomePageService {
       // CATCH THE N/A AND RAISE AN ERROR, OR IF ACCEPTABLE THEN DON'T SUBSTRING
       // IF N/A.
 
-      print("\n\nYYYYYYYYYYYYYY obTime='${obTime}'\n\n");
-      String date = obTime.length < 8 ? obtime : obTime.substring(0, 8);
+      print("\n\nYYYYYYYYYYYYYY obTime='$obTime'\n\n");
+      String date = obTime.length < 8 ? obTime : obTime.substring(0, 8);
 
       if (!tempMap.containsKey(date)) {
         List<SurveyInfo> tempList = [];
