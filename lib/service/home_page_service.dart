@@ -1,4 +1,4 @@
-/// Provide the model-view layer of home page, including all services the very view layer needs
+/// A model-view layer of home page including all needed services.
 ///
 /// Copyright (C) 2023 The Authors
 ///
@@ -36,11 +36,13 @@ import 'package:securedialog/utils/solid_utils.dart';
 import 'package:securedialog/utils/survey_utils.dart';
 import 'package:securedialog/utils/time_utils.dart';
 
-/// the model-view layer of home page, including all services the very view layer needs
+/// A model-view layer for the home page including all needed services.
+
 class HomePageService {
   final HomePageNet homePageNet = HomePageNet();
 
-  /// this method is to get a list of survey info from a POD
+  /// Obtain a list of survey info from a POD.
+
   Future<List<SurveyDayInfo>?> getSurveyDayInfoList(
       int dayNum, Map<dynamic, dynamic>? authData) async {
     List<SurveyInfo> surveyInfoList = [];
@@ -53,6 +55,7 @@ class HomePageService {
     String? surveyContainerURI = podInfo[Constants.surveyContainerURI];
     dynamic rsa = podInfo[Constants.rsa];
     dynamic pubKeyJwk = podInfo[Constants.pubKeyJwk];
+
     EncryptClient? encryptClient =
         await EncryptUtils.getClient(authData!, webId!);
     try {
@@ -61,16 +64,20 @@ class HomePageService {
           Constants.containerName)) {
         return null;
       }
+
       if (!SolidUtils.isContainerExist(
           await homePageNet.readFile(
               containerURI!, accessToken, rsa, pubKeyJwk),
           Constants.surveyContainerName)) {
         return null;
       }
+
       String surveyContainerContent = await homePageNet.readFile(
           surveyContainerURI!, accessToken, rsa, pubKeyJwk);
+
       List<String> fileNameList = SolidUtils.getSurveyFileNameList(
           surveyContainerContent, webId, dayNum * 7);
+
       for (int i = 0; i < fileNameList.length; i++) {
         String fileName = fileNameList[i];
         String fileURI = surveyContainerURI + fileName;
@@ -84,14 +91,23 @@ class HomePageService {
       debugPrint("Error on fetching survey data: $e");
       return null;
     }
-    // surveyInfoList to surveyDayInfoList
+
+    // Transform from surveyInfoList to surveyDayInfoList.
+
     Map<String, List<SurveyInfo>> tempMap = {};
+
     for (SurveyInfo surveyInfo in surveyInfoList) {
       String obTime = surveyInfo.obTime;
-      print("\n\nYYYYYYYYYYYYYY ${obTime}\n\n");
-      // String date = obTime.substring(0, 8);
-      // 20230930 gjw WHY IS THIS N/A AND FAILS WITH 8 BUT NOT WITH 3 !!!!
-      String date = obTime.substring(0, 3);
+
+      // 20230930 gjw TODO WHY IS THIS N/A. AS A RESULT IT FAILS TO EXTRACT THE
+      // LENGTH 8 SUBSTRING. SO ONLY SUBSTRING THIS IF THE LENGTH IS AT LEAST 8
+
+      print("\n\nYYYYYYYYYYYYYY obTime='${obTime}'\n\n");
+      String date = obTime;
+      if (obTime.length >= 8) {
+        date = obTime.substring(0, 8);
+      }
+
       if (!tempMap.containsKey(date)) {
         List<SurveyInfo> tempList = [];
         tempList.add(surveyInfo);
@@ -102,14 +118,18 @@ class HomePageService {
         tempMap[date] = tempList;
       }
     }
+
     tempMap.forEach((date, surveyInfoList) {
       SurveyDayInfo surveyDayInfo = SurveyDayInfo();
       surveyDayInfo.date = date;
       surveyDayInfo.surveyInfoList = surveyInfoList;
       surveyDayInfoList.add(surveyDayInfo);
     });
-    // sorting
+
+    // Sorting.
+
     surveyDayInfoList.sort((s1, s2) => s1.date.compareTo(s2.date));
+
     return surveyDayInfoList;
   }
 
