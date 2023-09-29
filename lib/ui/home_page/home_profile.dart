@@ -63,6 +63,8 @@ class _HomeProfileState extends State<HomeProfile> {
               if (snapshot.connectionState == ConnectionState.done) {
                 if (snapshot.hasError) {
                   // request failed
+                  print("SNAPSHOT   XXXXXXXXXXXXXXXXXXXXXXXXXX\n\n");
+                  print(snapshot);
                   return Column(
                     children: <Widget>[
                       BaseWidget.getPadding(15.0),
@@ -87,7 +89,7 @@ class _HomeProfileState extends State<HomeProfile> {
                         width: MediaQuery.of(context).size.width,
                         alignment: Alignment.center,
                         child: Text(
-                          "Server Error:${snapshot.error}",
+                          "Server Error: ${snapshot.error}",
                           textAlign: TextAlign.center,
                           style: const TextStyle(
                             fontSize: 20,
