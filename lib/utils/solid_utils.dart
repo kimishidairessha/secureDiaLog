@@ -51,14 +51,36 @@ class SolidUtils {
       String content, EncryptClient encryptClient) {
     SurveyInfo surveyInfo = SurveyInfo();
     List<String> lines = content.split("\n");
+
     for (int i = 0; i < lines.length; i++) {
       String line = lines[i];
       String val = "";
+
+      print("OB TIME DEBUG: line='$line'");
+
+      // 20230930 gjw TODO CAN WE PRINT THE DECODED LINE HERE???? THIS WILL HELP
+      // UNDERSTAND WHY NO obTime IS FOUND PERHAPS? WOULD ALSO PROBABLY BE A
+      // BETTER APPROACH THAN ALL OF THE ENCODE AND DECODE CALLS BELOW.
+
       if (line.contains(" \"")) {
         val = line.split(" \"")[1];
       } else {
         continue;
       }
+
+      print("OB TIME DEBUG: val = '$val'");
+      String tmp = val.replaceAll("\".", "").replaceAll("\";", "").trim();
+      print(tmp);
+      //tmp = EncryptUtils.decode(tmp, encryptClient)!;
+      //print(tmp);
+
+      print("Q1KEY = ${EncryptUtils.encode(Constants.q1Key, encryptClient)!}");
+
+      // 20230930 gjw TODO WHY IS THE Q1KEY DIFFERENT FOR EACH LINE?
+
+      // 20230930 gjw TODO THERE IS WAY TO MUCH REPEATED CODE BELOW. NEEDS
+      // FIXING. DRY => DON'T REPEAT YOURSELF
+
       if (line.contains(EncryptUtils.encode(Constants.q1Key, encryptClient)!)) {
         surveyInfo.setStrength(EncryptUtils.decode(
             val.replaceAll("\".", "").replaceAll("\";", "").trim(),
@@ -100,6 +122,7 @@ class SolidUtils {
             encryptClient)!);
       }
     }
+
     return surveyInfo;
   }
 
