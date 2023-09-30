@@ -81,6 +81,7 @@ class HomePageService {
       for (int i = 0; i < fileNameList.length; i++) {
         String fileName = fileNameList[i];
         String fileURI = surveyContainerURI + fileName;
+        print("\n\nFILE URI = $fileURI\n\n");
         String fileContent =
             await homePageNet.readFile(fileURI, accessToken, rsa, pubKeyJwk);
         SurveyInfo surveyInfo =

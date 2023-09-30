@@ -123,6 +123,10 @@ class SolidUtils {
       }
     }
 
+    print("SURVEY INFO");
+    print("\tsystolic = ${surveyInfo.systolic}");
+    print("\theartRate = ${surveyInfo.heartRate}");
+    print("\tobInfo = ${surveyInfo.obTime}");
     return surveyInfo;
   }
 
