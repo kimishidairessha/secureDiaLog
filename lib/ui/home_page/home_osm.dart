@@ -1,4 +1,4 @@
-/// The widget for displaying GEO page
+/// A widget to display the map page.
 ///
 /// Copyright (C) 2023 The Authors
 ///
@@ -23,10 +23,10 @@
 import 'dart:async';
 import 'dart:io';
 
-//import 'package:common_utils/common_utils.dart';
+import 'package:flutter/material.dart';
+
 import 'package:current_location/current_location.dart';
 import 'package:current_location/model/location.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
@@ -40,8 +40,8 @@ import 'package:securedialog/utils/device_file_utils.dart';
 import 'package:securedialog/utils/geo_utils.dart';
 import 'package:securedialog/utils/global.dart';
 
-/// Dispatch background tasks.
-/// @return void
+/// Dispatch background map tasks.
+
 @pragma('vm:entry-point')
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
@@ -55,7 +55,7 @@ void callbackDispatcher() {
   });
 }
 
-/// Create the view layer of an open street map widget in the home page.
+/// Create a view layer for open street map widget in the home page.
 
 class HomeOSM extends StatefulWidget {
   final Map<dynamic, dynamic>? authData;
@@ -128,35 +128,42 @@ class _HomeOSMState extends State<HomeOSM> with WidgetsBindingObserver {
           keepAlive: true,
           onMapReady: () {
             debugPrint("map init complete");
-            timer = Timer.periodic(const Duration(seconds: Constants.interval),
-                (timer) async {
-              debugPrint("refresh the map and write position info into pod");
-              if (autoGeo) {
-                if (Platform.isLinux ||
-                    Platform.isWindows ||
-                    Platform.isMacOS) {
-                  Location? location = await UserLocation.getValue();
-                  setState(() {
-                    curLatLng =
-                        LatLng(location!.latitude!, location.longitude!);
-                    Global.globalLatLng = curLatLng;
-                  });
-                  homePageService.saveGeoInfo(
-                      curLatLng!, widget.authData, DateTime.now());
+
+            // 20230930 gjw TODO LET'S TURN OFF THE MAP UPDATES FOR NOW. GEO
+            // CAPABILITY IS NOT BEING USED FOR THE SECUREDIALOG APP AT THIS
+            // TIME.
+
+            if (false) {
+              timer = Timer.periodic(
+                  const Duration(seconds: Constants.interval), (timer) async {
+                debugPrint("refresh the map and write position info into pod");
+                if (autoGeo) {
+                  if (Platform.isLinux ||
+                      Platform.isWindows ||
+                      Platform.isMacOS) {
+                    Location? location = await UserLocation.getValue();
+                    setState(() {
+                      curLatLng =
+                          LatLng(location!.latitude!, location.longitude!);
+                      Global.globalLatLng = curLatLng;
+                    });
+                    homePageService.saveGeoInfo(
+                        curLatLng!, widget.authData, DateTime.now());
+                  } else {
+                    Position position = await GeoUtils.getCurrentLocation();
+                    setState(() {
+                      curLatLng = LatLng(position.latitude, position.longitude);
+                      Global.globalLatLng = curLatLng;
+                    });
+                    homePageService.saveGeoInfo(
+                        curLatLng!, widget.authData, DateTime.now());
+                  }
                 } else {
-                  Position position = await GeoUtils.getCurrentLocation();
-                  setState(() {
-                    curLatLng = LatLng(position.latitude, position.longitude);
-                    Global.globalLatLng = curLatLng;
-                  });
                   homePageService.saveGeoInfo(
                       curLatLng!, widget.authData, DateTime.now());
                 }
-              } else {
-                homePageService.saveGeoInfo(
-                    curLatLng!, widget.authData, DateTime.now());
-              }
-            });
+              });
+            }
           },
           onTap: (tapPosition, latLng) {
             autoGeo = false;
