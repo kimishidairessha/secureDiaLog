@@ -78,14 +78,25 @@ class HomePageService {
       List<String> fileNameList = SolidUtils.getSurveyFileNameList(
           surveyContainerContent, webId, dayNum * 7);
 
+      // 20231001 gjw TODO WHY IS THIS DONE TWICE?? EVERYTHING TO DO WITH
+      // LOADING AND PARSING SEEMS TO BE DONE TWICE??
+
+      print("\n\nFILE LIST LENGTH = ${fileNameList.length}\n");
+
       for (int i = 0; i < fileNameList.length; i++) {
         String fileName = fileNameList[i];
         String fileURI = surveyContainerURI + fileName;
-        print("\n\nFILE URI = $fileURI\n\n");
+        print("\n\nFILE $i URI = $fileURI\n");
         String fileContent =
             await homePageNet.readFile(fileURI, accessToken, rsa, pubKeyJwk);
+        print("\n\nFILE $i CONTENT = \n\n$fileContent\n");
         SurveyInfo surveyInfo =
             SolidUtils.parseSurveyFile(fileContent, encryptClient!);
+        print("\n\nFILE $i SURVEY INFO = "
+            "\n\tdiastolic = ${surveyInfo.diastolic}"
+            "\n\tsystolic = ${surveyInfo.systolic}"
+            "\n\theartRate = ${surveyInfo.heartRate}"
+            "\n\tobTime = ${surveyInfo.obTime}\n");
         surveyInfoList.add(surveyInfo);
       }
     } catch (e) {
@@ -104,9 +115,8 @@ class HomePageService {
       // LENGTH 8 SUBSTRING. SO ONLY SUBSTRING THIS IF THE LENGTH IS AT LEAST
       // 8. ONCE CONFIRMED WHY IT IS N/A THEN REMOVE THE PRINT AND POTENTIALY
       // CATCH THE N/A AND RAISE AN ERROR, OR IF ACCEPTABLE THEN DON'T SUBSTRING
-      // IF N/A.
+      // IF N/A. ALSO DOCUMENT WHAT FORMAT IS EXPECTED.
 
-      print("\n\nYYYYYYYYYYYYYY obTime='$obTime'\n\n");
       String date = obTime.length < 8 ? obTime : obTime.substring(0, 8);
 
       if (!tempMap.containsKey(date)) {

@@ -18,7 +18,9 @@
 // You should have received a copy of the GNU General Public License along with
 // this program.  If not, see <https://www.gnu.org/licenses/>.
 ///
-/// Authors: Bowen Yang, Ye Duan
+/// Authors: Bowen Yang, Ye Duan, Graham Williams
+
+import 'package:flutter/material.dart' show debugPrint;
 
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:securedialog/model/survey_info.dart';
@@ -27,7 +29,8 @@ import 'package:securedialog/utils/encrpt_utils.dart';
 import 'package:rdflib/rdflib.dart';
 import 'package:solid_encrypt/solid_encrypt.dart';
 
-/// this class is a util class related to solid server affairs
+/// A class supporting solid server activities.
+
 class SolidUtils {
   static String? getLastObTime(String content) {
     List<String> lines = content.split("\n");
@@ -56,11 +59,11 @@ class SolidUtils {
       String line = lines[i];
       String val = "";
 
-      print("OB TIME DEBUG: line='$line'");
-
       // 20230930 gjw TODO CAN WE PRINT THE DECODED LINE HERE???? THIS WILL HELP
       // UNDERSTAND WHY NO obTime IS FOUND PERHAPS? WOULD ALSO PROBABLY BE A
       // BETTER APPROACH THAN ALL OF THE ENCODE AND DECODE CALLS BELOW.
+
+      // 20231001 gjw TODO USE THE RDF PACKAGE TO HANDLE THE TTL.
 
       if (line.contains(" \"")) {
         val = line.split(" \"")[1];
@@ -68,13 +71,25 @@ class SolidUtils {
         continue;
       }
 
-      print("OB TIME DEBUG: val = '$val'");
-      String tmp = val.replaceAll("\".", "").replaceAll("\";", "").trim();
-      print(tmp);
-      //tmp = EncryptUtils.decode(tmp, encryptClient)!;
-      //print(tmp);
+      String? encVal = val.replaceAll("\".", "").replaceAll("\";", "").trim();
+      debugPrint(encVal);
 
-      print("Q1KEY = ${EncryptUtils.encode(Constants.q1Key, encryptClient)!}");
+      String? encSys = EncryptUtils.encode(Constants.q4Key, encryptClient);
+      debugPrint("${Constants.q4Key} => $encSys");
+
+      try {
+        encVal = EncryptUtils.decode(encVal, encryptClient);
+      } catch (e) {
+        debugPrint("\n\nEncryptUtils FAILED with: $e\n\n");
+        // 20231001 gjw JUST CONTINUE FOR NOW TO GET THE FOLLOWING OUTPUT
+      }
+
+      // 20231001 gjw THIS MAY BE USEFUL: https://the-x.cn/en-us/cryptography/Aes.aspx
+
+      //debugPrint(tmp);
+
+      debugPrint(
+          "Q1KEY = ${EncryptUtils.encode(Constants.q1Key, encryptClient)!}");
 
       // 20230930 gjw TODO WHY IS THE Q1KEY DIFFERENT FOR EACH LINE?
 
@@ -123,10 +138,6 @@ class SolidUtils {
       }
     }
 
-    print("SURVEY INFO");
-    print("\tsystolic = ${surveyInfo.systolic}");
-    print("\theartRate = ${surveyInfo.heartRate}");
-    print("\tobInfo = ${surveyInfo.obTime}");
     return surveyInfo;
   }
 
