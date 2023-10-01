@@ -83,6 +83,8 @@ class HomePageService {
         String fileURI = surveyContainerURI + fileName;
         String fileContent =
             await homePageNet.readFile(fileURI, accessToken, rsa, pubKeyJwk);
+        print("FileContent: $fileContent");
+        // net layer works fine, errors may from SolidUtils.parseSurveyFile.
         SurveyInfo surveyInfo =
             SolidUtils.parseSurveyFile(fileContent, encryptClient!);
         surveyInfoList.add(surveyInfo);

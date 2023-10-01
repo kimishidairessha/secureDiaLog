@@ -51,6 +51,20 @@ class SolidUtils {
       String content, EncryptClient encryptClient) {
     SurveyInfo surveyInfo = SurveyInfo();
     List<String> lines = content.split("\n");
+    print("Lines: $lines");
+
+    // 20231001 kimi Encryption and decryption do not match. It will throw the
+    // error when decrypting.
+    String testString = "Hello, world!";
+    String encrypted = EncryptUtils.encode(testString, encryptClient)!;
+    print("Encrypted: $encrypted");
+    String decrypted;
+    try {
+      decrypted = EncryptUtils.decode(encrypted, encryptClient)!;
+      print("Decrypted: $decrypted");
+    } catch (e) {
+      print("Error during decryption: $e");
+    }
 
     for (int i = 0; i < lines.length; i++) {
       String line = lines[i];
@@ -73,11 +87,13 @@ class SolidUtils {
       print(tmp);
       //tmp = EncryptUtils.decode(tmp, encryptClient)!;
       //print(tmp);
+      print("Decode: ${EncryptUtils.decode(
+          val.replaceAll("\".", "").replaceAll("\";", "").trim(),
+          encryptClient)!}");
 
       print("Q1KEY = ${EncryptUtils.encode(Constants.q1Key, encryptClient)!}");
 
       // 20230930 gjw TODO WHY IS THE Q1KEY DIFFERENT FOR EACH LINE?
-
       // 20230930 gjw TODO THERE IS WAY TO MUCH REPEATED CODE BELOW. NEEDS
       // FIXING. DRY => DON'T REPEAT YOURSELF
 
@@ -85,6 +101,7 @@ class SolidUtils {
         surveyInfo.setStrength(EncryptUtils.decode(
             val.replaceAll("\".", "").replaceAll("\";", "").trim(),
             encryptClient)!);
+        print("check strength: ${surveyInfo.strength}");
       } else if (line
           .contains(EncryptUtils.encode(Constants.q2Key, encryptClient)!)) {
         surveyInfo.setFasting(EncryptUtils.decode(
