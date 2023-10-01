@@ -55,6 +55,19 @@ class SolidUtils {
     SurveyInfo surveyInfo = SurveyInfo();
     List<String> lines = content.split("\n");
 
+    // 20231001 kimi encryption and decryption do not match, it will throw
+    // error, when decrypting.
+    String testString = "Hello, world!";
+    String encrypted = EncryptUtils.encode(testString, encryptClient)!;
+    print("Encrypted: $encrypted");
+    String decrypted;
+    try {
+      decrypted = EncryptUtils.decode(encrypted, encryptClient)!;
+      print("Decrypted: $decrypted");
+    } catch (e) {
+      print("Error during decryption: $e");
+    }
+
     for (int i = 0; i < lines.length; i++) {
       String line = lines[i];
       String val = "";

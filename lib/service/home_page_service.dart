@@ -75,6 +75,8 @@ class HomePageService {
       String surveyContainerContent = await homePageNet.readFile(
           surveyContainerURI!, accessToken, rsa, pubKeyJwk);
 
+      // 20231001 kimi the net layer works well.
+
       List<String> fileNameList = SolidUtils.getSurveyFileNameList(
           surveyContainerContent, webId, dayNum * 7);
 
