@@ -27,6 +27,7 @@ import 'package:securedialog/model/survey_info.dart';
 import 'package:securedialog/utils/constants.dart';
 import 'package:securedialog/utils/encrpt_utils.dart';
 import 'package:rdflib/rdflib.dart';
+import 'package:securedialog/utils/global.dart';
 import 'package:solid_encrypt/solid_encrypt.dart';
 
 /// A class supporting solid server activities.
@@ -60,12 +61,15 @@ class SolidUtils {
     String testString = "Hello, world!";
     String encrypted = EncryptUtils.encode(testString, encryptClient)!;
     print("Encrypted: $encrypted");
+    // check why the decryption cannot work
+    print("Check encryption key: ${Global.encryptKey}");
     String decrypted;
     try {
-      decrypted = EncryptUtils.decode(encrypted, encryptClient)!;
+      decrypted = encryptClient.decryptVal(Global.encryptKey, encrypted);
       print("Decrypted: $decrypted");
-    } catch (e) {
+    } catch (e, stackTrace) {
       print("Error during decryption: $e");
+      print("StackTrace: $stackTrace");
     }
 
     for (int i = 0; i < lines.length; i++) {
