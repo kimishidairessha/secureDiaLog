@@ -71,7 +71,7 @@ class SolidUtils {
 
     // check why the decryption cannot work
 
-    print("TESTING: Check encryption key: ${Global.encryptKey}");
+    print("TESTING: encryption key: ${Global.encryptKey}");
 
     String decrypted;
     try {
@@ -79,6 +79,9 @@ class SolidUtils {
       decrypted =
           encryptClient.decryptVal(Global.encryptKey, encryptVal, ivVal);
       print("TESTING: decrypted: $decrypted");
+      print(decrypted == testString
+          ? "SUCCESSFULLY DESCRYPTED\n"
+          : "FAILED TO DECRYPT\n");
     } catch (e, stackTrace) {
       print("Error during decryption: $e");
       print("StackTrace: $stackTrace");
@@ -124,6 +127,9 @@ class SolidUtils {
 
       // 20230930 gjw TODO THERE IS WAY TO MUCH REPEATED CODE BELOW. NEEDS
       // FIXING. DRY => DON'T REPEAT YOURSELF
+
+      // 20231004 gjw TODO REPLACE THE Q1, Q2, ETC WITH MORE SENSIBLE NAMES -
+      // THEY MEAN NOTHING.
 
       if (line.contains(EncryptUtils.encode(Constants.q1Key, encryptClient)!)) {
         surveyInfo.setStrength(EncryptUtils.decode(
