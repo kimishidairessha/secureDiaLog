@@ -59,18 +59,23 @@ class SolidUtils {
     // 20231001 kimi encryption and decryption do not match, it will throw
     // error, when decrypting.
     String testString = "Hello, world!";
+    print("TESTING: test string: $testString");
     String encrypted = EncryptUtils.encode(testString, encryptClient)!;
-    print("Encrypted: $encrypted");
+
+    print("TESTING: encrypted: $encrypted");
+
     // check why the decryption cannot work
-    print("Check encryption key: ${Global.encryptKey}");
+
+    print("TESTING: Check encryption key: ${Global.encryptKey}");
+
     String decrypted;
     try {
+      // ORIGINALLY IT WAS THIS:      decrypted = EncryptUtils.decode(encrypted, encryptClient)!;
       decrypted = encryptClient.decryptVal(Global.encryptKey, encrypted);
-      print("Decrypted: $decrypted");
+      print("TESTING: decrypted: $decrypted");
     } catch (e, stackTrace) {
       print("Error during decryption: $e");
       print("StackTrace: $stackTrace");
-    }
 
     for (int i = 0; i < lines.length; i++) {
       String line = lines[i];
