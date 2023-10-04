@@ -60,7 +60,7 @@ dependencies:
   rdflib: ^0.2.4
   shared_preferences: ^2.1.1
   solid_auth: ^0.1.11
-  solid_encrypt: ^0.1.5
+  solid_encrypt: ^0.1.6
   syncfusion_flutter_charts: ^23.1.38
   universal_io: ^2.2.2
   url_launcher: ^6.1.11

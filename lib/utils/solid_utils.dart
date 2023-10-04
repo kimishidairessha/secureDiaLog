@@ -60,9 +60,14 @@ class SolidUtils {
     // error, when decrypting.
     String testString = "Hello, world!";
     print("TESTING: test string: $testString");
-    String encrypted = EncryptUtils.encode(testString, encryptClient)!;
+    // String encrypted = EncryptUtils.encode(testString, encryptClient)!;
+    List encryptRes = encryptClient.encryptVal(Global.encryptKey, testString);
 
-    print("TESTING: encrypted: $encrypted");
+    String encryptVal = encryptRes[0];
+    String ivVal = encryptRes[1];
+
+    print("TESTING: encrypted: $encryptVal");
+    print("TESTING: ivVal: $ivVal");
 
     // check why the decryption cannot work
 
@@ -71,11 +76,13 @@ class SolidUtils {
     String decrypted;
     try {
       // ORIGINALLY IT WAS THIS:      decrypted = EncryptUtils.decode(encrypted, encryptClient)!;
-      decrypted = encryptClient.decryptVal(Global.encryptKey, encrypted);
+      decrypted =
+          encryptClient.decryptVal(Global.encryptKey, encryptVal, ivVal);
       print("TESTING: decrypted: $decrypted");
     } catch (e, stackTrace) {
       print("Error during decryption: $e");
       print("StackTrace: $stackTrace");
+    }
 
     for (int i = 0; i < lines.length; i++) {
       String line = lines[i];
