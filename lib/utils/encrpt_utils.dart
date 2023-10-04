@@ -65,13 +65,14 @@ class EncryptUtils {
   }
 
   static String? encode(String text, EncryptClient encryptClient) {
-    print("20231004 gjw NEEDS TO BE UPDATED SINCE WE NEED THE ivVal");
+    // 20231004 gjw TODO NEEDS TO BE UPDATED SINCE WE NEED THE ivVal
     String ivVal = encryptClient.encryptVal(Global.encryptKey, text)[1];
     return encryptClient.encryptVal(Global.encryptKey, text)[0];
   }
 
   static String? decode(String code, EncryptClient encryptClient) {
     String ivVal = "";
+    // 20231004 gjw TODO NEEDS TO BE UPDATED SINCE WE NEED THE ivVal
     return encryptClient.decryptVal(Global.encryptKey, code, ivVal);
   }
 }
