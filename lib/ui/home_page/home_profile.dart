@@ -1,4 +1,4 @@
-/// The widget for displaying PROFILE page
+/// A widget for displaying the PROFILE page.
 ///
 /// Copyright (C) 2023 The Authors
 ///
@@ -18,24 +18,37 @@
 // You should have received a copy of the GNU General Public License along with
 // this program.  If not, see <https://www.gnu.org/licenses/>.
 ///
-/// Authors: Bowen Yang, Ye Duan
+/// Authors: Bowen Yang, Ye Duan, Graham Williams
+
+// 20230930 gjw TODOD
+//
+// SPLIT OUT VARIOUS WIDGETS INTO OWN CLASSES TO REDUCE THIS FILE SIZE AND FOR
+// THE CODE TO BE MORE READABLE.
+//
+// REVIEW AND CLEANUP THE LAYOUT AND COMMENTS AND CHCEK THE DOCS GENERATION
+// PRODUCES USEFUL DOCUMENTATION.
 
 import 'package:flutter/material.dart';
+
 import 'package:securedialog/model/chart_point.dart';
 import 'package:securedialog/model/survey_day_info.dart';
+import 'package:securedialog/model/tooltip.dart';
+import 'package:securedialog/service/home_page_service.dart';
+import 'package:securedialog/ui/login_page/login_page.dart';
 import 'package:securedialog/utils/base_widget.dart';
 import 'package:securedialog/utils/chart_utils.dart';
+import 'package:securedialog/utils/constants.dart';
 import 'package:securedialog/utils/time_utils.dart';
 
-import '../../model/tooltip.dart';
-import '../../service/home_page_service.dart';
-import '../../utils/constants.dart';
-import '../login_page/login_page.dart';
+// 20230930 gjw TODO CAN THESE BE REPLACED WITH THE PACKAGE:SECUREDIALOG USAGE?
+// IS THERE ANY REASON NOT TO DO THAT?
+
 import 'home_charts/group_chart_widget.dart';
 import 'home_charts/syncfusion_column_chart_widget.dart';
 import 'home_charts/syncfusion_line_chart_widget.dart';
 
-/// the view layer of profile widget in home page
+/// A view layer for the profile widget in the home page.
+
 class HomeProfile extends StatefulWidget {
   final Map<dynamic, dynamic>? authData;
 
@@ -61,7 +74,8 @@ class _HomeProfileState extends State<HomeProfile> {
               // request is complete
               if (snapshot.connectionState == ConnectionState.done) {
                 if (snapshot.hasError) {
-                  // request failed
+                  // Request failed.
+
                   return Column(
                     children: <Widget>[
                       BaseWidget.getPadding(15.0),
@@ -86,7 +100,7 @@ class _HomeProfileState extends State<HomeProfile> {
                         width: MediaQuery.of(context).size.width,
                         alignment: Alignment.center,
                         child: Text(
-                          "Server Error:${snapshot.error}",
+                          "Server Error: ${snapshot.error}",
                           textAlign: TextAlign.center,
                           style: const TextStyle(
                             fontSize: 20,
@@ -251,6 +265,47 @@ class _HomeProfileState extends State<HomeProfile> {
                         ),
                       ),
                       BaseWidget.getPadding(15),
+                      BaseWidget.getQuestionText("Systolic & Diastolic"),
+                      BaseWidget.getPadding(5),
+                      SizedBox(
+                        height: 150,
+                        width: MediaQuery.of(context).size.width,
+                        child: GroupChartWidget(
+                            systolicList,
+                            diastolicList,
+                            systolicTimeList,
+                            timeList,
+                            Constants.systolicMinY,
+                            systolicToolTipsList,
+                            diastolicToolTipsList),
+                      ),
+                      BaseWidget.getPadding(15),
+                      BaseWidget.getQuestionText("Heart Rate"),
+                      BaseWidget.getPadding(5),
+                      SizedBox(
+                        height: 150,
+                        width: MediaQuery.of(context).size.width,
+                        child: SyncfusionLineChartWidget(
+                            heartRateList,
+                            heartRateTimeList,
+                            timeList,
+                            Constants.heartRateMinY,
+                            heartRateToolTipsList),
+                      ),
+                      BaseWidget.getPadding(15),
+                      BaseWidget.getQuestionText("Weight"),
+                      BaseWidget.getPadding(5),
+                      SizedBox(
+                        height: 150,
+                        width: MediaQuery.of(context).size.width,
+                        child: SyncfusionLineChartWidget(
+                            weightList,
+                            weightTimeList,
+                            timeList,
+                            Constants.weightMinY,
+                            weightToolTipsList),
+                      ),
+                      BaseWidget.getPadding(15),
                       BaseWidget.getQuestionText("Lacking in Strength Check"),
                       SizedBox(
                         height: 150,
@@ -287,47 +342,6 @@ class _HomeProfileState extends State<HomeProfile> {
                             timeList,
                             Constants.postprandialMinY,
                             postprandialToolTipsList),
-                      ),
-                      BaseWidget.getPadding(15),
-                      BaseWidget.getQuestionText("Systolic & Diastolic"),
-                      BaseWidget.getPadding(5),
-                      SizedBox(
-                        height: 150,
-                        width: MediaQuery.of(context).size.width,
-                        child: GroupChartWidget(
-                            systolicList,
-                            diastolicList,
-                            systolicTimeList,
-                            timeList,
-                            Constants.systolicMinY,
-                            systolicToolTipsList,
-                            diastolicToolTipsList),
-                      ),
-                      BaseWidget.getPadding(15),
-                      BaseWidget.getQuestionText("Weight"),
-                      BaseWidget.getPadding(5),
-                      SizedBox(
-                        height: 150,
-                        width: MediaQuery.of(context).size.width,
-                        child: SyncfusionLineChartWidget(
-                            weightList,
-                            weightTimeList,
-                            timeList,
-                            Constants.weightMinY,
-                            weightToolTipsList),
-                      ),
-                      BaseWidget.getPadding(15),
-                      BaseWidget.getQuestionText("Heart Rate"),
-                      BaseWidget.getPadding(5),
-                      SizedBox(
-                        height: 150,
-                        width: MediaQuery.of(context).size.width,
-                        child: SyncfusionLineChartWidget(
-                            heartRateList,
-                            heartRateTimeList,
-                            timeList,
-                            Constants.heartRateMinY,
-                            heartRateToolTipsList),
                       ),
                       BaseWidget.getPadding(30.0),
                     ],
