@@ -66,13 +66,20 @@ class EncryptUtils {
 
   static String? encode(String text, EncryptClient encryptClient) {
     // 20231004 gjw TODO NEEDS TO BE UPDATED SINCE WE NEED THE ivVal
-    String ivVal = encryptClient.encryptVal(Global.encryptKey, text)[1];
-    return encryptClient.encryptVal(Global.encryptKey, text)[0];
+    // String ivVal = encryptClient.encryptVal(Global.encryptKey, text)[1];
+    // return encryptClient.encryptVal(Global.encryptKey, text)[0];
+    List encryptionResults = encryptClient.encryptVal(Global.encryptKey, text);
+    return '${encryptionResults[0]}:::${encryptionResults[1]}';
   }
 
   static String? decode(String code, EncryptClient encryptClient) {
-    String ivVal = "";
+    List<String> parts = code.split(':::');
+    if (parts.length != 2) {
+      throw ArgumentError('Invalid encoded string format');
+    }
+    String encryptedText = parts[0];
+    String ivVal = parts[1];
+    return encryptClient.decryptVal(Global.encryptKey, encryptedText, ivVal);
     // 20231004 gjw TODO NEEDS TO BE UPDATED SINCE WE NEED THE ivVal
-    return encryptClient.decryptVal(Global.encryptKey, code, ivVal);
   }
 }

@@ -60,46 +60,47 @@ class SolidUtils {
     // error, when decrypting.
     //20231005 kimi Modify the method without changing the type to avoid
     // excessive modification.
-    String testString = "Hello, world!";
-    print("TESTING: test string: $testString");
-    // String encrypted = EncryptUtils.encode(testString, encryptClient)!;
-    List encryptRes = encryptClient.encryptVal(Global.encryptKey, testString);
-
-    String encryptVal = encryptRes[0];
-    String ivVal = encryptRes[1];
-
-    print("TESTING: encrypted: $encryptVal");
-    print("TESTING: ivVal: $ivVal");
-
-    // check why the decryption cannot work
-
-    print("TESTING: encryption key: ${Global.encryptKey}");
-
-    String encryption = '${encryptRes[0]}:::${encryptRes[1]}';
-    List<String> parts = encryption.split(':::');
-    if (parts.length != 2) {
-      throw ArgumentError('Invalid encoded string format');
-    }
-    String encryptVal1 = parts[0];
-    String ivVal1 = parts[1];
-
-    String decrypted;
-    try {
-      // ORIGINALLY IT WAS THIS:      decrypted = EncryptUtils.decode(encrypted, encryptClient)!;
-      decrypted =
-          encryptClient.decryptVal(Global.encryptKey, encryptVal1, ivVal1);
-      print("TESTING: decrypted: $decrypted");
-      print(decrypted == testString
-          ? "SUCCESSFULLY DESCRYPTED\n"
-          : "FAILED TO DECRYPT\n");
-    } catch (e, stackTrace) {
-      print("Error during decryption: $e");
-      print("StackTrace: $stackTrace");
-    }
+    // String testString = "Hello, world!";
+    // print("TESTING: test string: $testString");
+    // // String encrypted = EncryptUtils.encode(testString, encryptClient)!;
+    // List encryptRes = encryptClient.encryptVal(Global.encryptKey, testString);
+    //
+    // String encryptVal = encryptRes[0];
+    // String ivVal = encryptRes[1];
+    //
+    // print("TESTING: encrypted: $encryptVal");
+    // print("TESTING: ivVal: $ivVal");
+    //
+    // // check why the decryption cannot work
+    //
+    // print("TESTING: encryption key: ${Global.encryptKey}");
+    //
+    // String encryption = '${encryptRes[0]}:::${encryptRes[1]}';
+    // List<String> parts = encryption.split(':::');
+    // if (parts.length != 2) {
+    //   throw ArgumentError('Invalid encoded string format');
+    // }
+    // String encryptVal1 = parts[0];
+    // String ivVal1 = parts[1];
+    //
+    // String decrypted;
+    // try {
+    //   // ORIGINALLY IT WAS THIS:      decrypted = EncryptUtils.decode(encrypted, encryptClient)!;
+    //   decrypted =
+    //       encryptClient.decryptVal(Global.encryptKey, encryptVal1, ivVal1);
+    //   print("TESTING: decrypted: $decrypted");
+    //   print(decrypted == testString
+    //       ? "SUCCESSFULLY DESCRYPTED\n"
+    //       : "FAILED TO DECRYPT\n");
+    // } catch (e, stackTrace) {
+    //   print("Error during decryption: $e");
+    //   print("StackTrace: $stackTrace");
+    // }
 
     for (int i = 0; i < lines.length; i++) {
       String line = lines[i];
       String val = "";
+      String key = "";
 
       // 20230930 gjw TODO CAN WE PRINT THE DECODED LINE HERE???? THIS WILL HELP
       // UNDERSTAND WHY NO obTime IS FOUND PERHAPS? WOULD ALSO PROBABLY BE A
@@ -108,30 +109,17 @@ class SolidUtils {
       // 20231001 gjw TODO USE THE RDF PACKAGE TO HANDLE THE TTL.
 
       if (line.contains(" \"")) {
+        key = line.split(" \"")[0];
         val = line.split(" \"")[1];
       } else {
         continue;
       }
 
-      String? encVal = val.replaceAll("\".", "").replaceAll("\";", "").trim();
-      debugPrint(encVal);
+      key = key.split("http://xmlns.com/foaf/0.1/").last;
+      key = key.substring(0, key.length - 1); // remove the last character
+      key = EncryptUtils.decode(key, encryptClient)!;
 
-      String? encSys = EncryptUtils.encode(Constants.q4Key, encryptClient);
-      debugPrint("${Constants.q4Key} => $encSys");
 
-      try {
-        encVal = EncryptUtils.decode(encVal, encryptClient);
-      } catch (e) {
-        debugPrint("\n\nEncryptUtils FAILED with: $e\n\n");
-        // 20231001 gjw JUST CONTINUE FOR NOW TO GET THE FOLLOWING OUTPUT
-      }
-
-      // 20231001 gjw THIS MAY BE USEFUL: https://the-x.cn/en-us/cryptography/Aes.aspx
-
-      //debugPrint(tmp);
-
-      debugPrint(
-          "Q1KEY = ${EncryptUtils.encode(Constants.q1Key, encryptClient)!}");
 
       // 20230930 gjw TODO WHY IS THE Q1KEY DIFFERENT FOR EACH LINE?
 
@@ -141,42 +129,36 @@ class SolidUtils {
       // 20231004 gjw TODO REPLACE THE Q1, Q2, ETC WITH MORE SENSIBLE NAMES -
       // THEY MEAN NOTHING.
 
-      if (line.contains(EncryptUtils.encode(Constants.q1Key, encryptClient)!)) {
+
+      if (Constants.q1Key == key) {
         surveyInfo.setStrength(EncryptUtils.decode(
             val.replaceAll("\".", "").replaceAll("\";", "").trim(),
             encryptClient)!);
-      } else if (line
-          .contains(EncryptUtils.encode(Constants.q2Key, encryptClient)!)) {
+      } else if (Constants.q2Key == key) {
         surveyInfo.setFasting(EncryptUtils.decode(
             val.replaceAll("\".", "").replaceAll("\";", "").trim(),
             encryptClient)!);
-      } else if (line
-          .contains(EncryptUtils.encode(Constants.q3Key, encryptClient)!)) {
+      } else if (Constants.q3Key == key) {
         surveyInfo.setPostprandial(EncryptUtils.decode(
             val.replaceAll("\".", "").replaceAll("\";", "").trim(),
             encryptClient)!);
-      } else if (line
-          .contains(EncryptUtils.encode(Constants.q4Key, encryptClient)!)) {
+      } else if (Constants.q4Key == key) {
         surveyInfo.setSystolic(EncryptUtils.decode(
             val.replaceAll("\".", "").replaceAll("\";", "").trim(),
             encryptClient)!);
-      } else if (line
-          .contains(EncryptUtils.encode(Constants.q5Key, encryptClient)!)) {
+      } else if (Constants.q5Key == key) {
         surveyInfo.setDiastolic(EncryptUtils.decode(
             val.replaceAll("\".", "").replaceAll("\";", "").trim(),
             encryptClient)!);
-      } else if (line
-          .contains(EncryptUtils.encode(Constants.q6Key, encryptClient)!)) {
+      } else if (Constants.q6Key == key) {
         surveyInfo.setWeight(EncryptUtils.decode(
             val.replaceAll("\".", "").replaceAll("\";", "").trim(),
             encryptClient)!);
-      } else if (line
-          .contains(EncryptUtils.encode(Constants.q7Key, encryptClient)!)) {
+      } else if (Constants.q7Key == key) {
         surveyInfo.setHeartRate(EncryptUtils.decode(
             val.replaceAll("\".", "").replaceAll("\";", "").trim(),
             encryptClient)!);
-      } else if (line
-          .contains(EncryptUtils.encode(Constants.obTimeKey, encryptClient)!)) {
+      } else if (Constants.obTimeKey == key) {
         surveyInfo.setObTime(EncryptUtils.decode(
             val.replaceAll("\".", "").replaceAll("\";", "").trim(),
             encryptClient)!);
