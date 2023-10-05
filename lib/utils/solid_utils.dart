@@ -58,6 +58,8 @@ class SolidUtils {
 
     // 20231001 kimi encryption and decryption do not match, it will throw
     // error, when decrypting.
+    //20231005 kimi Modify the method without changing the type to avoid
+    // excessive modification.
     String testString = "Hello, world!";
     print("TESTING: test string: $testString");
     // String encrypted = EncryptUtils.encode(testString, encryptClient)!;
@@ -73,11 +75,19 @@ class SolidUtils {
 
     print("TESTING: encryption key: ${Global.encryptKey}");
 
+    String encryption = '${encryptRes[0]}:::${encryptRes[1]}';
+    List<String> parts = encryption.split(':::');
+    if (parts.length != 2) {
+      throw ArgumentError('Invalid encoded string format');
+    }
+    String encryptVal1 = parts[0];
+    String ivVal1 = parts[1];
+
     String decrypted;
     try {
       // ORIGINALLY IT WAS THIS:      decrypted = EncryptUtils.decode(encrypted, encryptClient)!;
       decrypted =
-          encryptClient.decryptVal(Global.encryptKey, encryptVal, ivVal);
+          encryptClient.decryptVal(Global.encryptKey, encryptVal1, ivVal1);
       print("TESTING: decrypted: $decrypted");
       print(decrypted == testString
           ? "SUCCESSFULLY DESCRYPTED\n"
