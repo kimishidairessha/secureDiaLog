@@ -268,7 +268,7 @@ class _HomeProfileState extends State<HomeProfile> {
                       BaseWidget.getQuestionText("Systolic & Diastolic"),
                       BaseWidget.getPadding(5),
                       SizedBox(
-                        height: 150,
+                        height: 320,
                         width: MediaQuery.of(context).size.width,
                         child: GroupChartWidget(
                             systolicList,

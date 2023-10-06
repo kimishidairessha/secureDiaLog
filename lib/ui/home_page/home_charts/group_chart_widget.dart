@@ -51,6 +51,7 @@ class _GroupChartWidgetState extends State<GroupChartWidget> {
   late List<BarChartGroupData> visibleBarGroups;
 
   int visibleLength = 7;
+  int? selectedBarIndex;
 
   Widget bottomTitleWidget(double value, TitleMeta meta) {
     const style = TextStyle(
@@ -58,7 +59,7 @@ class _GroupChartWidgetState extends State<GroupChartWidget> {
       fontWeight: FontWeight.bold,
       fontSize: 12,
     );
-    Widget text = Text('');
+    Widget text = const Text('');
     for (int i = 0; i < widget.xList.length; i++) {
       if (value.toInt() == i) {
         text = Text(
@@ -137,25 +138,30 @@ class _GroupChartWidgetState extends State<GroupChartWidget> {
       );
     }
 
-    return SingleChildScrollView(
+    return Column(
+      children: [
+      SingleChildScrollView(
       controller: scrollController,
       scrollDirection: Axis.horizontal, // makes it horizontally scrollable
-      child: ConstrainedBox(
-        constraints: BoxConstraints(
-          minWidth: 38 * rawBarGroups.length.toDouble(), // dynamic minWidth
-        ),
-        child: AspectRatio(
-          aspectRatio: 1.0,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 0.0,
-              vertical: 10,
-            ),
+      child: Container(
+        height: 200,
+        width: 38 * rawBarGroups.length.toDouble(),
+        // constraints: BoxConstraints(
+        //   minWidth:  // dynamic minWidth
+        // ),
             child: BarChart(
               BarChartData(
                 maxY: 220,
                 barGroups: visibleBarGroups,
                 barTouchData: BarTouchData(
+                  touchCallback: (FlTouchEvent event, BarTouchResponse? touchResponse) {
+                    if (touchResponse != null && touchResponse.spot != null) {
+                      setState(() {
+                        selectedBarIndex = touchResponse.spot!.touchedBarGroupIndex + firstVisibleDataIndex;
+                        print("Selected bar index: $selectedBarIndex");
+                      });
+                    }
+                  },
                   touchTooltipData: BarTouchTooltipData(
                     tooltipBgColor: Colors.green[600],
                     getTooltipItem: (group, groupIndex, rod, rodIndex) {
@@ -169,36 +175,39 @@ class _GroupChartWidgetState extends State<GroupChartWidget> {
                       String tooltipText =
                           "$time\nSystolic: $systolic\nDiastolic: $diastolic";
 
-                      if (widget.toolTipsList.isNotEmpty &&
-                          widget.toolTipsList[adjustedGroupIndex].isNotEmpty) {
-                        tooltipText += "\n--------------\nSystolic updating:";
-                        for (ToolTip toolTip in widget.toolTipsList[adjustedGroupIndex]) {
-                          String additionalText =
-                              "\n${toolTip.time} - ${toolTip.val.toString()}";
-                          tooltipText += additionalText;
-                        }
-                      }
+                      // if (widget.toolTipsList.isNotEmpty &&
+                      //     widget.toolTipsList[adjustedGroupIndex].isNotEmpty) {
+                      //   tooltipText += "\n--------------\nSystolic updating:";
+                      //   for (ToolTip toolTip in widget.toolTipsList[adjustedGroupIndex]) {
+                      //     String additionalText =
+                      //         "\n${toolTip.time} - ${toolTip.val.toString()}";
+                      //     tooltipText += additionalText;
+                      //   }
+                      // }
+                      //
+                      // if (widget.toolTipsList2.isNotEmpty &&
+                      //     widget.toolTipsList2[adjustedGroupIndex].isNotEmpty) {
+                      //   tooltipText += "\n--------------\nDiastolic updating:";
+                      //   for (ToolTip toolTip in widget.toolTipsList2[adjustedGroupIndex]) {
+                      //     String additionalText =
+                      //         "\n${toolTip.time} - ${toolTip.val.toString()}";
+                      //     tooltipText += additionalText;
+                      //   }
+                      // }
 
-                      if (widget.toolTipsList2.isNotEmpty &&
-                          widget.toolTipsList2[adjustedGroupIndex].isNotEmpty) {
-                        tooltipText += "\n--------------\nDiastolic updating:";
-                        for (ToolTip toolTip in widget.toolTipsList2[adjustedGroupIndex]) {
-                          String additionalText =
-                              "\n${toolTip.time} - ${toolTip.val.toString()}";
-                          tooltipText += additionalText;
-                        }
-                      }
-
-                      return BarTooltipItem(tooltipText, TextStyle(color: Colors.white));
+                      return BarTooltipItem(tooltipText, const TextStyle(color: Colors.white));
                     },
                     fitInsideVertically: true,
                     fitInsideHorizontally: true,
                   ),
-                  touchExtraThreshold: EdgeInsets.all(4),
+                  touchExtraThreshold: const EdgeInsets.all(4),
                 ),
                 titlesData: FlTitlesData(
                   show: true,
-                  rightTitles: AxisTitles(
+                  leftTitles: const AxisTitles(
+                    sideTitles: SideTitles(showTitles: false),
+                  ),
+                  rightTitles: const AxisTitles(
                     sideTitles: SideTitles(showTitles: false),
                   ),
                   bottomTitles: AxisTitles(
@@ -208,21 +217,70 @@ class _GroupChartWidgetState extends State<GroupChartWidget> {
                       getTitlesWidget: bottomTitleWidget,
                     ),
                   ),
-                  topTitles: AxisTitles(
+                  topTitles: const AxisTitles(
                     sideTitles: SideTitles(showTitles: false),
                   ),
                 ),
                 borderData: FlBorderData(
                   show: false,
                 ),
-                gridData: FlGridData(
+                gridData: const FlGridData(
                   show: false,
                 ),
               ),
             ),
-          ),
-        ),
       ),
+    ),
+        const SizedBox(height: 10.0),
+
+        if (selectedBarIndex != null) ...[
+          const Text(
+              "Detailed Systolic Updates(Time - value):",
+            style: TextStyle(
+              color: Colors.blueAccent,
+              fontFamily: "KleeOne",
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          Text(
+            widget.toolTipsList[selectedBarIndex!]
+                .take(4)
+                .toList()
+                .map((toolTip) =>
+            "${TimeUtils.convertHHmmToClock(toolTip.time)} - ${toolTip.val}")
+                .join(', '),
+            style: const TextStyle(
+              color: Colors.teal,
+              fontFamily: "KleeOne",
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+
+          const SizedBox(height: 6.0),
+
+          const Text(
+              "Detailed Diastolic Updates(Time - value):",
+            style: TextStyle(
+              color: Colors.blueAccent,
+              fontFamily: "KleeOne",
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          Text(
+            widget.toolTipsList2[selectedBarIndex!]
+                .take(4)
+                .toList()
+                .map((toolTip) =>
+            "${TimeUtils.convertHHmmToClock(toolTip.time)} - ${toolTip.val}")
+                .join(', '),
+            style: const TextStyle(
+              color: Colors.teal,
+              fontFamily: "KleeOne",
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
+      ],
     );
 
   }
