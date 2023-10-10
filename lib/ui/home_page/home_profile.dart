@@ -23,7 +23,7 @@
 import 'package:flutter/material.dart';
 import 'package:securedialog/model/chart_point.dart';
 import 'package:securedialog/model/survey_day_info.dart';
-import 'package:securedialog/ui/home_page/home_charts/DataTableWidget.dart';
+import 'package:securedialog/ui/home_page/home_charts/data_table_widget.dart';
 import 'package:securedialog/utils/base_widget.dart';
 import 'package:securedialog/utils/chart_utils.dart';
 import 'package:securedialog/utils/time_utils.dart';

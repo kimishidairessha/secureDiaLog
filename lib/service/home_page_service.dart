@@ -1,4 +1,4 @@
-/// Provide the model-view layer of home page, including all services the very view layer needs
+/// A model-view layer of home page including all needed services.
 ///
 /// Copyright (C) 2023 The Authors
 ///
@@ -18,28 +18,31 @@
 // You should have received a copy of the GNU General Public License along with
 // this program.  If not, see <https://www.gnu.org/licenses/>.
 ///
-/// Authors: Bowen Yang, Ye Duan
+/// Authors: Bowen Yang, Ye Duan, Graham Williams
 
-import 'package:common_utils/common_utils.dart';
+import 'package:flutter/material.dart';
+
+import 'package:latlong2/latlong.dart';
+import 'package:solid_encrypt/solid_encrypt.dart';
+
 import 'package:securedialog/model/geo_info.dart';
+import 'package:securedialog/model/survey_day_info.dart';
 import 'package:securedialog/model/survey_info.dart';
 import 'package:securedialog/net/home_page_net.dart';
 import 'package:securedialog/utils/constants.dart';
+import 'package:securedialog/utils/encrpt_utils.dart';
 import 'package:securedialog/utils/geo_utils.dart';
 import 'package:securedialog/utils/solid_utils.dart';
 import 'package:securedialog/utils/survey_utils.dart';
 import 'package:securedialog/utils/time_utils.dart';
-import 'package:latlong2/latlong.dart';
-import 'package:solid_encrypt/solid_encrypt.dart';
 
-import '../model/survey_day_info.dart';
-import '../utils/encrpt_utils.dart';
+/// A model-view layer for the home page including all needed services.
 
-/// the model-view layer of home page, including all services the very view layer needs
 class HomePageService {
   final HomePageNet homePageNet = HomePageNet();
 
-  /// this method is to get a list of survey info from a POD
+  /// Obtain a list of survey info from a POD.
+
   Future<List<SurveyDayInfo>?> getSurveyDayInfoList(
       int dayNum, Map<dynamic, dynamic>? authData) async {
     List<SurveyInfo> surveyInfoList = [];
@@ -52,6 +55,7 @@ class HomePageService {
     String? surveyContainerURI = podInfo[Constants.surveyContainerURI];
     dynamic rsa = podInfo[Constants.rsa];
     dynamic pubKeyJwk = podInfo[Constants.pubKeyJwk];
+
     EncryptClient? encryptClient =
         await EncryptUtils.getClient(authData!, webId!);
     try {
@@ -60,34 +64,63 @@ class HomePageService {
           Constants.containerName)) {
         return null;
       }
+
       if (!SolidUtils.isContainerExist(
           await homePageNet.readFile(
               containerURI!, accessToken, rsa, pubKeyJwk),
           Constants.surveyContainerName)) {
         return null;
       }
+
       String surveyContainerContent = await homePageNet.readFile(
           surveyContainerURI!, accessToken, rsa, pubKeyJwk);
+
+      // 20231001 kimi the net layer works well.
+
       List<String> fileNameList = SolidUtils.getSurveyFileNameList(
           surveyContainerContent, webId, dayNum * 7);
+
+      // 20231001 gjw TODO WHY IS THIS DONE TWICE?? EVERYTHING TO DO WITH
+      // LOADING AND PARSING SEEMS TO BE DONE TWICE??
+
+      print("\n\nFILE LIST LENGTH = ${fileNameList.length}\n");
+
       for (int i = 0; i < fileNameList.length; i++) {
         String fileName = fileNameList[i];
         String fileURI = surveyContainerURI + fileName;
+        print("\n\nFILE $i URI = $fileURI\n");
         String fileContent =
             await homePageNet.readFile(fileURI, accessToken, rsa, pubKeyJwk);
+        print("\n\nFILE $i CONTENT = \n\n$fileContent\n");
         SurveyInfo surveyInfo =
             SolidUtils.parseSurveyFile(fileContent, encryptClient!);
+        print("\n\nFILE $i SURVEY INFO = "
+            "\n\tdiastolic = ${surveyInfo.diastolic}"
+            "\n\tsystolic = ${surveyInfo.systolic}"
+            "\n\theartRate = ${surveyInfo.heartRate}"
+            "\n\tobTime = ${surveyInfo.obTime}\n");
         surveyInfoList.add(surveyInfo);
       }
     } catch (e) {
-      LogUtil.e("Error on fetching survey data");
+      debugPrint("Error on fetching survey data: $e");
       return null;
     }
-    // surveyInfoList to surveyDayInfoList
+
+    // Transform from surveyInfoList to surveyDayInfoList.
+
     Map<String, List<SurveyInfo>> tempMap = {};
+
     for (SurveyInfo surveyInfo in surveyInfoList) {
       String obTime = surveyInfo.obTime;
-      String date = obTime.substring(0, 8);
+
+      // 20230930 gjw TODO WHY IS THIS N/A. AS A RESULT IT FAILS TO EXTRACT THE
+      // LENGTH 8 SUBSTRING. SO ONLY SUBSTRING THIS IF THE LENGTH IS AT LEAST
+      // 8. ONCE CONFIRMED WHY IT IS N/A THEN REMOVE THE PRINT AND POTENTIALY
+      // CATCH THE N/A AND RAISE AN ERROR, OR IF ACCEPTABLE THEN DON'T SUBSTRING
+      // IF N/A. ALSO DOCUMENT WHAT FORMAT IS EXPECTED.
+
+      String date = obTime.length < 8 ? obTime : obTime.substring(0, 8);
+
       if (!tempMap.containsKey(date)) {
         List<SurveyInfo> tempList = [];
         tempList.add(surveyInfo);
@@ -98,14 +131,18 @@ class HomePageService {
         tempMap[date] = tempList;
       }
     }
+
     tempMap.forEach((date, surveyInfoList) {
       SurveyDayInfo surveyDayInfo = SurveyDayInfo();
       surveyDayInfo.date = date;
       surveyDayInfo.surveyInfoList = surveyInfoList;
       surveyDayInfoList.add(surveyDayInfo);
     });
-    // sorting
+
+    // Sorting.
+
     surveyDayInfoList.sort((s1, s2) => s1.date.compareTo(s2.date));
+
     return surveyDayInfoList;
   }
 
@@ -183,7 +220,7 @@ class HomePageService {
       setLastSurveyTime(
           podInfo, TimeUtils.getFormattedTimeYYYYmmDDHHmmSS(dateTime));
     } catch (e) {
-      LogUtil.e("Error on saving survey information");
+      debugPrint("Error on saving survey information: $e");
       return false;
     }
     return true;
@@ -251,18 +288,29 @@ class HomePageService {
       }
       return lastObTime;
     } catch (e) {
-      LogUtil.e("Error on fetching lastObTime");
+      debugPrint("Error on fetching lastObTime: $e");
       return Constants.none;
     }
   }
 
-  /// the method is to save the geographical information into a POD
-  /// @param latLng - geographical information collected from the device
-  ///        authData - the authentication Data received after login
-  ///        dateTime - the timestamp collected along with geographical information collection
-  /// @return isSuccess - TRUE is success and FALSE is failure
+  /// Save geographical information into a POD where [latLng] is the location
+  /// collected from the device, [authData] is the authentication data received
+  /// after login, and [dateTime] is the timestamp. It returns a [bool]
+  /// indicating success.
+
   Future<bool> saveGeoInfo(
-      LatLng latLng, Map<dynamic, dynamic>? authData, DateTime dateTime) async {
+    LatLng latLng,
+    Map<dynamic, dynamic>? authData,
+    DateTime dateTime,
+  ) async {
+    // 20230925 gjw FOR NOW LET'S TURN OFF THE AUTOMATIC SAVING EVERY MINUTE OF
+    // THE LOCATION. TODO ADD A SETTINGS TO TURN THIS ON/OFF AND TEST THE VALUE
+    // OF THE SETTING HERE. SHOULD ROBABLY BE AN IN APP SETTING AND DEFAULT TO
+    // OFF.
+
+    return true;
+
+    // ignore: dead_code
     Map<String, dynamic> podInfo = SolidUtils.parseAuthData(authData);
     String? accessToken = podInfo[Constants.accessToken];
     String? webId = podInfo[Constants.webId];
@@ -273,6 +321,7 @@ class HomePageService {
     dynamic pubKeyJwk = podInfo[Constants.pubKeyJwk];
     EncryptClient? encryptClient =
         await EncryptUtils.getClient(authData!, webId!);
+
     Map<String, String> positionInfo =
         await GeoUtils.getFormattedPosition(latLng, dateTime, encryptClient!);
     try {
@@ -316,7 +365,7 @@ class HomePageService {
             curRecordFileURI, accessToken, rsa, pubKeyJwk, sparqlQuery);
       });
     } catch (e) {
-      LogUtil.e("Error on saving geographical information");
+      debugPrint("Error on saving geographical information: $e");
       return false;
     }
     return true;
@@ -380,7 +429,7 @@ class HomePageService {
             curRecordFileURI, accessToken, rsa, pubKeyJwk, sparqlQuery);
       });
     } catch (e) {
-      LogUtil.e("Error on saving geographical information");
+      debugPrint("Error on saving geographical information: $e");
       return false;
     }
     return true;
