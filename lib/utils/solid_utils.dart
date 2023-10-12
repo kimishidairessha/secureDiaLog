@@ -56,57 +56,10 @@ class SolidUtils {
     SurveyInfo surveyInfo = SurveyInfo();
     List<String> lines = content.split("\n");
 
-    // 20231001 kimi encryption and decryption do not match, it will throw
-    // error, when decrypting.
-    //20231005 kimi Modify the method without changing the type to avoid
-    // excessive modification.
-    // String testString = "Hello, world!";
-    // print("TESTING: test string: $testString");
-    // // String encrypted = EncryptUtils.encode(testString, encryptClient)!;
-    // List encryptRes = encryptClient.encryptVal(Global.encryptKey, testString);
-    //
-    // String encryptVal = encryptRes[0];
-    // String ivVal = encryptRes[1];
-    //
-    // print("TESTING: encrypted: $encryptVal");
-    // print("TESTING: ivVal: $ivVal");
-    //
-    // // check why the decryption cannot work
-    //
-    // print("TESTING: encryption key: ${Global.encryptKey}");
-    //
-    // String encryption = '${encryptRes[0]}:::${encryptRes[1]}';
-    // List<String> parts = encryption.split(':::');
-    // if (parts.length != 2) {
-    //   throw ArgumentError('Invalid encoded string format');
-    // }
-    // String encryptVal1 = parts[0];
-    // String ivVal1 = parts[1];
-    //
-    // String decrypted;
-    // try {
-    //   // ORIGINALLY IT WAS THIS:      decrypted = EncryptUtils.decode(encrypted, encryptClient)!;
-    //   decrypted =
-    //       encryptClient.decryptVal(Global.encryptKey, encryptVal1, ivVal1);
-    //   print("TESTING: decrypted: $decrypted");
-    //   print(decrypted == testString
-    //       ? "SUCCESSFULLY DESCRYPTED\n"
-    //       : "FAILED TO DECRYPT\n");
-    // } catch (e, stackTrace) {
-    //   print("Error during decryption: $e");
-    //   print("StackTrace: $stackTrace");
-    // }
-
     for (int i = 0; i < lines.length; i++) {
       String line = lines[i];
       String val = "";
       String key = "";
-
-      // 20230930 gjw TODO CAN WE PRINT THE DECODED LINE HERE???? THIS WILL HELP
-      // UNDERSTAND WHY NO obTime IS FOUND PERHAPS? WOULD ALSO PROBABLY BE A
-      // BETTER APPROACH THAN ALL OF THE ENCODE AND DECODE CALLS BELOW.
-
-      // 20231001 gjw TODO USE THE RDF PACKAGE TO HANDLE THE TTL.
 
       if (line.contains(" \"")) {
         key = line.split(" \"")[0];
@@ -118,17 +71,6 @@ class SolidUtils {
       key = key.split("http://xmlns.com/foaf/0.1/").last;
       key = key.substring(0, key.length - 1); // remove the last character
       key = EncryptUtils.decode(key, encryptClient)!;
-
-
-
-      // 20230930 gjw TODO WHY IS THE Q1KEY DIFFERENT FOR EACH LINE?
-
-      // 20230930 gjw TODO THERE IS WAY TO MUCH REPEATED CODE BELOW. NEEDS
-      // FIXING. DRY => DON'T REPEAT YOURSELF
-
-      // 20231004 gjw TODO REPLACE THE Q1, Q2, ETC WITH MORE SENSIBLE NAMES -
-      // THEY MEAN NOTHING.
-
 
       if (Constants.q1Key == key) {
         surveyInfo.setStrength(EncryptUtils.decode(
