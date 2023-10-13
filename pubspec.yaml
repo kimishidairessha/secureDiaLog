@@ -66,6 +66,10 @@ dependencies:
   url_launcher: ^6.1.11
   window_manager: ^0.3.5
   workmanager: ^0.5.2
+  csv: ^5.0.0
+  share: ^2.0.4
+  permission_handler: ^10.0.0
+  table_sticky_headers: ^2.0.5
 
 dev_dependencies:
 

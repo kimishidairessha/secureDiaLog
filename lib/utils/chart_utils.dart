@@ -27,6 +27,7 @@ import 'package:securedialog/utils/time_utils.dart';
 
 import '../model/chart_point.dart';
 import '../model/survey_day_info.dart';
+import '../model/table_point.dart';
 import 'base_widget.dart';
 import 'constants.dart';
 
@@ -280,4 +281,173 @@ class ChartUtils {
         int.parse(cp1.obTimeDay).compareTo(int.parse(cp2.obTimeDay)));
     return chartPointList;
   }
+
+  static List<TablePoint> parseToTable(List<SurveyDayInfo> surveyDayInfoList) {
+    // Sort surveyDayInfoList by date in descending order
+    surveyDayInfoList.sort((a, b) => b.date.compareTo(a.date));
+    List<TablePoint> tablePointList = [];
+
+    // Adjust the loop to iterate from the start date to the current date
+    for (SurveyDayInfo surveyDayInfo in surveyDayInfoList) {
+      String requiredDate = surveyDayInfo.date;
+      List<SurveyInfo> curSurveyInfoList = surveyDayInfo.surveyInfoList;
+      double strengthMax = Constants.optionNull;
+      String strengthMaxTime = Constants.none;
+      double fastingMax = Constants.fastingMinY;
+      String fastingMaxTime = Constants.none;
+      double postprandialMax = Constants.postprandialMinY;
+      String postprandialMaxTime = Constants.none;
+      double diastolicMax = Constants.diastolicMinY;
+      String diastolicMaxTime = Constants.none;
+      double weightMax = Constants.weightMinY;
+      String weightMaxTime = Constants.none;
+      double systolicMax = Constants.systolicMinY;
+      String systolicMaxTime = Constants.none;
+      double heartRateMax = Constants.heartRateMinY;
+      String heartRateMaxTime = Constants.none;
+      List<ToolTip> toolTipStrength = [];
+      List<ToolTip> toolTipFasting = [];
+      List<ToolTip> toolTipPostprandial = [];
+      List<ToolTip> toolTipDiastolic = [];
+      List<ToolTip> toolTipWeight = [];
+      List<ToolTip> toolTipSystolic = [];
+      List<ToolTip> toolTipHeartRate = [];
+      for (SurveyInfo surveyInfo in curSurveyInfoList) {
+        if (surveyInfo.strength >= strengthMax) {
+          strengthMax = surveyInfo.strength;
+          strengthMaxTime = surveyInfo.obTime;
+        }
+        if (surveyInfo.fasting >= fastingMax) {
+          fastingMax = surveyInfo.fasting;
+          fastingMaxTime = surveyInfo.obTime;
+        }
+        if (surveyInfo.postprandial >= postprandialMax) {
+          postprandialMax = surveyInfo.postprandial;
+          postprandialMaxTime = surveyInfo.obTime;
+        }
+        if (surveyInfo.diastolic >= diastolicMax) {
+          diastolicMax = surveyInfo.diastolic;
+          diastolicMaxTime = surveyInfo.obTime;
+        }
+        if (surveyInfo.weight >= weightMax) {
+          weightMax = surveyInfo.weight;
+          weightMaxTime = surveyInfo.obTime;
+        }
+        if (surveyInfo.systolic >= systolicMax) {
+          systolicMax = surveyInfo.systolic;
+          systolicMaxTime = surveyInfo.obTime;
+        }
+        if (surveyInfo.heartRate >= heartRateMax) {
+          heartRateMax = surveyInfo.heartRate;
+          heartRateMaxTime = surveyInfo.obTime;
+        }
+      }
+      for (SurveyInfo surveyInfo in curSurveyInfoList) {
+        if (surveyInfo.obTime != strengthMaxTime) {
+          ToolTip toolTip = ToolTip();
+          if (surveyInfo.strength <= Constants.optionNull) {
+            toolTip.val = Constants.toolTipNoneVal;
+          } else {
+            toolTip.val = surveyInfo.strength;
+          }
+          toolTip.time = surveyInfo.obTime.substring(8, 12);
+          toolTipStrength.add(toolTip);
+        }
+        if (surveyInfo.obTime != fastingMaxTime) {
+          ToolTip toolTip = ToolTip();
+          if (surveyInfo.fasting <= Constants.fastingMinY) {
+            toolTip.val = Constants.toolTipNoneVal;
+          } else {
+            toolTip.val = surveyInfo.fasting;
+          }
+          toolTip.time = surveyInfo.obTime.substring(8, 12);
+          toolTipFasting.add(toolTip);
+        }
+        if (surveyInfo.obTime != postprandialMaxTime) {
+          ToolTip toolTip = ToolTip();
+          if (surveyInfo.postprandial <= Constants.postprandialMinY) {
+            toolTip.val = Constants.toolTipNoneVal;
+          } else {
+            toolTip.val = surveyInfo.postprandial;
+          }
+          toolTip.time = surveyInfo.obTime.substring(8, 12);
+          toolTipPostprandial.add(toolTip);
+        }
+        if (surveyInfo.obTime != diastolicMaxTime) {
+          ToolTip toolTip = ToolTip();
+          if (surveyInfo.diastolic <= Constants.diastolicMinY) {
+            toolTip.val = Constants.toolTipNoneVal;
+          } else {
+            toolTip.val = surveyInfo.diastolic;
+          }
+          toolTip.time = surveyInfo.obTime.substring(8, 12);
+          toolTipDiastolic.add(toolTip);
+        }
+        if (surveyInfo.obTime != weightMaxTime) {
+          ToolTip toolTip = ToolTip();
+          if (surveyInfo.weight <= Constants.weightMinY) {
+            toolTip.val = Constants.toolTipNoneVal;
+          } else {
+            toolTip.val = surveyInfo.weight;
+          }
+          toolTip.time = surveyInfo.obTime.substring(8, 12);
+          toolTipWeight.add(toolTip);
+        }
+        if (surveyInfo.obTime != systolicMaxTime) {
+          ToolTip toolTip = ToolTip();
+          if (surveyInfo.systolic <= Constants.systolicMinY) {
+            toolTip.val = Constants.toolTipNoneVal;
+          } else {
+            toolTip.val = surveyInfo.systolic;
+          }
+          toolTip.time = surveyInfo.obTime.substring(8, 12);
+          toolTipSystolic.add(toolTip);
+        }
+        if (surveyInfo.obTime != heartRateMaxTime) {
+          ToolTip toolTip = ToolTip();
+          if (surveyInfo.heartRate <= Constants.heartRateMinY) {
+            toolTip.val = Constants.toolTipNoneVal;
+          } else {
+            toolTip.val = surveyInfo.heartRate;
+          }
+          toolTip.time = surveyInfo.obTime.substring(8, 12);
+          toolTipHeartRate.add(toolTip);
+        }
+      }
+      TablePoint tablePoint = TablePoint();
+      tablePoint.obTimeDay = requiredDate;
+      tablePoint.strengthMax = strengthMax;
+      tablePoint.strengthMaxTime =
+          TimeUtils.convertHHmmToClock(strengthMaxTime.substring(8, 12));
+      tablePoint.fastingMax = fastingMax;
+      tablePoint.fastingMaxTime =
+          TimeUtils.convertHHmmToClock(fastingMaxTime.substring(8, 12));
+      tablePoint.postprandialMax = postprandialMax;
+      tablePoint.postprandialMaxTime =
+          TimeUtils.convertHHmmToClock(postprandialMaxTime.substring(8, 12));
+      tablePoint.diastolicMax = diastolicMax;
+      tablePoint.diastolicMaxTime =
+          TimeUtils.convertHHmmToClock(diastolicMaxTime.substring(8, 12));
+      tablePoint.weightMax = weightMax;
+      tablePoint.weightMaxTime =
+          TimeUtils.convertHHmmToClock(weightMaxTime.substring(8, 12));
+      tablePoint.systolicMax = systolicMax;
+      tablePoint.systolicMaxTime =
+          TimeUtils.convertHHmmToClock(systolicMaxTime.substring(8, 12));
+      tablePoint.heartRateMax = heartRateMax;
+      tablePoint.heartRateMaxTime =
+          TimeUtils.convertHHmmToClock(heartRateMaxTime.substring(8, 12));
+      tablePoint.otherStrength = toolTipStrength;
+      tablePoint.otherFasting = toolTipFasting;
+      tablePoint.otherPostprandial = toolTipPostprandial;
+      tablePoint.otherDiastolic = toolTipDiastolic;
+      tablePoint.otherWeight = toolTipWeight;
+      tablePoint.otherSystolic = toolTipSystolic;
+      tablePoint.otherHeartRate = toolTipHeartRate;
+      tablePointList.add(tablePoint);
+    }
+
+    return tablePointList;
+  }
+
 }
