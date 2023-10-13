@@ -81,13 +81,13 @@ class _HomeDataState extends State<HomeData> {
     rows.add([
       "Data",
       "Time",
+      "Systolic",
+      "Diastolic",
+      "Heart Rate",
+      "Weight",
       "Strength Level",
       "Fasting Blood Glucose",
       "Postprandial Blood Glucose",
-      "Systolic",
-      "Diastolic",
-      "Weight",
-      "Heart Rate"
     ]);
 
     // Data
@@ -97,13 +97,13 @@ class _HomeDataState extends State<HomeData> {
         List<dynamic> row = [
           timeList1[rowIndex],
           strengthTimeList1[rowIndex],
+          systolicList1[rowIndex],
+          diastolicList1[rowIndex],
+          heartRateList1[rowIndex],
+          weightList1[rowIndex],
           mapValueToText(strengthList1[rowIndex]),
           fastingList1[rowIndex],
           postprandialList1[rowIndex],
-          systolicList1[rowIndex],
-          diastolicList1[rowIndex],
-          weightList1[rowIndex],
-          heartRateList1[rowIndex]
         ];
 
         rows.add(row);
@@ -113,13 +113,13 @@ class _HomeDataState extends State<HomeData> {
           List<dynamic> row1 = [
             timeList1[rowIndex],
             TimeUtils.convertHHmmToClock(strengthToolTipsList1[rowIndex][i].time),
+            setNull(systolicToolTipsList1[rowIndex][i].val),
+            setNull(diastolicToolTipsList1[rowIndex][i].val),
+            setNull(heartRateToolTipsList1[rowIndex][i].val),
+            setNull(weightToolTipsList1[rowIndex][i].val),
             mapValueToText(strengthToolTipsList1[rowIndex][i].val),
             setNull(fastingToolTipsList1[rowIndex][i].val),
             setNull(postprandialToolTipsList1[rowIndex][i].val),
-            setNull(systolicToolTipsList1[rowIndex][i].val),
-            setNull(diastolicToolTipsList1[rowIndex][i].val),
-            setNull(weightToolTipsList1[rowIndex][i].val),
-            setNull(heartRateToolTipsList1[rowIndex][i].val),
           ];
           rows.add(row1);
         }
@@ -145,7 +145,6 @@ class _HomeDataState extends State<HomeData> {
     return Container(
       color: Constants.backgroundColor,
       child: SafeArea(
-        child: SingleChildScrollView(
           child: FutureBuilder<List<SurveyDayInfo>?>(
             future: homePageService.getSurveyDayInfoList(
                 Constants.barNumber, widget.authData),
@@ -328,7 +327,6 @@ class _HomeDataState extends State<HomeData> {
                         ),
                         child: Text("Export to CSV"),
                       ),
-                      BaseWidget.getPadding(30.0),
                     ],
                   );
                 }
@@ -342,7 +340,6 @@ class _HomeDataState extends State<HomeData> {
               }
             },
           ),
-        ),
       ),
     );
   }

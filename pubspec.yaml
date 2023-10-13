@@ -69,6 +69,7 @@ dependencies:
   csv: ^5.0.0
   share: ^2.0.4
   permission_handler: ^10.0.0
+  table_sticky_headers: ^2.0.5
 
 dev_dependencies:
 

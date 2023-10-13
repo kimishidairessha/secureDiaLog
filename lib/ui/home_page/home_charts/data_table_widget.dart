@@ -1,3 +1,25 @@
+/// The widget for displaying a table chart
+///
+/// Copyright (C) 2023 The Authors
+///
+/// License: GNU General Public License, Version 3 (the "License")
+/// https://www.gnu.org/licenses/gpl-3.0.en.html
+//
+// This program is free software: you can redistribute it and/or modify it under
+// the terms of the GNU General Public License as published by the Free Software
+// Foundation, either version 3 of the License, or (at your option) any later
+// version.
+//
+// This program is distributed in the hope that it will be useful, but WITHOUT
+// ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+// FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+// details.
+//
+// You should have received a copy of the GNU General Public License along with
+// this program.  If not, see <https://www.gnu.org/licenses/>.
+///
+/// Authors: Ye Duan
+
 import 'package:flutter/material.dart';
 import 'package:securedialog/model/tooltip.dart';
 import 'package:securedialog/utils/time_utils.dart';
@@ -61,48 +83,99 @@ class _DataTableWidget extends State<DataTableWidget> {
 
   @override
   Widget build(BuildContext context) {
-    int maxRows = widget.timeList.length + widget.strengthToolTipsList.length;
-    int maxTooltipStrength = widget.strengthToolTipsList
-        .fold<int>(0, (max, list) => list.length > max ? list.length : max);
-    int maxTooltipFasting = widget.fastingToolTipsList
-        .fold<int>(0, (max, list) => list.length > max ? list.length : max);
-    int maxTooltipPostprandial = widget.postprandialToolTipsList
-        .fold<int>(0, (max, list) => list.length > max ? list.length : max);
-    int maxTooltipSystolic = widget.systolicToolTipsList
-        .fold<int>(0, (max, list) => list.length > max ? list.length : max);
-    int maxTooltipDiastolic = widget.diastolicToolTipsList
-        .fold<int>(0, (max, list) => list.length > max ? list.length : max);
-    int maxTooltipWeight = widget.weightToolTipsList
-        .fold<int>(0, (max, list) => list.length > max ? list.length : max);
-    int maxTooltipHeartRate = widget.heartRateToolTipsList
-        .fold<int>(0, (max, list) => list.length > max ? list.length : max);
-
     return Scrollbar(
       controller: controller2,
       // isAlwaysShown: true,
       child: SingleChildScrollView(
         controller: controller2,
         scrollDirection: Axis.horizontal,
-        child: SingleChildScrollView(
-          controller: controller,
-          child: DataTable(
-            columns: [
-              const DataColumn(label: Text('Data')),
-              const DataColumn(label: Text('Time')),
-              const DataColumn(label: Text('Strength Level')),
-              const DataColumn(label: Text('Fasting Blood Glucose')),
-              const DataColumn(label: Text('Postprandial Blood Glucose')),
-              const DataColumn(label: Text('Systolic')),
-              const DataColumn(label: Text('Diastolic')),
-              const DataColumn(label: Text('Weight')),
-              const DataColumn(label: Text('Heart Rate')),
-            ],
-            rows: createRows(),
-          ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Header row
+            Container(
+              color: Colors.white,
+              child: const DefaultTextStyle(
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+                child: Row(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 42.0, vertical: 15.0),
+                      child: Text('Data'),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 15.0),
+                      child: Text('Time'),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 26.0, vertical: 15.0),
+                      child: Text('Systolic'),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 26.0, vertical: 15.0),
+                      child: Text('Diastolic'),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 26.0, vertical: 15.0),
+                      child: Text('Heart Rate'),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 26.0, vertical: 15.0),
+                      child: Text('Weight'),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 26.0, vertical: 15.0),
+                      child: Text('Strength Level'),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 26.0, vertical: 15.0),
+                      child: Text('Fasting Blood Glucose'),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 26.0, right: 18.0, top: 15.0, bottom:15.0),
+                      child: Text('Postprandial Blood Glucose'),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            // Scrollable rows
+            ConstrainedBox(
+              constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.48), // adjust as needed
+              child: Scrollbar(
+                child: SingleChildScrollView(
+                  controller: controller,
+                  child: Container(
+                    color: Colors.white,
+                    child: DataTable(
+                      headingRowHeight: 0,
+                      columns: [
+                        const DataColumn(label: Text('Data')),
+                        const DataColumn(label: Text('Time')),
+                        const DataColumn(label: Text('Systolic')),
+                        const DataColumn(label: Text('Diastolic')),
+                        const DataColumn(label: Text('Heart Rate')),
+                        const DataColumn(label: Text('Weight')),
+                        const DataColumn(label: Text('Strength Level')),
+                        const DataColumn(label: Text('Fasting Blood Glucose')),
+                        const DataColumn(label: Text('Postprandial Blood Glucose')),
+                      ],
+                      rows: createRows(),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
+
 
   List<DataRow> createRows() {
     List<DataRow> allRows = [];
@@ -112,13 +185,13 @@ class _DataTableWidget extends State<DataTableWidget> {
         allRows.add(DataRow(cells: [
           DataCell(Text(widget.timeList[rowIndex])),
           DataCell(Text(widget.strengthTimeList[rowIndex])),
+          DataCell(Text('${widget.systolicList[rowIndex]}')),
+          DataCell(Text('${widget.diastolicList[rowIndex]}')),
+          DataCell(Text('${widget.heartRateList[rowIndex]}')),
+          DataCell(Text('${widget.weightList[rowIndex]}')),
           DataCell(Text(mapValueToText(widget.strengthList[rowIndex]))),
           DataCell(Text('${widget.fastingList[rowIndex]}')),
           DataCell(Text('${widget.postprandialList[rowIndex]}')),
-          DataCell(Text('${widget.systolicList[rowIndex]}')),
-          DataCell(Text('${widget.diastolicList[rowIndex]}')),
-          DataCell(Text('${widget.weightList[rowIndex]}')),
-          DataCell(Text('${widget.heartRateList[rowIndex]}')),
         ]));
 
         // Tooltip rows for strength
@@ -126,13 +199,13 @@ class _DataTableWidget extends State<DataTableWidget> {
           allRows.add(DataRow(cells: [
             DataCell(Text(widget.timeList[rowIndex])), // Date empty for tooltip rows
             DataCell(Text(TimeUtils.convertHHmmToClock(widget.strengthToolTipsList[rowIndex][i].time))), // Tooltip time
+            DataCell(Text(setNull(widget.systolicToolTipsList[rowIndex][i].val))),
+            DataCell(Text(setNull(widget.diastolicToolTipsList[rowIndex][i].val))),
+            DataCell(Text(setNull(widget.heartRateToolTipsList[rowIndex][i].val))),
+            DataCell(Text(setNull(widget.weightToolTipsList[rowIndex][i].val))),
             DataCell(Text(mapValueToText(widget.strengthToolTipsList[rowIndex][i].val))), // Tooltip value
             DataCell(Text(setNull(widget.fastingToolTipsList[rowIndex][i].val))),
             DataCell(Text(setNull(widget.postprandialToolTipsList[rowIndex][i].val))),
-            DataCell(Text(setNull(widget.systolicToolTipsList[rowIndex][i].val))),
-            DataCell(Text(setNull(widget.diastolicToolTipsList[rowIndex][i].val))),
-            DataCell(Text(setNull(widget.weightToolTipsList[rowIndex][i].val))),
-            DataCell(Text(setNull(widget.heartRateToolTipsList[rowIndex][i].val))),
           ]));
         }
       }
