@@ -104,39 +104,48 @@ class _DataTableWidget extends State<DataTableWidget> {
                 child: Row(
                   children: [
                     Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 42.0, vertical: 15.0),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 42.0, vertical: 15.0),
                       child: Text('Data'),
                     ),
                     Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 15.0),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 30.0, vertical: 15.0),
                       child: Text('Time'),
                     ),
                     Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 26.0, vertical: 15.0),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 26.0, vertical: 15.0),
                       child: Text('Systolic'),
                     ),
                     Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 26.0, vertical: 15.0),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 26.0, vertical: 15.0),
                       child: Text('Diastolic'),
                     ),
                     Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 26.0, vertical: 15.0),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 26.0, vertical: 15.0),
                       child: Text('Heart Rate'),
                     ),
                     Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 26.0, vertical: 15.0),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 26.0, vertical: 15.0),
                       child: Text('Weight'),
                     ),
                     Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 26.0, vertical: 15.0),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 26.0, vertical: 15.0),
                       child: Text('Strength Level'),
                     ),
                     Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 26.0, vertical: 15.0),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 26.0, vertical: 15.0),
                       child: Text('Fasting Blood Glucose'),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(left: 26.0, right: 18.0, top: 15.0, bottom:15.0),
+                      padding: EdgeInsets.only(
+                          left: 26.0, right: 18.0, top: 15.0, bottom: 15.0),
                       child: Text('Postprandial Blood Glucose'),
                     ),
                   ],
@@ -145,7 +154,9 @@ class _DataTableWidget extends State<DataTableWidget> {
             ),
             // Scrollable rows
             ConstrainedBox(
-              constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.48), // adjust as needed
+              constraints: BoxConstraints(
+                  maxHeight: MediaQuery.of(context).size.height *
+                      0.48), // adjust as needed
               child: Scrollbar(
                 child: SingleChildScrollView(
                   controller: controller,
@@ -162,7 +173,8 @@ class _DataTableWidget extends State<DataTableWidget> {
                         const DataColumn(label: Text('Weight')),
                         const DataColumn(label: Text('Strength Level')),
                         const DataColumn(label: Text('Fasting Blood Glucose')),
-                        const DataColumn(label: Text('Postprandial Blood Glucose')),
+                        const DataColumn(
+                            label: Text('Postprandial Blood Glucose')),
                       ],
                       rows: createRows(),
                     ),
@@ -175,7 +187,6 @@ class _DataTableWidget extends State<DataTableWidget> {
       ),
     );
   }
-
 
   List<DataRow> createRows() {
     List<DataRow> allRows = [];
@@ -197,15 +208,23 @@ class _DataTableWidget extends State<DataTableWidget> {
         // Tooltip rows for strength
         for (int i = 0; i < widget.strengthToolTipsList[rowIndex].length; i++) {
           allRows.add(DataRow(cells: [
-            DataCell(Text(widget.timeList[rowIndex])), // Date empty for tooltip rows
-            DataCell(Text(TimeUtils.convertHHmmToClock(widget.strengthToolTipsList[rowIndex][i].time))), // Tooltip time
-            DataCell(Text(setNull(widget.systolicToolTipsList[rowIndex][i].val))),
-            DataCell(Text(setNull(widget.diastolicToolTipsList[rowIndex][i].val))),
-            DataCell(Text(setNull(widget.heartRateToolTipsList[rowIndex][i].val))),
+            DataCell(
+                Text(widget.timeList[rowIndex])), // Date empty for tooltip rows
+            DataCell(Text(TimeUtils.convertHHmmToClock(widget
+                .strengthToolTipsList[rowIndex][i].time))), // Tooltip time
+            DataCell(
+                Text(setNull(widget.systolicToolTipsList[rowIndex][i].val))),
+            DataCell(
+                Text(setNull(widget.diastolicToolTipsList[rowIndex][i].val))),
+            DataCell(
+                Text(setNull(widget.heartRateToolTipsList[rowIndex][i].val))),
             DataCell(Text(setNull(widget.weightToolTipsList[rowIndex][i].val))),
-            DataCell(Text(mapValueToText(widget.strengthToolTipsList[rowIndex][i].val))), // Tooltip value
-            DataCell(Text(setNull(widget.fastingToolTipsList[rowIndex][i].val))),
-            DataCell(Text(setNull(widget.postprandialToolTipsList[rowIndex][i].val))),
+            DataCell(Text(mapValueToText(widget
+                .strengthToolTipsList[rowIndex][i].val))), // Tooltip value
+            DataCell(
+                Text(setNull(widget.fastingToolTipsList[rowIndex][i].val))),
+            DataCell(Text(
+                setNull(widget.postprandialToolTipsList[rowIndex][i].val))),
           ]));
         }
       }

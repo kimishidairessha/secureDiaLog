@@ -449,5 +449,4 @@ class ChartUtils {
 
     return tablePointList;
   }
-
 }
