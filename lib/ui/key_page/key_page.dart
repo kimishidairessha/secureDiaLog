@@ -29,7 +29,7 @@ import 'package:securedialog/service/home_page_service.dart';
 import 'package:securedialog/service/key_page_service.dart';
 
 import '../../utils/base_widget.dart';
-import '../../utils/constants.dart';
+import 'package:securedialog/constants/app.dart';
 import '../../utils/global.dart';
 import '../home_page/home_page.dart';
 import '../login_page/login_page.dart';

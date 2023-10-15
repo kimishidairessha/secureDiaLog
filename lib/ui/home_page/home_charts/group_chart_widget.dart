@@ -18,16 +18,16 @@
 // You should have received a copy of the GNU General Public License along with
 // this program.  If not, see <https://www.gnu.org/licenses/>.
 ///
-/// Authors: Ye Duan
+/// Authors: Ye Duan, Graham Williams
 
 import 'package:flutter/material.dart';
-import 'package:securedialog/extensions/color_extensions.dart';
 
-import '../../../model/tooltip.dart';
-import '../../../utils/constants.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
-import '../../../utils/time_utils.dart';
+import 'package:securedialog/constants/app.dart';
+import 'package:securedialog/extensions/color_extensions.dart';
+import 'package:securedialog/model/tooltip.dart';
+import 'package:securedialog/utils/time_utils.dart';
 
 class GroupChartWidget extends StatefulWidget {
   final List<double> yList;

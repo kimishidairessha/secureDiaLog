@@ -20,7 +20,7 @@
 ///
 /// Authors: Bowen Yang, Ye Duan
 
-import 'package:securedialog/utils/constants.dart';
+import 'package:securedialog/constants/app.dart';
 
 /// the model of survey info
 class SurveyInfo {

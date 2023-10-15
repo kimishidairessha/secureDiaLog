@@ -28,7 +28,7 @@ import 'package:flutter/services.dart';
 import 'package:securedialog/service/home_page_service.dart';
 import 'package:securedialog/ui/home_page/home_page.dart';
 import 'package:securedialog/utils/base_widget.dart';
-import 'package:securedialog/utils/constants.dart';
+import 'package:securedialog/constants/app.dart';
 import 'package:securedialog/utils/survey_utils.dart';
 
 /// the view layer of survey widget in home page
@@ -54,8 +54,7 @@ class _HomeSurveyState extends State<HomeSurvey> {
   TextEditingController q3AnswerTextController = TextEditingController();
   TextEditingController q4AnswerTextController = TextEditingController();
   TextEditingController q5AnswerTextController = TextEditingController();
-  TextEditingController q6AnswerTextController =
-      TextEditingController(text: "60");
+  TextEditingController q6AnswerTextController = TextEditingController();
   TextEditingController q7AnswerTextController = TextEditingController();
   String? q1Answer;
   String? q2Answer;

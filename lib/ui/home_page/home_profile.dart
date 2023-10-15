@@ -37,7 +37,7 @@ import 'package:securedialog/service/home_page_service.dart';
 import 'package:securedialog/ui/login_page/login_page.dart';
 import 'package:securedialog/utils/base_widget.dart';
 import 'package:securedialog/utils/chart_utils.dart';
-import 'package:securedialog/utils/constants.dart';
+import 'package:securedialog/constants/app.dart';
 import 'package:securedialog/utils/time_utils.dart';
 
 // 20230930 gjw TODO CAN THESE BE REPLACED WITH THE PACKAGE:SECUREDIALOG USAGE?

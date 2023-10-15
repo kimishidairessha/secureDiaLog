@@ -35,7 +35,7 @@ import 'package:workmanager/workmanager.dart';
 import 'package:securedialog/model/geo_info.dart';
 import 'package:securedialog/service/home_page_service.dart';
 import 'package:securedialog/utils/base_widget.dart';
-import 'package:securedialog/utils/constants.dart';
+import 'package:securedialog/constants/app.dart';
 import 'package:securedialog/utils/device_file_utils.dart';
 import 'package:securedialog/utils/geo_utils.dart';
 import 'package:securedialog/utils/global.dart';

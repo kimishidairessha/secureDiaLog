@@ -20,7 +20,7 @@
 ///
 /// Authors: Bowen Yang
 
-import '../utils/constants.dart';
+import 'package:securedialog/constants/app.dart';
 import '../utils/encrpt_utils.dart';
 import '../utils/solid_utils.dart';
 

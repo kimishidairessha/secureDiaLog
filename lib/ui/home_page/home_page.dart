@@ -34,7 +34,7 @@ import 'package:securedialog/ui/home_page/home_profile.dart';
 import 'package:securedialog/ui/home_page/home_settings.dart';
 import 'package:securedialog/ui/home_page/home_survey.dart';
 import 'package:securedialog/utils/base_widget.dart';
-import 'package:securedialog/utils/constants.dart';
+import 'package:securedialog/constants/app.dart';
 import 'package:securedialog/utils/global.dart';
 import 'package:securedialog/utils/notify_utils.dart';
 import 'package:securedialog/utils/time_utils.dart';

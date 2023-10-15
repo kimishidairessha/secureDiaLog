@@ -29,7 +29,7 @@ import 'package:securedialog/utils/time_utils.dart';
 import 'package:platform_device_id/platform_device_id.dart';
 import 'package:solid_encrypt/solid_encrypt.dart';
 
-import 'constants.dart';
+import 'package:securedialog/constants/app.dart';
 
 /// this class is a util class related to survey affairs
 class SurveyUtils {

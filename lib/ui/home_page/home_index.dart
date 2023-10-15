@@ -22,7 +22,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:securedialog/service/home_page_service.dart';
-import 'package:securedialog/utils/constants.dart';
+import 'package:securedialog/constants/app.dart';
 import 'dart:ui' as ui;
 
 class HomeIndex extends StatefulWidget {

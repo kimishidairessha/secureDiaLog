@@ -29,7 +29,7 @@ import '../model/chart_point.dart';
 import '../model/survey_day_info.dart';
 import '../model/table_point.dart';
 import 'base_widget.dart';
-import 'constants.dart';
+import 'package:securedialog/constants/app.dart';
 
 class ChartUtils {
   static LineTooltipItem getLineTooltipItem(List<List<ToolTip>> toolTipsList,

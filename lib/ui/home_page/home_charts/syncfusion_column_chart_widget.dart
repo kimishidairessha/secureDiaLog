@@ -21,10 +21,12 @@
 /// Authors: Ye Duan
 
 import 'package:flutter/material.dart';
+
 import 'package:syncfusion_flutter_charts/charts.dart';
-import '../../../model/tooltip.dart';
-import '../../../utils/constants.dart';
-import '../../../utils/time_utils.dart';
+
+import 'package:securedialog/constants/app.dart';
+import 'package:securedialog/model/tooltip.dart';
+import 'package:securedialog/utils/time_utils.dart';
 
 class SyncfusionColumnChartWidget extends StatefulWidget {
   final List<double> yList;
