@@ -1,4 +1,4 @@
-/// The widget for displaying a grouped chart
+/// The widget for displaying a columned chart
 ///
 /// Copyright (C) 2023 The Authors
 ///
@@ -24,28 +24,27 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import '../../../model/tooltip.dart';
 import '../../../utils/constants.dart';
-
 import '../../../utils/time_utils.dart';
 
-class GroupChartWidget extends StatefulWidget {
+class ColumnChartWidget extends StatefulWidget {
   final List<double> yList;
-  final List<double> yList2;
   final List<String> timeList;
   final List<String> xList;
-  final double minY;
+  final double maxY;
   final List<List<ToolTip>> toolTipsList;
-  final List<List<ToolTip>> toolTipsList2;
 
-  const GroupChartWidget(this.yList, this.yList2, this.timeList, this.xList,
-      this.minY, this.toolTipsList, this.toolTipsList2,
+  const ColumnChartWidget(
+      this.yList, this.timeList, this.xList, this.maxY, this.toolTipsList,
       {Key? key})
       : super(key: key);
 
   @override
-  State<GroupChartWidget> createState() => _GroupChartWidgetState();
+  State<ColumnChartWidget> createState() =>
+      _ColumnChartWidgetState();
 }
 
-class _GroupChartWidgetState extends State<GroupChartWidget> {
+class _ColumnChartWidgetState
+    extends State<ColumnChartWidget> {
   late List<BarChartGroupData> rawBarGroups;
   late ScrollController scrollController;
   late List<BarChartGroupData> visibleBarGroups;
@@ -86,7 +85,6 @@ class _GroupChartWidgetState extends State<GroupChartWidget> {
           x: i,
           barRods: [
             BarChartRodData(
-              fromY: widget.yList2[i],
               toY: widget.yList[i],
               color: Colors.blue,
             ),
@@ -139,18 +137,18 @@ class _GroupChartWidgetState extends State<GroupChartWidget> {
 
     return Column(
       children: [
-      SingleChildScrollView(
-      controller: scrollController,
-      scrollDirection: Axis.horizontal, // makes it horizontally scrollable
-      child: Container(
-        height: 200,
-        width: 38 * rawBarGroups.length.toDouble(),
-        // constraints: BoxConstraints(
-        //   minWidth:  // dynamic minWidth
-        // ),
+        SingleChildScrollView(
+          controller: scrollController,
+          scrollDirection: Axis.horizontal, // makes it horizontally scrollable
+          child: Container(
+            height: 200,
+            width: 38 * rawBarGroups.length.toDouble(),
+            // constraints: BoxConstraints(
+            //   minWidth:  // dynamic minWidth
+            // ),
             child: BarChart(
               BarChartData(
-                maxY: 220,
+                maxY: 10,
                 barGroups: visibleBarGroups,
                 barTouchData: BarTouchData(
                   touchCallback: (FlTouchEvent event, BarTouchResponse? touchResponse) {
@@ -168,11 +166,10 @@ class _GroupChartWidgetState extends State<GroupChartWidget> {
                       int adjustedGroupIndex = groupIndex + firstVisibleDataIndex;
                       print(adjustedGroupIndex);
                       String time = widget.timeList[adjustedGroupIndex];
-                      String systolic = widget.yList[adjustedGroupIndex].toString();
-                      String diastolic = widget.yList2[adjustedGroupIndex].toString();
+                      String strength = mapIntToValueString(widget.yList[adjustedGroupIndex]);
 
                       String tooltipText =
-                          "$time\nSystolic: $systolic\nDiastolic: $diastolic";
+                          "$time\nStrength level: $strength";
 
                       return BarTooltipItem(tooltipText, const TextStyle(color: Colors.white));
                     },
@@ -208,13 +205,13 @@ class _GroupChartWidgetState extends State<GroupChartWidget> {
                 ),
               ),
             ),
-      ),
-    ),
+          ),
+        ),
         const SizedBox(height: 10.0),
 
         if (selectedBarIndex != null) ...[
           const Text(
-              "Detailed Systolic Updates(Time - value):",
+            "Detailed Strength level Updates(Time - value):",
             style: TextStyle(
               color: Colors.blueAccent,
               fontFamily: "KleeOne",
@@ -226,31 +223,7 @@ class _GroupChartWidgetState extends State<GroupChartWidget> {
                 .take(4)
                 .toList()
                 .map((toolTip) =>
-            "${TimeUtils.convertHHmmToClock(toolTip.time)} - ${toolTip.val}")
-                .join(', '),
-            style: const TextStyle(
-              color: Colors.teal,
-              fontFamily: "KleeOne",
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-
-          const SizedBox(height: 6.0),
-
-          const Text(
-              "Detailed Diastolic Updates(Time - value):",
-            style: TextStyle(
-              color: Colors.blueAccent,
-              fontFamily: "KleeOne",
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          Text(
-            widget.toolTipsList2[selectedBarIndex!]
-                .take(4)
-                .toList()
-                .map((toolTip) =>
-            "${TimeUtils.convertHHmmToClock(toolTip.time)} - ${toolTip.val}")
+            "${TimeUtils.convertHHmmToClock(toolTip.time)} - ${mapIntToValueString(toolTip.val)}")
                 .join(', '),
             style: const TextStyle(
               color: Colors.teal,
@@ -269,19 +242,34 @@ class _GroupChartWidgetState extends State<GroupChartWidget> {
 
     for (int i = 0; i < Constants.lineNumber; i++) {
       final y1 = widget.yList[i];
-      final y2 = widget.yList2[i];
       final x = widget.xList[i];
 
-      chartData.add(_ChartData(x, y1, y2));
+      chartData.add(_ChartData(x, y1));
     }
     return chartData;
+  }
+
+  String mapIntToValueString(double value) {
+    switch (value.toInt()) {
+      case 0:
+        return 'Null';
+      case 2:
+        return 'No';
+      case 4:
+        return 'Mild';
+      case 6:
+        return 'Moderate';
+      case 8:
+        return 'Severe';
+      default:
+        return 'Unknown'; // handle any other values not in your set
+    }
   }
 }
 
 class _ChartData {
-  _ChartData(this.x, this.y1, this.y2);
+  _ChartData(this.x, this.y1);
 
   final String x;
   final double y1;
-  final double y2;
 }
