@@ -575,7 +575,7 @@ class _HomeSurveyState extends State<HomeSurvey> {
                       context,
                       MaterialPageRoute(
                           builder: (context) =>
-                              HomePage(widget.authData, Constants.mapPage)),
+                              HomePage(widget.authData, Constants.podPage)),
                     );
                   } else {
                     await showDialog<bool>(
