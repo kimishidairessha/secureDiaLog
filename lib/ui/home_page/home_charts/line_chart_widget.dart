@@ -109,7 +109,6 @@ class _LineChartWidgetState extends State<LineChartWidget> {
   int firstVisibleDataIndex = 8;
 
   void updateVisibleData() {
-    print("updateVisibleData called");
     int calculatedIndex = (scrollController.offset / 15).floor();
     int maxFirstIndex = rawBarGroups.length - visibleLength;
 
@@ -172,7 +171,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
                       String strength = widget.yList[adjustedGroupIndex].toString();
 
                       String tooltipText =
-                          "$time\nStrength level: $strength";
+                          "$time\nValue: $strength";
 
                       return BarTooltipItem(tooltipText, const TextStyle(color: Colors.white));
                     },
@@ -214,7 +213,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
 
         if (selectedBarIndex != null) ...[
           const Text(
-            "Detailed Strength level Updates(Time - value):",
+            "Detailed value Updates(Time - value):",
             style: TextStyle(
               color: Colors.blueAccent,
               fontFamily: "KleeOne",
