@@ -131,7 +131,8 @@ class _HomeOSMState extends State<HomeOSM> with WidgetsBindingObserver {
 
             // 20230930 gjw TODO LET'S TURN OFF THE MAP UPDATES FOR NOW. GEO
             // CAPABILITY IS NOT BEING USED FOR THE SECUREDIALOG APP AT THIS
-            // TIME.
+            // TIME. BUT WE SHOULD ADD A SETTING TO TURN THIS OFF RATHER THAN
+            // COMMENT OUT THE CODE.
 
             // if (false) {
             //   timer = Timer.periodic(
