@@ -133,37 +133,37 @@ class _HomeOSMState extends State<HomeOSM> with WidgetsBindingObserver {
             // CAPABILITY IS NOT BEING USED FOR THE SECUREDIALOG APP AT THIS
             // TIME.
 
-            if (false) {
-              timer = Timer.periodic(
-                  const Duration(seconds: Constants.interval), (timer) async {
-                debugPrint("refresh the map and write position info into pod");
-                if (autoGeo) {
-                  if (Platform.isLinux ||
-                      Platform.isWindows ||
-                      Platform.isMacOS) {
-                    Location? location = await UserLocation.getValue();
-                    setState(() {
-                      curLatLng =
-                          LatLng(location!.latitude!, location.longitude!);
-                      Global.globalLatLng = curLatLng;
-                    });
-                    homePageService.saveGeoInfo(
-                        curLatLng!, widget.authData, DateTime.now());
-                  } else {
-                    Position position = await GeoUtils.getCurrentLocation();
-                    setState(() {
-                      curLatLng = LatLng(position.latitude, position.longitude);
-                      Global.globalLatLng = curLatLng;
-                    });
-                    homePageService.saveGeoInfo(
-                        curLatLng!, widget.authData, DateTime.now());
-                  }
-                } else {
-                  homePageService.saveGeoInfo(
-                      curLatLng!, widget.authData, DateTime.now());
-                }
-              });
-            }
+            // if (false) {
+            //   timer = Timer.periodic(
+            //       const Duration(seconds: Constants.interval), (timer) async {
+            //     debugPrint("refresh the map and write position info into pod");
+            //     if (autoGeo) {
+            //       if (Platform.isLinux ||
+            //           Platform.isWindows ||
+            //           Platform.isMacOS) {
+            //         Location? location = await UserLocation.getValue();
+            //         setState(() {
+            //           curLatLng =
+            //               LatLng(location!.latitude!, location.longitude!);
+            //           Global.globalLatLng = curLatLng;
+            //         });
+            //         homePageService.saveGeoInfo(
+            //             curLatLng!, widget.authData, DateTime.now());
+            //       } else {
+            //         Position position = await GeoUtils.getCurrentLocation();
+            //         setState(() {
+            //           curLatLng = LatLng(position.latitude, position.longitude);
+            //           Global.globalLatLng = curLatLng;
+            //         });
+            //         homePageService.saveGeoInfo(
+            //             curLatLng!, widget.authData, DateTime.now());
+            //       }
+            //     } else {
+            //       homePageService.saveGeoInfo(
+            //           curLatLng!, widget.authData, DateTime.now());
+            //     }
+            //   });
+            // }
           },
           onTap: (tapPosition, latLng) {
             autoGeo = false;

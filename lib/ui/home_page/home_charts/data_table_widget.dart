@@ -74,6 +74,7 @@ class DataTableWidget extends StatefulWidget {
       {Key? key})
       : super(key: key);
 
+  @override
   State<DataTableWidget> createState() => _DataTableWidget();
 }
 
@@ -164,16 +165,16 @@ class _DataTableWidget extends State<DataTableWidget> {
                     color: Colors.white,
                     child: DataTable(
                       headingRowHeight: 0,
-                      columns: [
-                        const DataColumn(label: Text('Data')),
-                        const DataColumn(label: Text('Time')),
-                        const DataColumn(label: Text('Systolic')),
-                        const DataColumn(label: Text('Diastolic')),
-                        const DataColumn(label: Text('Heart Rate')),
-                        const DataColumn(label: Text('Weight')),
-                        const DataColumn(label: Text('Strength Level')),
-                        const DataColumn(label: Text('Fasting Blood Glucose')),
-                        const DataColumn(
+                      columns: const [
+                        DataColumn(label: Text('Data')),
+                        DataColumn(label: Text('Time')),
+                        DataColumn(label: Text('Systolic')),
+                        DataColumn(label: Text('Diastolic')),
+                        DataColumn(label: Text('Heart Rate')),
+                        DataColumn(label: Text('Weight')),
+                        DataColumn(label: Text('Strength Level')),
+                        DataColumn(label: Text('Fasting Blood Glucose')),
+                        DataColumn(
                             label: Text('Postprandial Blood Glucose')),
                       ],
                       rows: createRows(),

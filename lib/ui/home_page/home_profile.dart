@@ -28,6 +28,8 @@
 // REVIEW AND CLEANUP THE LAYOUT AND COMMENTS AND CHCEK THE DOCS GENERATION
 // PRODUCES USEFUL DOCUMENTATION.
 
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 
 import 'package:securedialog/model/chart_point.dart';

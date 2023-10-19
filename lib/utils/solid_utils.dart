@@ -20,14 +20,11 @@
 ///
 /// Authors: Bowen Yang, Ye Duan, Graham Williams
 
-import 'package:flutter/material.dart' show debugPrint;
-
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:securedialog/model/survey_info.dart';
 import 'package:securedialog/constants/app.dart';
 import 'package:securedialog/utils/encrpt_utils.dart';
 import 'package:rdflib/rdflib.dart';
-import 'package:securedialog/utils/global.dart';
 import 'package:solid_encrypt/solid_encrypt.dart';
 
 /// A class supporting solid server activities.

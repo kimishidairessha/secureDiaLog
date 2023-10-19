@@ -22,7 +22,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:securedialog/model/chart_point.dart';
 import 'package:securedialog/model/survey_day_info.dart';
 import 'package:securedialog/ui/home_page/home_charts/data_table_widget.dart';
 import 'package:securedialog/utils/base_widget.dart';
@@ -36,7 +35,6 @@ import '../../service/home_page_service.dart';
 import 'package:securedialog/constants/app.dart';
 import 'package:csv/csv.dart';
 import 'dart:io';
-import 'package:flutter/services.dart';
 
 /// the view layer of profile widget in home page
 class HomeData extends StatefulWidget {
@@ -325,7 +323,7 @@ class _HomeDataState extends State<HomeData> {
                         backgroundColor:
                             MaterialStateProperty.all(Colors.teal[400]),
                       ),
-                      child: Text("Export to CSV"),
+                      child: const Text("Export to CSV"),
                     ),
                   ],
                 );
