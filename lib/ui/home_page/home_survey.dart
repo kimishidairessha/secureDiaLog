@@ -98,7 +98,7 @@ class _HomeSurveyState extends State<HomeSurvey> {
       context: context,
       initialDate: DateTime.now(),
       firstDate: DateTime(2000),
-      lastDate: DateTime.now().add(Duration(days: 365)),
+      lastDate: DateTime.now().add(const Duration(days: 365)),
     );
 
     if (pickedDate != null) {
@@ -121,7 +121,6 @@ class _HomeSurveyState extends State<HomeSurvey> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -133,11 +132,11 @@ class _HomeSurveyState extends State<HomeSurvey> {
               BaseWidget.getPadding(8.0),
               Card(
                 color: Colors.lime[50],
-                margin: EdgeInsets.all(15.0),
+                margin: const EdgeInsets.all(15.0),
                 elevation: 4,
                 shape: RoundedRectangleBorder(
-                  borderRadius:
-                  BorderRadius.circular(15), // Rounded corners with radius of 15
+                  borderRadius: BorderRadius.circular(
+                      15), // Rounded corners with radius of 15
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(15.0),
@@ -151,11 +150,14 @@ class _HomeSurveyState extends State<HomeSurvey> {
                       ElevatedButton(
                         onPressed: () => _selectDate(context),
                         style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(Colors.teal[400]),
+                          backgroundColor:
+                              MaterialStateProperty.all(Colors.teal[400]),
                           // Other styles here
                         ),
                         child: Text(
-                          selectedDate == null ? "Pick a date and time" : "${selectedDate?.toLocal()}",
+                          selectedDate == null
+                              ? "Pick a date and time"
+                              : "${selectedDate?.toLocal()}",
                         ),
                       ),
                     ],
