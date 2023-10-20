@@ -298,12 +298,8 @@ class _HomeProfileState extends State<HomeProfile> {
                       SizedBox(
                         height: 300,
                         width: MediaQuery.of(context).size.width,
-                        child: LineChartWidget(
-                            weightList,
-                            weightTimeList,
-                            timeList,
-                            Constants.weightMinY,
-                            weightToolTipsList),
+                        child: LineChartWidget(weightList, weightTimeList,
+                            timeList, Constants.weightMinY, weightToolTipsList),
                       ),
                       BaseWidget.getPadding(15),
                       BaseWidget.getQuestionText("Lacking in Strength Check"),

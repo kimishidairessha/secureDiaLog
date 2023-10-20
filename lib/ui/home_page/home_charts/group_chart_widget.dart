@@ -75,7 +75,6 @@ class _GroupChartWidgetState extends State<GroupChartWidget> {
     );
   }
 
-
   @override
   void initState() {
     super.initState();
@@ -96,12 +95,15 @@ class _GroupChartWidgetState extends State<GroupChartWidget> {
       );
     }
     // Create the scroll controller and add a listener to it
-    scrollController = ScrollController(initialScrollOffset: (rawBarGroups.length - visibleLength) * 15.0,)
-      ..addListener(() {
+    scrollController = ScrollController(
+      initialScrollOffset: (rawBarGroups.length - visibleLength) * 15.0,
+    )..addListener(() {
         updateVisibleData();
       });
 
-    int initialIndex = (rawBarGroups.length > visibleLength) ? rawBarGroups.length - visibleLength : 0;
+    int initialIndex = (rawBarGroups.length > visibleLength)
+        ? rawBarGroups.length - visibleLength
+        : 0;
     visibleBarGroups = rawBarGroups.sublist(initialIndex, rawBarGroups.length);
   }
 
@@ -116,15 +118,15 @@ class _GroupChartWidgetState extends State<GroupChartWidget> {
     firstVisibleDataIndex = calculatedIndex.clamp(0, maxFirstIndex);
     int lastVisibleDataIndex = firstVisibleDataIndex + visibleLength;
 
-    if (firstVisibleDataIndex >= 0 && lastVisibleDataIndex <= rawBarGroups.length) {
+    if (firstVisibleDataIndex >= 0 &&
+        lastVisibleDataIndex <= rawBarGroups.length) {
       setState(() {
-        visibleBarGroups = rawBarGroups.sublist(
-            firstVisibleDataIndex, lastVisibleDataIndex);
+        visibleBarGroups =
+            rawBarGroups.sublist(firstVisibleDataIndex, lastVisibleDataIndex);
       });
     }
     print("First: $firstVisibleDataIndex, Last: $lastVisibleDataIndex");
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -139,24 +141,27 @@ class _GroupChartWidgetState extends State<GroupChartWidget> {
 
     return Column(
       children: [
-      SingleChildScrollView(
-      controller: scrollController,
-      scrollDirection: Axis.horizontal, // makes it horizontally scrollable
-      child: Container(
-        height: 200,
-        width: 38 * rawBarGroups.length.toDouble(),
-        // constraints: BoxConstraints(
-        //   minWidth:  // dynamic minWidth
-        // ),
+        SingleChildScrollView(
+          controller: scrollController,
+          scrollDirection: Axis.horizontal, // makes it horizontally scrollable
+          child: Container(
+            height: 200,
+            width: 38 * rawBarGroups.length.toDouble(),
+            // constraints: BoxConstraints(
+            //   minWidth:  // dynamic minWidth
+            // ),
             child: BarChart(
               BarChartData(
                 maxY: 220,
                 barGroups: visibleBarGroups,
                 barTouchData: BarTouchData(
-                  touchCallback: (FlTouchEvent event, BarTouchResponse? touchResponse) {
+                  touchCallback:
+                      (FlTouchEvent event, BarTouchResponse? touchResponse) {
                     if (touchResponse != null && touchResponse.spot != null) {
                       setState(() {
-                        selectedBarIndex = touchResponse.spot!.touchedBarGroupIndex + firstVisibleDataIndex;
+                        selectedBarIndex =
+                            touchResponse.spot!.touchedBarGroupIndex +
+                                firstVisibleDataIndex;
                         print("Selected bar index: $selectedBarIndex");
                       });
                     }
@@ -165,16 +170,20 @@ class _GroupChartWidgetState extends State<GroupChartWidget> {
                     tooltipBgColor: Colors.green[600],
                     getTooltipItem: (group, groupIndex, rod, rodIndex) {
                       print("Group index: $groupIndex, Rod index: $rodIndex");
-                      int adjustedGroupIndex = groupIndex + firstVisibleDataIndex;
+                      int adjustedGroupIndex =
+                          groupIndex + firstVisibleDataIndex;
                       print(adjustedGroupIndex);
                       String time = widget.timeList[adjustedGroupIndex];
-                      String systolic = widget.yList[adjustedGroupIndex].toString();
-                      String diastolic = widget.yList2[adjustedGroupIndex].toString();
+                      String systolic =
+                          widget.yList[adjustedGroupIndex].toString();
+                      String diastolic =
+                          widget.yList2[adjustedGroupIndex].toString();
 
                       String tooltipText =
                           "$time\nSystolic: $systolic\nDiastolic: $diastolic";
 
-                      return BarTooltipItem(tooltipText, const TextStyle(color: Colors.white));
+                      return BarTooltipItem(
+                          tooltipText, const TextStyle(color: Colors.white));
                     },
                     fitInsideVertically: true,
                     fitInsideHorizontally: true,
@@ -208,13 +217,12 @@ class _GroupChartWidgetState extends State<GroupChartWidget> {
                 ),
               ),
             ),
-      ),
-    ),
+          ),
+        ),
         const SizedBox(height: 10.0),
-
         if (selectedBarIndex != null) ...[
           const Text(
-              "Detailed Systolic Updates(Time - value):",
+            "Detailed Systolic Updates(Time - value):",
             style: TextStyle(
               color: Colors.blueAccent,
               fontFamily: "KleeOne",
@@ -226,7 +234,7 @@ class _GroupChartWidgetState extends State<GroupChartWidget> {
                 .take(4)
                 .toList()
                 .map((toolTip) =>
-            "${TimeUtils.convertHHmmToClock(toolTip.time)} - ${toolTip.val}")
+                    "${TimeUtils.convertHHmmToClock(toolTip.time)} - ${toolTip.val}")
                 .join(', '),
             style: const TextStyle(
               color: Colors.teal,
@@ -234,11 +242,9 @@ class _GroupChartWidgetState extends State<GroupChartWidget> {
               fontWeight: FontWeight.bold,
             ),
           ),
-
           const SizedBox(height: 6.0),
-
           const Text(
-              "Detailed Diastolic Updates(Time - value):",
+            "Detailed Diastolic Updates(Time - value):",
             style: TextStyle(
               color: Colors.blueAccent,
               fontFamily: "KleeOne",
@@ -250,7 +256,7 @@ class _GroupChartWidgetState extends State<GroupChartWidget> {
                 .take(4)
                 .toList()
                 .map((toolTip) =>
-            "${TimeUtils.convertHHmmToClock(toolTip.time)} - ${toolTip.val}")
+                    "${TimeUtils.convertHHmmToClock(toolTip.time)} - ${toolTip.val}")
                 .join(', '),
             style: const TextStyle(
               color: Colors.teal,
@@ -261,7 +267,6 @@ class _GroupChartWidgetState extends State<GroupChartWidget> {
         ],
       ],
     );
-
   }
 
   List<_ChartData> _getChartData() {

@@ -119,8 +119,6 @@ class SolidUtils {
       key = key.substring(0, key.length - 1); // remove the last character
       key = EncryptUtils.decode(key, encryptClient)!;
 
-
-
       // 20230930 gjw TODO WHY IS THE Q1KEY DIFFERENT FOR EACH LINE?
 
       // 20230930 gjw TODO THERE IS WAY TO MUCH REPEATED CODE BELOW. NEEDS
@@ -128,7 +126,6 @@ class SolidUtils {
 
       // 20231004 gjw TODO REPLACE THE Q1, Q2, ETC WITH MORE SENSIBLE NAMES -
       // THEY MEAN NOTHING.
-
 
       if (Constants.q1Key == key) {
         surveyInfo.setStrength(EncryptUtils.decode(

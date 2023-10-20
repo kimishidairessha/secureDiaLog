@@ -39,12 +39,10 @@ class ColumnChartWidget extends StatefulWidget {
       : super(key: key);
 
   @override
-  State<ColumnChartWidget> createState() =>
-      _ColumnChartWidgetState();
+  State<ColumnChartWidget> createState() => _ColumnChartWidgetState();
 }
 
-class _ColumnChartWidgetState
-    extends State<ColumnChartWidget> {
+class _ColumnChartWidgetState extends State<ColumnChartWidget> {
   late List<BarChartGroupData> rawBarGroups;
   late ScrollController scrollController;
   late List<BarChartGroupData> visibleBarGroups;
@@ -74,7 +72,6 @@ class _ColumnChartWidgetState
     );
   }
 
-
   @override
   void initState() {
     super.initState();
@@ -94,12 +91,15 @@ class _ColumnChartWidgetState
       );
     }
     // Create the scroll controller and add a listener to it
-    scrollController = ScrollController(initialScrollOffset: (rawBarGroups.length - visibleLength) * 15.0,)
-      ..addListener(() {
+    scrollController = ScrollController(
+      initialScrollOffset: (rawBarGroups.length - visibleLength) * 15.0,
+    )..addListener(() {
         updateVisibleData();
       });
 
-    int initialIndex = (rawBarGroups.length > visibleLength) ? rawBarGroups.length - visibleLength : 0;
+    int initialIndex = (rawBarGroups.length > visibleLength)
+        ? rawBarGroups.length - visibleLength
+        : 0;
     visibleBarGroups = rawBarGroups.sublist(initialIndex, rawBarGroups.length);
   }
 
@@ -114,15 +114,15 @@ class _ColumnChartWidgetState
     firstVisibleDataIndex = calculatedIndex.clamp(0, maxFirstIndex);
     int lastVisibleDataIndex = firstVisibleDataIndex + visibleLength;
 
-    if (firstVisibleDataIndex >= 0 && lastVisibleDataIndex <= rawBarGroups.length) {
+    if (firstVisibleDataIndex >= 0 &&
+        lastVisibleDataIndex <= rawBarGroups.length) {
       setState(() {
-        visibleBarGroups = rawBarGroups.sublist(
-            firstVisibleDataIndex, lastVisibleDataIndex);
+        visibleBarGroups =
+            rawBarGroups.sublist(firstVisibleDataIndex, lastVisibleDataIndex);
       });
     }
     print("First: $firstVisibleDataIndex, Last: $lastVisibleDataIndex");
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -151,10 +151,13 @@ class _ColumnChartWidgetState
                 maxY: 10,
                 barGroups: visibleBarGroups,
                 barTouchData: BarTouchData(
-                  touchCallback: (FlTouchEvent event, BarTouchResponse? touchResponse) {
+                  touchCallback:
+                      (FlTouchEvent event, BarTouchResponse? touchResponse) {
                     if (touchResponse != null && touchResponse.spot != null) {
                       setState(() {
-                        selectedBarIndex = touchResponse.spot!.touchedBarGroupIndex + firstVisibleDataIndex;
+                        selectedBarIndex =
+                            touchResponse.spot!.touchedBarGroupIndex +
+                                firstVisibleDataIndex;
                         print("Selected bar index: $selectedBarIndex");
                       });
                     }
@@ -163,15 +166,17 @@ class _ColumnChartWidgetState
                     tooltipBgColor: Colors.green[600],
                     getTooltipItem: (group, groupIndex, rod, rodIndex) {
                       print("Group index: $groupIndex, Rod index: $rodIndex");
-                      int adjustedGroupIndex = groupIndex + firstVisibleDataIndex;
+                      int adjustedGroupIndex =
+                          groupIndex + firstVisibleDataIndex;
                       print(adjustedGroupIndex);
                       String time = widget.timeList[adjustedGroupIndex];
-                      String strength = mapIntToValueString(widget.yList[adjustedGroupIndex]);
+                      String strength =
+                          mapIntToValueString(widget.yList[adjustedGroupIndex]);
 
-                      String tooltipText =
-                          "$time\nStrength level: $strength";
+                      String tooltipText = "$time\nStrength level: $strength";
 
-                      return BarTooltipItem(tooltipText, const TextStyle(color: Colors.white));
+                      return BarTooltipItem(
+                          tooltipText, const TextStyle(color: Colors.white));
                     },
                     fitInsideVertically: true,
                     fitInsideHorizontally: true,
@@ -208,7 +213,6 @@ class _ColumnChartWidgetState
           ),
         ),
         const SizedBox(height: 10.0),
-
         if (selectedBarIndex != null) ...[
           const Text(
             "Detailed Strength level Updates(Time - value):",
@@ -223,7 +227,7 @@ class _ColumnChartWidgetState
                 .take(4)
                 .toList()
                 .map((toolTip) =>
-            "${TimeUtils.convertHHmmToClock(toolTip.time)} - ${mapIntToValueString(toolTip.val)}")
+                    "${TimeUtils.convertHHmmToClock(toolTip.time)} - ${mapIntToValueString(toolTip.val)}")
                 .join(', '),
             style: const TextStyle(
               color: Colors.teal,
@@ -234,7 +238,6 @@ class _ColumnChartWidgetState
         ],
       ],
     );
-
   }
 
   List<_ChartData> _getChartData() {
