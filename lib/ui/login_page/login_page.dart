@@ -24,7 +24,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:securedialog/ui/key_page/key_page.dart';
 import 'package:securedialog/utils/base_widget.dart';
-import 'package:securedialog/utils/constants.dart';
+import 'package:securedialog/constants/app.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../service/login_page_service.dart';

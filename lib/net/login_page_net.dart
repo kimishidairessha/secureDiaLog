@@ -21,7 +21,7 @@
 /// Authors: Bowen Yang, Ye Duan
 
 import 'package:flutter/cupertino.dart';
-import 'package:securedialog/utils/constants.dart';
+import 'package:securedialog/constants/app.dart';
 import 'package:solid_auth/solid_auth.dart';
 
 /// model layer of login page, including net IO operations authenticate and get authentication information

@@ -28,6 +28,8 @@
 // REVIEW AND CLEANUP THE LAYOUT AND COMMENTS AND CHCEK THE DOCS GENERATION
 // PRODUCES USEFUL DOCUMENTATION.
 
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 
 import 'package:securedialog/model/chart_point.dart';
@@ -37,7 +39,7 @@ import 'package:securedialog/service/home_page_service.dart';
 import 'package:securedialog/ui/login_page/login_page.dart';
 import 'package:securedialog/utils/base_widget.dart';
 import 'package:securedialog/utils/chart_utils.dart';
-import 'package:securedialog/utils/constants.dart';
+import 'package:securedialog/constants/app.dart';
 import 'package:securedialog/utils/time_utils.dart';
 
 // 20230930 gjw TODO CAN THESE BE REPLACED WITH THE PACKAGE:SECUREDIALOG USAGE?

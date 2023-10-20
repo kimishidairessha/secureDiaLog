@@ -18,12 +18,14 @@
 // You should have received a copy of the GNU General Public License along with
 // this program.  If not, see <https://www.gnu.org/licenses/>.
 ///
-/// Authors: Bowen Yang, Ye Duan
+/// Authors: Bowen Yang, Ye Duan, Graham Williams
 
 import 'package:flutter/material.dart';
+
 import 'package:latlong2/latlong.dart';
 
-/// this class contains some constants used in this project
+/// Constants used in the project.
+
 class Constants {
   // Page Indices
   static const int indexPage = 0;

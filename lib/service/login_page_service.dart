@@ -25,7 +25,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:securedialog/net/login_page_net.dart';
-import 'package:securedialog/utils/constants.dart';
+import 'package:securedialog/constants/app.dart';
 
 /// A model-view layer of the login page, including all services the very view
 /// layer needs.

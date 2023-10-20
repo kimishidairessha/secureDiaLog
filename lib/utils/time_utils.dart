@@ -20,7 +20,7 @@
 ///
 /// Authors: Bowen Yang
 
-import 'package:securedialog/utils/constants.dart';
+import 'package:securedialog/constants/app.dart';
 
 /// this class is a util class to process time formatting
 class TimeUtils {

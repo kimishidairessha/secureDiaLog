@@ -18,22 +18,23 @@
 // You should have received a copy of the GNU General Public License along with
 // this program.  If not, see <https://www.gnu.org/licenses/>.
 ///
-/// Authors: Bowen Yang
+/// Authors: Bowen Yang, Graham Williams
 
 import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:latlong2/latlong.dart';
+import 'package:platform_device_id/platform_device_id.dart';
 import 'package:securedialog/model/geo_info.dart';
 import 'package:securedialog/utils/encrpt_utils.dart';
 import 'package:securedialog/utils/time_utils.dart';
-import 'package:latlong2/latlong.dart';
-import 'package:platform_device_id/platform_device_id.dart';
 import 'package:solid_encrypt/solid_encrypt.dart';
 
-import 'constants.dart';
+import 'package:securedialog/constants/app.dart';
 
 /// this class is a util class related to geographical affairs
+
 class GeoUtils {
   /// this method get the current location from the device, but not working for linux
   /// @return position - the current position from the OS of the device

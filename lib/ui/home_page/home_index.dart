@@ -22,7 +22,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:securedialog/service/home_page_service.dart';
-import 'package:securedialog/utils/constants.dart';
+import 'package:securedialog/constants/app.dart';
 import 'dart:ui' as ui;
 
 class HomeIndex extends StatefulWidget {
@@ -84,7 +84,7 @@ class _HomeIndexState extends State<HomeIndex> {
                   Constants.subTitle6,
                   Constants.indexPageInstructionText6,
                   Icons.table_view_rounded,
-                  Constants.podPage), // TO BECOME DATA PAGE
+                  Constants.dataPage), // TO BECOME DATA PAGE
               _buildInstructionCard(
                   Constants.subTitle2,
                   Constants.indexPageInstructionText2,

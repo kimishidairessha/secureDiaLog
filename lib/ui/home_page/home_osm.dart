@@ -35,7 +35,7 @@ import 'package:workmanager/workmanager.dart';
 import 'package:securedialog/model/geo_info.dart';
 import 'package:securedialog/service/home_page_service.dart';
 import 'package:securedialog/utils/base_widget.dart';
-import 'package:securedialog/utils/constants.dart';
+import 'package:securedialog/constants/app.dart';
 import 'package:securedialog/utils/device_file_utils.dart';
 import 'package:securedialog/utils/geo_utils.dart';
 import 'package:securedialog/utils/global.dart';
@@ -131,39 +131,40 @@ class _HomeOSMState extends State<HomeOSM> with WidgetsBindingObserver {
 
             // 20230930 gjw TODO LET'S TURN OFF THE MAP UPDATES FOR NOW. GEO
             // CAPABILITY IS NOT BEING USED FOR THE SECUREDIALOG APP AT THIS
-            // TIME.
+            // TIME. BUT WE SHOULD ADD A SETTING TO TURN THIS OFF RATHER THAN
+            // COMMENT OUT THE CODE.
 
-            if (false) {
-              timer = Timer.periodic(
-                  const Duration(seconds: Constants.interval), (timer) async {
-                debugPrint("refresh the map and write position info into pod");
-                if (autoGeo) {
-                  if (Platform.isLinux ||
-                      Platform.isWindows ||
-                      Platform.isMacOS) {
-                    Location? location = await UserLocation.getValue();
-                    setState(() {
-                      curLatLng =
-                          LatLng(location!.latitude!, location.longitude!);
-                      Global.globalLatLng = curLatLng;
-                    });
-                    homePageService.saveGeoInfo(
-                        curLatLng!, widget.authData, DateTime.now());
-                  } else {
-                    Position position = await GeoUtils.getCurrentLocation();
-                    setState(() {
-                      curLatLng = LatLng(position.latitude, position.longitude);
-                      Global.globalLatLng = curLatLng;
-                    });
-                    homePageService.saveGeoInfo(
-                        curLatLng!, widget.authData, DateTime.now());
-                  }
-                } else {
-                  homePageService.saveGeoInfo(
-                      curLatLng!, widget.authData, DateTime.now());
-                }
-              });
-            }
+            // if (false) {
+            //   timer = Timer.periodic(
+            //       const Duration(seconds: Constants.interval), (timer) async {
+            //     debugPrint("refresh the map and write position info into pod");
+            //     if (autoGeo) {
+            //       if (Platform.isLinux ||
+            //           Platform.isWindows ||
+            //           Platform.isMacOS) {
+            //         Location? location = await UserLocation.getValue();
+            //         setState(() {
+            //           curLatLng =
+            //               LatLng(location!.latitude!, location.longitude!);
+            //           Global.globalLatLng = curLatLng;
+            //         });
+            //         homePageService.saveGeoInfo(
+            //             curLatLng!, widget.authData, DateTime.now());
+            //       } else {
+            //         Position position = await GeoUtils.getCurrentLocation();
+            //         setState(() {
+            //           curLatLng = LatLng(position.latitude, position.longitude);
+            //           Global.globalLatLng = curLatLng;
+            //         });
+            //         homePageService.saveGeoInfo(
+            //             curLatLng!, widget.authData, DateTime.now());
+            //       }
+            //     } else {
+            //       homePageService.saveGeoInfo(
+            //           curLatLng!, widget.authData, DateTime.now());
+            //     }
+            //   });
+            // }
           },
           onTap: (tapPosition, latLng) {
             autoGeo = false;

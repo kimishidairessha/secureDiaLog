@@ -24,7 +24,7 @@ import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:securedialog/utils/time_utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'constants.dart';
+import 'package:securedialog/constants/app.dart';
 
 /// this class is a util class related to notification affairs
 class NotifyUtils {
