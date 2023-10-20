@@ -22,8 +22,8 @@
 
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:securedialog/constants/app.dart';
 import '../../../model/tooltip.dart';
-import '../../../utils/constants.dart';
 import '../../../utils/time_utils.dart';
 
 class ColumnChartWidget extends StatefulWidget {
@@ -140,7 +140,7 @@ class _ColumnChartWidgetState
         SingleChildScrollView(
           controller: scrollController,
           scrollDirection: Axis.horizontal, // makes it horizontally scrollable
-          child: Container(
+          child: SizedBox(
             height: 200,
             width: 38 * rawBarGroups.length.toDouble(),
             // constraints: BoxConstraints(
