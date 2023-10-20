@@ -40,8 +40,7 @@ class LineChartWidget extends StatefulWidget {
       : super(key: key);
 
   @override
-  State<LineChartWidget> createState() =>
-      _LineChartWidgetState();
+  State<LineChartWidget> createState() => _LineChartWidgetState();
 }
 
 class _LineChartWidgetState extends State<LineChartWidget> {
@@ -74,7 +73,6 @@ class _LineChartWidgetState extends State<LineChartWidget> {
     );
   }
 
-
   @override
   void initState() {
     super.initState();
@@ -98,12 +96,15 @@ class _LineChartWidgetState extends State<LineChartWidget> {
       print(widget.yList[i]);
     }
     // Create the scroll controller and add a listener to it
-    scrollController = ScrollController(initialScrollOffset: (rawBarGroups.length - visibleLength) * 15.0,)
-      ..addListener(() {
+    scrollController = ScrollController(
+      initialScrollOffset: (rawBarGroups.length - visibleLength) * 15.0,
+    )..addListener(() {
         updateVisibleData();
       });
 
-    int initialIndex = (rawBarGroups.length > visibleLength) ? rawBarGroups.length - visibleLength : 0;
+    int initialIndex = (rawBarGroups.length > visibleLength)
+        ? rawBarGroups.length - visibleLength
+        : 0;
     visibleBarGroups = rawBarGroups.sublist(initialIndex, rawBarGroups.length);
   }
 
@@ -117,15 +118,15 @@ class _LineChartWidgetState extends State<LineChartWidget> {
     firstVisibleDataIndex = calculatedIndex.clamp(0, maxFirstIndex);
     int lastVisibleDataIndex = firstVisibleDataIndex + visibleLength;
 
-    if (firstVisibleDataIndex >= 0 && lastVisibleDataIndex <= rawBarGroups.length) {
+    if (firstVisibleDataIndex >= 0 &&
+        lastVisibleDataIndex <= rawBarGroups.length) {
       setState(() {
-        visibleBarGroups = rawBarGroups.sublist(
-            firstVisibleDataIndex, lastVisibleDataIndex);
+        visibleBarGroups =
+            rawBarGroups.sublist(firstVisibleDataIndex, lastVisibleDataIndex);
       });
     }
     print("First: $firstVisibleDataIndex, Last: $lastVisibleDataIndex");
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -154,10 +155,13 @@ class _LineChartWidgetState extends State<LineChartWidget> {
                 maxY: 220,
                 barGroups: visibleBarGroups,
                 barTouchData: BarTouchData(
-                  touchCallback: (FlTouchEvent event, BarTouchResponse? touchResponse) {
+                  touchCallback:
+                      (FlTouchEvent event, BarTouchResponse? touchResponse) {
                     if (touchResponse != null && touchResponse.spot != null) {
                       setState(() {
-                        selectedBarIndex = touchResponse.spot!.touchedBarGroupIndex + firstVisibleDataIndex;
+                        selectedBarIndex =
+                            touchResponse.spot!.touchedBarGroupIndex +
+                                firstVisibleDataIndex;
                         print("Selected bar index: $selectedBarIndex");
                       });
                     }
@@ -166,15 +170,17 @@ class _LineChartWidgetState extends State<LineChartWidget> {
                     tooltipBgColor: Colors.green[600],
                     getTooltipItem: (group, groupIndex, rod, rodIndex) {
                       print("Group index: $groupIndex, Rod index: $rodIndex");
-                      int adjustedGroupIndex = groupIndex + firstVisibleDataIndex;
+                      int adjustedGroupIndex =
+                          groupIndex + firstVisibleDataIndex;
                       print(adjustedGroupIndex);
                       String time = widget.timeList[adjustedGroupIndex];
-                      String strength = widget.yList[adjustedGroupIndex].toString();
+                      String strength =
+                          widget.yList[adjustedGroupIndex].toString();
 
-                      String tooltipText =
-                          "$time\nValue: $strength";
+                      String tooltipText = "$time\nValue: $strength";
 
-                      return BarTooltipItem(tooltipText, const TextStyle(color: Colors.white));
+                      return BarTooltipItem(
+                          tooltipText, const TextStyle(color: Colors.white));
                     },
                     fitInsideVertically: true,
                     fitInsideHorizontally: true,
@@ -211,7 +217,6 @@ class _LineChartWidgetState extends State<LineChartWidget> {
           ),
         ),
         const SizedBox(height: 10.0),
-
         if (selectedBarIndex != null) ...[
           const Text(
             "Detailed value Updates(Time - value):",
@@ -226,7 +231,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
                 .take(4)
                 .toList()
                 .map((toolTip) =>
-            "${TimeUtils.convertHHmmToClock(toolTip.time)} - ${toolTip.val}")
+                    "${TimeUtils.convertHHmmToClock(toolTip.time)} - ${toolTip.val}")
                 .join(', '),
             style: const TextStyle(
               color: Colors.teal,
@@ -237,7 +242,6 @@ class _LineChartWidgetState extends State<LineChartWidget> {
         ],
       ],
     );
-
   }
 
   List<_ChartData> _getChartData() {
