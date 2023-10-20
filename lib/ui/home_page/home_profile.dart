@@ -46,8 +46,8 @@ import 'package:securedialog/utils/time_utils.dart';
 // IS THERE ANY REASON NOT TO DO THAT?
 
 import 'home_charts/group_chart_widget.dart';
-import 'home_charts/syncfusion_column_chart_widget.dart';
-import 'home_charts/syncfusion_line_chart_widget.dart';
+import 'home_charts/column_chart_widget.dart';
+import 'home_charts/line_chart_widget.dart';
 
 /// A view layer for the profile widget in the home page.
 
@@ -270,7 +270,7 @@ class _HomeProfileState extends State<HomeProfile> {
                       BaseWidget.getQuestionText("Systolic & Diastolic"),
                       BaseWidget.getPadding(5),
                       SizedBox(
-                        height: 150,
+                        height: 320,
                         width: MediaQuery.of(context).size.width,
                         child: GroupChartWidget(
                             systolicList,
@@ -285,9 +285,9 @@ class _HomeProfileState extends State<HomeProfile> {
                       BaseWidget.getQuestionText("Heart Rate"),
                       BaseWidget.getPadding(5),
                       SizedBox(
-                        height: 150,
+                        height: 300,
                         width: MediaQuery.of(context).size.width,
-                        child: SyncfusionLineChartWidget(
+                        child: LineChartWidget(
                             heartRateList,
                             heartRateTimeList,
                             timeList,
@@ -298,21 +298,17 @@ class _HomeProfileState extends State<HomeProfile> {
                       BaseWidget.getQuestionText("Weight"),
                       BaseWidget.getPadding(5),
                       SizedBox(
-                        height: 150,
+                        height: 300,
                         width: MediaQuery.of(context).size.width,
-                        child: SyncfusionLineChartWidget(
-                            weightList,
-                            weightTimeList,
-                            timeList,
-                            Constants.weightMinY,
-                            weightToolTipsList),
+                        child: LineChartWidget(weightList, weightTimeList,
+                            timeList, Constants.weightMinY, weightToolTipsList),
                       ),
                       BaseWidget.getPadding(15),
                       BaseWidget.getQuestionText("Lacking in Strength Check"),
                       SizedBox(
-                        height: 150,
+                        height: 300,
                         width: MediaQuery.of(context).size.width,
-                        child: SyncfusionColumnChartWidget(
+                        child: ColumnChartWidget(
                             strengthList,
                             strengthTimeList,
                             timeList,
@@ -323,9 +319,9 @@ class _HomeProfileState extends State<HomeProfile> {
                       BaseWidget.getQuestionText("Fasting Blood Glucose"),
                       BaseWidget.getPadding(5),
                       SizedBox(
-                        height: 150,
+                        height: 300,
                         width: MediaQuery.of(context).size.width,
-                        child: SyncfusionLineChartWidget(
+                        child: LineChartWidget(
                             fastingList,
                             fastingTimeList,
                             timeList,
@@ -336,9 +332,9 @@ class _HomeProfileState extends State<HomeProfile> {
                       BaseWidget.getQuestionText("Postprandial Blood Glucose"),
                       BaseWidget.getPadding(5),
                       SizedBox(
-                        height: 150,
+                        height: 300,
                         width: MediaQuery.of(context).size.width,
-                        child: SyncfusionLineChartWidget(
+                        child: LineChartWidget(
                             postprandialList,
                             postprandialTimeList,
                             timeList,
