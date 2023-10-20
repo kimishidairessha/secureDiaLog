@@ -129,6 +129,9 @@ class Constants {
   static const String q5Text = "What's your diastolic measurement today?";
   static const String q6Text = "What's your weight today?";
   static const String q7Text = "What's your heart rate today?";
+  static const String dateText =
+      "If this is a history report please click the button below to edit the "
+      "date and time.";
 
   // Geo Info Saving Interval (seconds)
   static const int interval = 60;

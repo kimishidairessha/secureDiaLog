@@ -59,11 +59,11 @@ chrome:
 # List the files that are automatically generated. Then they will get 
 # built as required.
 
-BUILD_RUNNER = \
-#	lib/models/synchronise_time.g.dart
+# BUILD_RUNNER = \
+# 	lib/models/synchronise_time.g.dart
 
-$(BUILD_RUNNER):
-	dart run build_runner build --delete-conflicting-outputs
+# $(BUILD_RUNNER):
+# 	dart run build_runner build --delete-conflicting-outputs
 
 pubspec.lock:
 	flutter pub get
@@ -139,12 +139,12 @@ analyze:
 
 .PHONY: ignore
 ignore:
-	@rgrep -C 2 ignore: lib
+	@rgrep ignore: lib
 
 .PHONY: license
 license:
 	@echo "--\nFiles without a license:"
-	@find lib -type f ! -exec grep -qE '^(/// .*|/// Copyright|/// Licensed)' {} \; -printf "\t%p\n"
+	@find lib -type f -not -name '*~' ! -exec grep -qE '^(/// .*|/// Copyright|/// Licensed)' {} \; -printf "\t%p\n"
 
 ########################################################################
 # INTEGRATION TESTING
