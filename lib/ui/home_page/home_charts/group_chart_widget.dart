@@ -75,7 +75,6 @@ class _GroupChartWidgetState extends State<GroupChartWidget> {
     );
   }
 
-
   @override
   void initState() {
     super.initState();
@@ -129,7 +128,6 @@ class _GroupChartWidgetState extends State<GroupChartWidget> {
     print("First: $firstVisibleDataIndex, Last: $lastVisibleDataIndex");
   }
 
-
   @override
   Widget build(BuildContext context) {
     final chartData = _getChartData();
@@ -143,86 +141,85 @@ class _GroupChartWidgetState extends State<GroupChartWidget> {
 
     return Column(
       children: [
-      SingleChildScrollView(
-        controller: scrollController,
-        scrollDirection: Axis.horizontal, // makes it horizontally scrollable
-        child: Container(
-          color: Colors.yellow[50],
-          child: SizedBox(
-            height: 200,
-            width: 38 * rawBarGroups.length.toDouble(),
-            child: BarChart(
-              BarChartData(
-                maxY: 220,
-                barGroups: visibleBarGroups,
-                barTouchData: BarTouchData(
-                  touchCallback:
-                      (FlTouchEvent event, BarTouchResponse? touchResponse) {
-                    if (touchResponse != null && touchResponse.spot != null) {
-                      setState(() {
-                        selectedBarIndex =
-                            touchResponse.spot!.touchedBarGroupIndex +
-                                firstVisibleDataIndex;
-                        print("Selected bar index: $selectedBarIndex");
-                      });
-                    }
-                  },
-                  touchTooltipData: BarTouchTooltipData(
-                    tooltipBgColor: Colors.green[600],
-                    getTooltipItem: (group, groupIndex, rod, rodIndex) {
-                      print("Group index: $groupIndex, Rod index: $rodIndex");
-                      int adjustedGroupIndex =
-                          groupIndex + firstVisibleDataIndex;
-                      print(adjustedGroupIndex);
-                      String time = widget.timeList[adjustedGroupIndex];
-                      String systolic =
-                          widget.yList[adjustedGroupIndex].toString();
-                      String diastolic =
-                          widget.yList2[adjustedGroupIndex].toString();
-
-                      String tooltipText =
-                          "$time\nSystolic: $systolic\nDiastolic: $diastolic";
-
-                      return BarTooltipItem(
-                          tooltipText, const TextStyle(color: Colors.white));
+        SingleChildScrollView(
+          controller: scrollController,
+          scrollDirection: Axis.horizontal, // makes it horizontally scrollable
+          child: Container(
+            color: Colors.yellow[50],
+            child: SizedBox(
+              height: 200,
+              width: 38 * rawBarGroups.length.toDouble(),
+              child: BarChart(
+                BarChartData(
+                  maxY: 220,
+                  barGroups: visibleBarGroups,
+                  barTouchData: BarTouchData(
+                    touchCallback:
+                        (FlTouchEvent event, BarTouchResponse? touchResponse) {
+                      if (touchResponse != null && touchResponse.spot != null) {
+                        setState(() {
+                          selectedBarIndex =
+                              touchResponse.spot!.touchedBarGroupIndex +
+                                  firstVisibleDataIndex;
+                          print("Selected bar index: $selectedBarIndex");
+                        });
+                      }
                     },
-                    fitInsideVertically: true,
-                    fitInsideHorizontally: true,
+                    touchTooltipData: BarTouchTooltipData(
+                      tooltipBgColor: Colors.green[600],
+                      getTooltipItem: (group, groupIndex, rod, rodIndex) {
+                        print("Group index: $groupIndex, Rod index: $rodIndex");
+                        int adjustedGroupIndex =
+                            groupIndex + firstVisibleDataIndex;
+                        print(adjustedGroupIndex);
+                        String time = widget.timeList[adjustedGroupIndex];
+                        String systolic =
+                            widget.yList[adjustedGroupIndex].toString();
+                        String diastolic =
+                            widget.yList2[adjustedGroupIndex].toString();
+
+                        String tooltipText =
+                            "$time\nSystolic: $systolic\nDiastolic: $diastolic";
+
+                        return BarTooltipItem(
+                            tooltipText, const TextStyle(color: Colors.white));
+                      },
+                      fitInsideVertically: true,
+                      fitInsideHorizontally: true,
+                    ),
+                    touchExtraThreshold: const EdgeInsets.all(4),
                   ),
-                  touchExtraThreshold: const EdgeInsets.all(4),
-                ),
-                titlesData: FlTitlesData(
-                  show: true,
-                  leftTitles: const AxisTitles(
-                    sideTitles: SideTitles(showTitles: false),
-                  ),
-                  rightTitles: const AxisTitles(
-                    sideTitles: SideTitles(showTitles: false),
-                  ),
-                  bottomTitles: AxisTitles(
-                    sideTitles: SideTitles(
-                      showTitles: true,
-                      reservedSize: 40,
-                      getTitlesWidget: bottomTitleWidget,
+                  titlesData: FlTitlesData(
+                    show: true,
+                    leftTitles: const AxisTitles(
+                      sideTitles: SideTitles(showTitles: false),
+                    ),
+                    rightTitles: const AxisTitles(
+                      sideTitles: SideTitles(showTitles: false),
+                    ),
+                    bottomTitles: AxisTitles(
+                      sideTitles: SideTitles(
+                        showTitles: true,
+                        reservedSize: 40,
+                        getTitlesWidget: bottomTitleWidget,
+                      ),
+                    ),
+                    topTitles: const AxisTitles(
+                      sideTitles: SideTitles(showTitles: false),
                     ),
                   ),
-                  topTitles: const AxisTitles(
-                    sideTitles: SideTitles(showTitles: false),
+                  borderData: FlBorderData(
+                    show: false,
                   ),
-                ),
-                borderData: FlBorderData(
-                  show: false,
-                ),
-                gridData: const FlGridData(
-                  show: false,
+                  gridData: const FlGridData(
+                    show: false,
+                  ),
                 ),
               ),
             ),
           ),
         ),
-    ),
         const SizedBox(height: 10.0),
-
         if (selectedBarIndex != null) ...[
           const Text(
             "Detailed Systolic Updates(Time - value):",
@@ -270,7 +267,6 @@ class _GroupChartWidgetState extends State<GroupChartWidget> {
         ],
       ],
     );
-
   }
 
   List<_ChartData> _getChartData() {

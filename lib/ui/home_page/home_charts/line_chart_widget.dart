@@ -176,7 +176,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
                         print(adjustedGroupIndex);
                         String time = widget.timeList[adjustedGroupIndex];
                         String strength =
-                        widget.yList[adjustedGroupIndex].toString();
+                            widget.yList[adjustedGroupIndex].toString();
 
                         String tooltipText = "$time\nValue: $strength";
 

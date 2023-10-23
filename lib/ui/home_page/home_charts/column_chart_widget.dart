@@ -169,8 +169,8 @@ class _ColumnChartWidgetState extends State<ColumnChartWidget> {
                             groupIndex + firstVisibleDataIndex;
                         print(adjustedGroupIndex);
                         String time = widget.timeList[adjustedGroupIndex];
-                        String strength =
-                        mapIntToValueString(widget.yList[adjustedGroupIndex]);
+                        String strength = mapIntToValueString(
+                            widget.yList[adjustedGroupIndex]);
 
                         String tooltipText = "$time\nStrength level: $strength";
 
