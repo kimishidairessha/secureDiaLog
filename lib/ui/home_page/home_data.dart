@@ -265,7 +265,8 @@ class _HomeDataState extends State<HomeData> {
                   systolicTimeList1.add(tablePoint.systolicMaxTime);
                   heartRateList1.add(tablePoint.heartRateMax);
                   heartRateTimeList1.add(tablePoint.heartRateMaxTime);
-                  timeList1.add(TimeUtils.reformatDate(tablePoint.obTimeDay));
+                  timeList1.add(
+                      TimeUtils.reformatDateForTable(tablePoint.obTimeDay));
                   strengthToolTipsList1.add(tablePoint.otherStrength);
                   fastingToolTipsList1.add(tablePoint.otherFasting);
                   postprandialToolTipsList1.add(tablePoint.otherPostprandial);
