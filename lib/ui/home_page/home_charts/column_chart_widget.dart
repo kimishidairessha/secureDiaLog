@@ -140,73 +140,73 @@ class _ColumnChartWidgetState extends State<ColumnChartWidget> {
         SingleChildScrollView(
           controller: scrollController,
           scrollDirection: Axis.horizontal, // makes it horizontally scrollable
-          child: SizedBox(
-            height: 200,
-            width: 38 * rawBarGroups.length.toDouble(),
-            // constraints: BoxConstraints(
-            //   minWidth:  // dynamic minWidth
-            // ),
-            child: BarChart(
-              BarChartData(
-                maxY: 10,
-                barGroups: visibleBarGroups,
-                barTouchData: BarTouchData(
-                  touchCallback:
-                      (FlTouchEvent event, BarTouchResponse? touchResponse) {
-                    if (touchResponse != null && touchResponse.spot != null) {
-                      setState(() {
-                        selectedBarIndex =
-                            touchResponse.spot!.touchedBarGroupIndex +
-                                firstVisibleDataIndex;
-                        print("Selected bar index: $selectedBarIndex");
-                      });
-                    }
-                  },
-                  touchTooltipData: BarTouchTooltipData(
-                    tooltipBgColor: Colors.green[600],
-                    getTooltipItem: (group, groupIndex, rod, rodIndex) {
-                      print("Group index: $groupIndex, Rod index: $rodIndex");
-                      int adjustedGroupIndex =
-                          groupIndex + firstVisibleDataIndex;
-                      print(adjustedGroupIndex);
-                      String time = widget.timeList[adjustedGroupIndex];
-                      String strength =
-                          mapIntToValueString(widget.yList[adjustedGroupIndex]);
-
-                      String tooltipText = "$time\nStrength level: $strength";
-
-                      return BarTooltipItem(
-                          tooltipText, const TextStyle(color: Colors.white));
+          child: Container(
+            color: Colors.yellow[50],
+            child: SizedBox(
+              height: 200,
+              width: 38 * rawBarGroups.length.toDouble(),
+              child: BarChart(
+                BarChartData(
+                  maxY: 10,
+                  barGroups: visibleBarGroups,
+                  barTouchData: BarTouchData(
+                    touchCallback:
+                        (FlTouchEvent event, BarTouchResponse? touchResponse) {
+                      if (touchResponse != null && touchResponse.spot != null) {
+                        setState(() {
+                          selectedBarIndex =
+                              touchResponse.spot!.touchedBarGroupIndex +
+                                  firstVisibleDataIndex;
+                          print("Selected bar index: $selectedBarIndex");
+                        });
+                      }
                     },
-                    fitInsideVertically: true,
-                    fitInsideHorizontally: true,
+                    touchTooltipData: BarTouchTooltipData(
+                      tooltipBgColor: Colors.green[600],
+                      getTooltipItem: (group, groupIndex, rod, rodIndex) {
+                        print("Group index: $groupIndex, Rod index: $rodIndex");
+                        int adjustedGroupIndex =
+                            groupIndex + firstVisibleDataIndex;
+                        print(adjustedGroupIndex);
+                        String time = widget.timeList[adjustedGroupIndex];
+                        String strength =
+                        mapIntToValueString(widget.yList[adjustedGroupIndex]);
+
+                        String tooltipText = "$time\nStrength level: $strength";
+
+                        return BarTooltipItem(
+                            tooltipText, const TextStyle(color: Colors.white));
+                      },
+                      fitInsideVertically: true,
+                      fitInsideHorizontally: true,
+                    ),
+                    touchExtraThreshold: const EdgeInsets.all(4),
                   ),
-                  touchExtraThreshold: const EdgeInsets.all(4),
-                ),
-                titlesData: FlTitlesData(
-                  show: true,
-                  leftTitles: const AxisTitles(
-                    sideTitles: SideTitles(showTitles: false),
-                  ),
-                  rightTitles: const AxisTitles(
-                    sideTitles: SideTitles(showTitles: false),
-                  ),
-                  bottomTitles: AxisTitles(
-                    sideTitles: SideTitles(
-                      showTitles: true,
-                      reservedSize: 40,
-                      getTitlesWidget: bottomTitleWidget,
+                  titlesData: FlTitlesData(
+                    show: true,
+                    leftTitles: const AxisTitles(
+                      sideTitles: SideTitles(showTitles: false),
+                    ),
+                    rightTitles: const AxisTitles(
+                      sideTitles: SideTitles(showTitles: false),
+                    ),
+                    bottomTitles: AxisTitles(
+                      sideTitles: SideTitles(
+                        showTitles: true,
+                        reservedSize: 40,
+                        getTitlesWidget: bottomTitleWidget,
+                      ),
+                    ),
+                    topTitles: const AxisTitles(
+                      sideTitles: SideTitles(showTitles: false),
                     ),
                   ),
-                  topTitles: const AxisTitles(
-                    sideTitles: SideTitles(showTitles: false),
+                  borderData: FlBorderData(
+                    show: false,
                   ),
-                ),
-                borderData: FlBorderData(
-                  show: false,
-                ),
-                gridData: const FlGridData(
-                  show: false,
+                  gridData: const FlGridData(
+                    show: false,
+                  ),
                 ),
               ),
             ),

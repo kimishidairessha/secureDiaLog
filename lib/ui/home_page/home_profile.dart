@@ -305,6 +305,7 @@ class _HomeProfileState extends State<HomeProfile> {
                       ),
                       BaseWidget.getPadding(15),
                       BaseWidget.getQuestionText("Lacking in Strength Check"),
+                      BaseWidget.getPadding(5),
                       SizedBox(
                         height: 300,
                         width: MediaQuery.of(context).size.width,

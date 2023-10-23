@@ -140,14 +140,13 @@ class _GroupChartWidgetState extends State<GroupChartWidget> {
     return Column(
       children: [
       SingleChildScrollView(
-      controller: scrollController,
-      scrollDirection: Axis.horizontal, // makes it horizontally scrollable
-      child: SizedBox(
-        height: 200,
-        width: 38 * rawBarGroups.length.toDouble(),
-        // constraints: BoxConstraints(
-        //   minWidth:  // dynamic minWidth
-        // ),
+        controller: scrollController,
+        scrollDirection: Axis.horizontal, // makes it horizontally scrollable
+        child: Container(
+          color: Colors.yellow[50],
+          child: SizedBox(
+            height: 200,
+            width: 38 * rawBarGroups.length.toDouble(),
             child: BarChart(
               BarChartData(
                 maxY: 220,
@@ -208,7 +207,8 @@ class _GroupChartWidgetState extends State<GroupChartWidget> {
                 ),
               ),
             ),
-      ),
+          ),
+        ),
     ),
         const SizedBox(height: 10.0),
 
