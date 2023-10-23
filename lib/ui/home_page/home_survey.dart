@@ -69,6 +69,7 @@ class _HomeSurveyState extends State<HomeSurvey> {
   String? errorText5;
   String? errorText6;
   String? errorText7;
+  DateTime? selectedDate;
 
   @override
   void initState() {
@@ -92,6 +93,34 @@ class _HomeSurveyState extends State<HomeSurvey> {
     super.dispose();
   }
 
+  Future<void> _selectDate(BuildContext context) async {
+    DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime.now().add(const Duration(days: 365)),
+    );
+
+    if (pickedDate != null) {
+      TimeOfDay? pickedTime = await showTimePicker(
+        context: context,
+        initialTime: TimeOfDay.now(),
+      );
+
+      if (pickedTime != null) {
+        setState(() {
+          selectedDate = DateTime(
+            pickedDate.year,
+            pickedDate.month,
+            pickedDate.day,
+            pickedTime.hour,
+            pickedTime.minute,
+          );
+        });
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -100,7 +129,42 @@ class _HomeSurveyState extends State<HomeSurvey> {
         child: SingleChildScrollView(
           child: Column(
             children: <Widget>[
-              BaseWidget.getPadding(15.0),
+              BaseWidget.getPadding(8.0),
+              Card(
+                color: Colors.lime[50],
+                margin: const EdgeInsets.all(15.0),
+                elevation: 4,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(
+                      15), // Rounded corners with radius of 15
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Text
+                      BaseWidget.getQuestionText(Constants.dateText),
+                      BaseWidget.getPadding(8.0),
+                      // Button
+                      ElevatedButton(
+                        onPressed: () => _selectDate(context),
+                        style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all(Colors.teal[400]),
+                          // Other styles here
+                        ),
+                        child: Text(
+                          selectedDate == null
+                              ? "Pick a date and time"
+                              : "${selectedDate?.toLocal()}",
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              BaseWidget.getPadding(8.0),
               // BaseWidget.getQuestionText(Constants.q4Text),
               Padding(
                 padding: const EdgeInsets.only(
@@ -120,9 +184,9 @@ class _HomeSurveyState extends State<HomeSurvey> {
                     width: 200,
                     alignment: Alignment.center,
                     child: TextField(
-                      focusNode: focusNode5,
+                      focusNode: focusNode2,
                       onEditingComplete: () =>
-                          FocusScope.of(context).requestFocus(focusNode6),
+                          FocusScope.of(context).requestFocus(focusNode3),
                       controller: q4AnswerTextController,
                       style:
                           const TextStyle(fontSize: 18, fontFamily: "KleeOne"),
@@ -194,9 +258,9 @@ class _HomeSurveyState extends State<HomeSurvey> {
                     width: 200,
                     alignment: Alignment.center,
                     child: TextField(
-                      focusNode: focusNode6,
+                      focusNode: focusNode3,
                       onEditingComplete: () =>
-                          FocusScope.of(context).requestFocus(focusNode7),
+                          FocusScope.of(context).requestFocus(focusNode4),
                       controller: q5AnswerTextController,
                       style:
                           const TextStyle(fontSize: 18, fontFamily: "KleeOne"),
@@ -268,8 +332,9 @@ class _HomeSurveyState extends State<HomeSurvey> {
                     width: 200,
                     alignment: Alignment.center,
                     child: TextField(
-                      focusNode: focusNode7,
-                      onEditingComplete: () => focusNode7.unfocus(),
+                      focusNode: focusNode4,
+                      onEditingComplete: () =>
+                          FocusScope.of(context).requestFocus(focusNode5),
                       controller: q7AnswerTextController,
                       style:
                           const TextStyle(fontSize: 18, fontFamily: "KleeOne"),
@@ -406,9 +471,9 @@ class _HomeSurveyState extends State<HomeSurvey> {
                       width: 120,
                       alignment: Alignment.center,
                       child: TextField(
-                        focusNode: focusNode2,
+                        focusNode: focusNode5,
                         onEditingComplete: () =>
-                            FocusScope.of(context).requestFocus(focusNode3),
+                            FocusScope.of(context).requestFocus(focusNode6),
                         controller: q6AnswerTextController,
                         style: const TextStyle(
                             fontSize: 18, fontFamily: "KleeOne"),
@@ -521,73 +586,7 @@ class _HomeSurveyState extends State<HomeSurvey> {
                   ],
                 ),
               ),
-              ////////////////////////////////////////////////////////////////////////
-              // SUBMIT
-              BaseWidget.getPadding(15.0),
-              BaseWidget.getElevatedButton(() async {
-                if (q1Answer == null &&
-                    q2Answer == null &&
-                    q3Answer == null &&
-                    q4Answer == null &&
-                    q5Answer == null &&
-                    q6Answer == null &&
-                    q7Answer == null) {
-                  await showDialog<bool>(
-                      context: context,
-                      builder: (context) {
-                        return BaseWidget.getNoticeDialog(
-                            context,
-                            "Warning",
-                            "An empty report can not be submitted, pls answer at least one question",
-                            "Continue");
-                      });
-                } else {
-                  q1Answer ??= Constants.none;
-                  q2Answer ??= Constants.none;
-                  q3Answer ??= Constants.none;
-                  q4Answer ??= Constants.none;
-                  q5Answer ??= Constants.none;
-                  q6Answer ??= Constants.none;
-                  q7Answer ??= Constants.none;
-                  if (await homePageService.saveSurveyInfo(
-                      q1Answer!,
-                      q2Answer!,
-                      q3Answer!,
-                      q4Answer!,
-                      q5Answer!,
-                      q6Answer!,
-                      q7Answer!,
-                      widget.authData,
-                      DateTime.now())) {
-                    await showDialog<bool>(
-                        context: context,
-                        builder: (context) {
-                          return BaseWidget.getNoticeDialog(
-                              context,
-                              "Message",
-                              "Thank you for reporting your condition today",
-                              "Continue");
-                        });
-                    if (!mounted) {
-                      return null;
-                    }
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              HomePage(widget.authData, Constants.podPage)),
-                    );
-                  } else {
-                    await showDialog<bool>(
-                        context: context,
-                        builder: (context) {
-                          return BaseWidget.getNoticeDialog(context, "Error",
-                              "Failed to connect to your POD", "Try again");
-                        });
-                  }
-                }
-              }, "Submit", MediaQuery.of(context).size.width / 1.25, 50),
-              BaseWidget.getPadding(15.0),
+              BaseWidget.getPadding(20.0),
               // BaseWidget.getQuestionText(Constants.q1Text),
               Padding(
                 padding: const EdgeInsets.only(
@@ -676,9 +675,9 @@ class _HomeSurveyState extends State<HomeSurvey> {
                     width: 200,
                     alignment: Alignment.centerLeft,
                     child: TextField(
-                      focusNode: focusNode3,
+                      focusNode: focusNode6,
                       onEditingComplete: () =>
-                          FocusScope.of(context).requestFocus(focusNode4),
+                          FocusScope.of(context).requestFocus(focusNode7),
                       controller: q2AnswerTextController,
                       style:
                           const TextStyle(fontSize: 18, fontFamily: "KleeOne"),
@@ -755,9 +754,8 @@ class _HomeSurveyState extends State<HomeSurvey> {
                     width: 200,
                     alignment: Alignment.center,
                     child: TextField(
-                      focusNode: focusNode4,
-                      onEditingComplete: () =>
-                          FocusScope.of(context).requestFocus(focusNode5),
+                      focusNode: focusNode7,
+                      onEditingComplete: () => focusNode7.unfocus(),
                       controller: q3AnswerTextController,
                       style:
                           const TextStyle(fontSize: 18, fontFamily: "KleeOne"),
@@ -814,7 +812,71 @@ class _HomeSurveyState extends State<HomeSurvey> {
                   ),
                 ),
               ),
-              BaseWidget.getPadding(150.0),
+              BaseWidget.getPadding(20.0),
+              BaseWidget.getElevatedButton(() async {
+                if (q1Answer == null &&
+                    q2Answer == null &&
+                    q3Answer == null &&
+                    q4Answer == null &&
+                    q5Answer == null &&
+                    q6Answer == null &&
+                    q7Answer == null) {
+                  await showDialog<bool>(
+                      context: context,
+                      builder: (context) {
+                        return BaseWidget.getNoticeDialog(
+                            context,
+                            "Warning",
+                            "An empty report can not be submitted, pls answer at least one question",
+                            "Continue");
+                      });
+                } else {
+                  q1Answer ??= Constants.none;
+                  q2Answer ??= Constants.none;
+                  q3Answer ??= Constants.none;
+                  q4Answer ??= Constants.none;
+                  q5Answer ??= Constants.none;
+                  q6Answer ??= Constants.none;
+                  q7Answer ??= Constants.none;
+                  if (await homePageService.saveSurveyInfo(
+                      q1Answer!,
+                      q2Answer!,
+                      q3Answer!,
+                      q4Answer!,
+                      q5Answer!,
+                      q6Answer!,
+                      q7Answer!,
+                      widget.authData,
+                      selectedDate ?? DateTime.now())) {
+                    await showDialog<bool>(
+                        context: context,
+                        builder: (context) {
+                          return BaseWidget.getNoticeDialog(
+                              context,
+                              "Message",
+                              "Thank you for reporting your condition today",
+                              "Continue");
+                        });
+                    if (!mounted) {
+                      return null;
+                    }
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              HomePage(widget.authData, Constants.podPage)),
+                    );
+                  } else {
+                    await showDialog<bool>(
+                        context: context,
+                        builder: (context) {
+                          return BaseWidget.getNoticeDialog(context, "Error",
+                              "Failed to connect to your POD", "Try again");
+                        });
+                  }
+                }
+              }, "Submit", MediaQuery.of(context).size.width / 1.25, 50),
+              BaseWidget.getPadding(50.0),
             ],
           ),
         ),

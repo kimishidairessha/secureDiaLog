@@ -174,8 +174,7 @@ class _DataTableWidget extends State<DataTableWidget> {
                         DataColumn(label: Text('Weight')),
                         DataColumn(label: Text('Strength Level')),
                         DataColumn(label: Text('Fasting Blood Glucose')),
-                        DataColumn(
-                            label: Text('Postprandial Blood Glucose')),
+                        DataColumn(label: Text('Postprandial Blood Glucose')),
                       ],
                       rows: createRows(),
                     ),

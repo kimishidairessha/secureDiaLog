@@ -26,7 +26,6 @@ import 'package:securedialog/constants/app.dart';
 import 'package:securedialog/model/tooltip.dart';
 import 'package:securedialog/utils/time_utils.dart';
 
-
 class LineChartWidget extends StatefulWidget {
   final List<double> yList;
   final List<String> timeList;
