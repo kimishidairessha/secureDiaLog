@@ -33,6 +33,10 @@ import 'package:securedialog/utils/geo_utils.dart';
 /// Main entry point for the application.
 
 void main() async {
+  debugPrint = (String? message, {int? wrapWidth}) {
+    null;
+  };
+
   // Identify if Desktop or Mobile app.
 
   bool isDesktop = Platform.isLinux || Platform.isMacOS || Platform.isWindows;
