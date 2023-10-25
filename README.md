@@ -95,3 +95,8 @@ settings.
 * Real-time chart visualizations
 * Complete user data control
 * Diabetes status analytics
+
+## Credits
+
+Bowen Wang began this as a student project based on Graham Williams'
+design and supervision. See https://github.com/onionoino/klee.
