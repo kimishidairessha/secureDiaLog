@@ -4,6 +4,8 @@
 
 *Authors: Graham Williams, Bowen Yang, Ye Duan*
 
+*ANU Software Innovation Institute*
+
 *License: GNU GPL V3*
 
 Data is at the heart of managing our lives these data. But for too
