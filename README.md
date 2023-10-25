@@ -14,7 +14,7 @@ the Solid Server standards we can now store our data in personal
 online data stores, or PODs. Through the research of the ANU's
 Software Innovation Institute, our PODs data is also encrypted on
 server and only ever decrypted on device, protecting the data against
-unwanted breeches.
+unwanted breeches, and implementing a *Trust No One* (TNO) platform.
 
 This project is a privacy oriented diabetes data collection and
 analysis application that runs on any of ios, android, windows, linux,
