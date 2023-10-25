@@ -8,7 +8,7 @@
 
 *License: GNU GPL V3*
 
-Data is at the heart of managing our lives these data. But for too
+Data is at the heart of managing our lives these days. But for too
 long it has been collected centrally. It does not need to be! Using
 the Solid Server standards we can now store our data in personal
 online data stores, or PODs. Through the research of the ANU's
@@ -32,10 +32,10 @@ backend to store data in a privacy focussed way. The app can actively
 collect location pings regularly, allow the input of location based
 observations, and provide graphical analyses of the collected data.
 
-## Software Description
+## The App
 
-The application records users' personal data through daily
-questionnaires.  The historical data is displayed in real-time charts
+The application records users' personal data through a daily
+questionnaire.  The historical data is displayed in real-time charts
 and stored encrypted in a Solid POD. Users have complete control over
 their data, including sharing the data with other POD users. With an
 open format for storing the data, anyone can develop an app to add
