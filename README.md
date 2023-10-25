@@ -4,7 +4,7 @@
 
 *Authors: Graham Williams, Bowen Yang, Ye Duan*
 
-*ANU Software Innovation Institute*
+*[ANU Software Innovation Institute](https://sii.anu.edu.au)*
 
 *License: GNU GPL V3*
 
