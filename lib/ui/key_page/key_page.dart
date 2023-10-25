@@ -80,7 +80,11 @@ class _KeyPageState extends State<KeyPage> {
               alignment: Alignment.topCenter,
               width: MediaQuery.of(context).size.width - 30,
               child: BaseWidget.getTitleText(
-                  """For your privacy, please enter your encryption key first, if you haven't had a key yet, SecureDiaLog will help you create a new key for later identity verification."""),
+                  "For your privacy please provide an encryption key "
+                  "that SecureDiaLog will use to encrypt your data "
+                  "to keep it protected within your POD. Once provided "
+                  "the key will be securely stored locally and available "
+                  "within Settings."),
             ),
             BaseWidget.getPadding(2.5),
             RawKeyboardListener(
