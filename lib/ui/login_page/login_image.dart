@@ -31,7 +31,7 @@ class LoginImage extends StatelessWidget {
     return Center(
       child: ClipOval(
         child: Image.asset(
-          "images/Secure.png",
+          "images/handDrawing.jpg",
           alignment: Alignment.center,
           colorBlendMode: BlendMode.saturation,
           fit: BoxFit.cover,
