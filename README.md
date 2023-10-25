@@ -10,16 +10,18 @@
 
 Data is at the heart of managing our lives these data. But for too
 long it has been collected centrally. It does not need to be! Using
-the Solid Serve standards we can now store our data in personal online
-data stores, or PODs. Through the research of the ANU's Software
-Innovation Institute, our PODs data is also encrypted on server and
-only ever decrypted on device, protecting the data against unwanted
-breeches.
+the Solid Server standards we can now store our data in personal
+online data stores, or PODs. Through the research of the ANU's
+Software Innovation Institute, our PODs data is also encrypted on
+server and only ever decrypted on device, protecting the data against
+unwanted breeches.
 
 This project is a privacy oriented diabetes data collection and
-analysis application (ios/android/windows/linux/macos/web) using
-standards based Solid servers to help individuals manage their
-diabetes.
+analysis application that runs on any of ios, android, windows, linux,
+macos, or through a browser. 
+
+The demonstrator application uses standards based Solid servers to
+help individuals manage their diabetes.
 
 ## Introduction
 
@@ -52,7 +54,7 @@ device. The device does not get to know your login details.
 
 <div align="center">
 	<img
-	src="https://github.com/kimishidairessha/diabetes/blob/main/images/login.png"
+	src="https://github.com/kimishidairessha/secureDiaLog/blob/main/images/login.png"
 	alt="Login Screen" width="400">
 </div>
 
@@ -67,7 +69,7 @@ Solid server.
 
 <div align="center">
 	<img
-	src="https://github.com/kimishidairessha/diabetes/blob/main/images/encrypt.png"
+	src="https://github.com/kimishidairessha/secureDiaLog/blob/main/images/encrypt.png"
 	alt="Encrypt Screen" width="400">
 </div>
 
@@ -80,7 +82,7 @@ settings.
 
 <div align="center">
 	<img
-	src="https://github.com/kimishidairessha/diabetes/blob/main/images/home.png"
+	src="https://github.com/kimishidairessha/secureDiaLog/blob/main/images/home.png"
 	alt="Home Screen" width="400">
 </div>
 
