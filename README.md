@@ -99,4 +99,7 @@ settings.
 ## Credits
 
 Bowen Wang began this as a student project based on Graham Williams'
-design and supervision. See https://github.com/onionoino/klee.
+design and supervision. See https://github.com/onionoino/klee. Ye Duan
+continued its development as a student project and migrated the
+original concept into a daily diabetes survey capturing app under
+Graham Williams' supervision.
