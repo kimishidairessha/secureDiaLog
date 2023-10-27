@@ -2,7 +2,7 @@
 
 **An ANU Software Innovation Institute demo project for Solid PODs**.
 
-*Authors: Graham Williams, Bowen Yang, Ye Duan*
+*Authors: Ye Duan, Graham Williams, Bowen Yang*
 
 *[ANU Software Innovation Institute](https://sii.anu.edu.au)*
 
