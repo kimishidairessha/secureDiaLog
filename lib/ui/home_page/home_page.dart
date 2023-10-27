@@ -150,7 +150,8 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<bool> hasSurveyBeenDoneToday() async {
-    String? lastSurveyTime = await homePageService.getLastSurveyTime(widget.authData!);
+    String? lastSurveyTime =
+        await homePageService.getLastSurveyTime(widget.authData!);
     if (lastSurveyTime == Constants.none) {
       return false;
     }
@@ -168,13 +169,14 @@ class _HomePageState extends State<HomePage> {
       if (selectedIdx == Constants.surveyPage) {
         // String? lastSurveyTime =
         //     await homePageService.getLastSurveyTime(widget.authData!);
-        List<SurveyDayInfo>? surveyDayInfoList =
-        await homePageService.getSurveyDayInfoList(
-            Constants.barNumber, widget.authData);
-        String? time = surveyDayInfoList?[surveyDayInfoList.length - 1].surveyInfoList[0].obTime;
+        List<SurveyDayInfo>? surveyDayInfoList = await homePageService
+            .getSurveyDayInfoList(Constants.barNumber, widget.authData);
+        String? time = surveyDayInfoList?[surveyDayInfoList.length - 1]
+            .surveyInfoList[0]
+            .obTime;
         String lastSurveyTime = time!;
 
-        if (lastSurveyTime == Constants.none ) {
+        if (lastSurveyTime == Constants.none) {
           setState(() {
             curWidgetIdx = Constants.surveyPage;
           });

@@ -186,8 +186,8 @@ class _HomeSettingsState extends State<HomeSettings> {
                                   _updateEncryptionKey(encKeyController.text);
                                 },
                                 style: ButtonStyle(
-                                  backgroundColor:
-                                  MaterialStateProperty.all(Colors.teal[400]),
+                                  backgroundColor: MaterialStateProperty.all(
+                                      Colors.teal[400]),
                                   // Other styles here
                                 ),
                                 child: const Text(" SAVE "),
@@ -218,7 +218,8 @@ class _HomeSettingsState extends State<HomeSettings> {
                                       fontFamily: "KleeOne",
                                       color: Colors.blueGrey[700]),
                                   decoration: InputDecoration(
-                                    hintText: "https://pod-url.example-server.net/profile/card#me",
+                                    hintText:
+                                        "https://pod-url.example-server.net/profile/card#me",
                                     contentPadding: const EdgeInsets.all(10.0),
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(10.0),
@@ -244,8 +245,8 @@ class _HomeSettingsState extends State<HomeSettings> {
                                   _updateWebID(webIdController.text);
                                 },
                                 style: ButtonStyle(
-                                  backgroundColor:
-                                  MaterialStateProperty.all(Colors.teal[400]),
+                                  backgroundColor: MaterialStateProperty.all(
+                                      Colors.teal[400]),
                                 ),
                                 child: const Text(" SAVE "),
                               ),
@@ -270,7 +271,8 @@ class _HomeSettingsState extends State<HomeSettings> {
                 return;
               }
               homePageService.logout(widget.authData!["logoutUrl"]);
-              Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) {
+              Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (_) {
                 return const LoginPage();
               }));
             }, "Logout", MediaQuery.of(context).size.width / 1.25, 50),
