@@ -23,6 +23,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:latlong2/latlong.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:solid_encrypt/solid_encrypt.dart';
 
 import 'package:securedialog/model/geo_info.dart';
@@ -308,9 +309,14 @@ class HomePageService {
     // OF THE SETTING HERE. SHOULD ROBABLY BE AN IN APP SETTING AND DEFAULT TO
     // OFF.
 
-    return true;
+    // return true;
 
     // ignore: dead_code
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool? captureLocation = prefs.getBool('captureLocation');
+    if (captureLocation == null || !captureLocation) {
+      return false;  // Don't save if location capture is off
+    }
     Map<String, dynamic> podInfo = SolidUtils.parseAuthData(authData);
     String? accessToken = podInfo[Constants.accessToken];
     String? webId = podInfo[Constants.webId];
