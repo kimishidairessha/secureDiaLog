@@ -145,7 +145,7 @@ class _GroupChartWidgetState extends State<GroupChartWidget> {
           controller: scrollController,
           scrollDirection: Axis.horizontal, // makes it horizontally scrollable
           child: Container(
-            color: Colors.yellow[50],
+            color: Constants.tableColor,
             child: SizedBox(
               height: 200,
               width: 38 * rawBarGroups.length.toDouble(),
