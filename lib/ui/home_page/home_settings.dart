@@ -26,6 +26,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter/services.dart';
 import 'package:securedialog/constants/app.dart';
+import 'package:securedialog/utils/time_utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../service/home_page_service.dart';
@@ -50,6 +51,7 @@ class _HomeSettingsState extends State<HomeSettings> {
   bool isTextVisible = false;
   bool isCaptureLocationEnabled = false;
   int locationCaptureFrequency = 1; // Default to 1 minute
+  String? lastSurveyTime;
 
   @override
   void initState() {
@@ -97,6 +99,7 @@ class _HomeSettingsState extends State<HomeSettings> {
     prefs.setBool('captureLocation', isCaptureLocationEnabled);
     prefs.setInt('locationCaptureFrequency', locationCaptureFrequency);
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -312,6 +315,45 @@ class _HomeSettingsState extends State<HomeSettings> {
                                 locationCaptureFrequency = newValue!;
                               });
                               _saveSettings();
+                            },
+                          ),
+                          const SizedBox(height: 20),
+                          FutureBuilder<String>(
+                            future: homePageService.getLastSurveyTime(widget.authData!),
+                            builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+                              if (snapshot.connectionState == ConnectionState.waiting) {
+                                return const CircularProgressIndicator();
+                              } else if (snapshot.hasError) {
+                                return Text("Error: ${snapshot.error}");
+                              } else {
+                                lastSurveyTime = snapshot.data ?? Constants.none;
+                                return Padding(
+                                  padding: const EdgeInsets.only(top: 0.0, left: 0.0),
+                                  child: Row(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Last Survey Time:',
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                          fontFamily: "KleeOne",
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.teal[800],
+                                        ),
+                                      ),
+                                      const SizedBox(width: 18),
+                                      Text(
+                                        TimeUtils.reformatYYYYMMDDHHMMSS(lastSurveyTime!),
+                                        style: TextStyle(
+                                            fontSize: 18,
+                                            fontFamily: "KleeOne",
+                                            color: Colors.blueGrey[700]
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                );
+                              }
                             },
                           ),
                         ],
