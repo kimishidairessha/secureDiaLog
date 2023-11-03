@@ -105,6 +105,12 @@ class _HomeOSMState extends State<HomeOSM> with WidgetsBindingObserver {
                 curLatLng!, widget.authData, DateTime.now());
             mapController.move(curLatLng!, Constants.defaultZoom);
           }
+        } else {
+          setState(() {
+            curLatLng = Constants.defaultLatLng;
+            Global.globalLatLng = curLatLng;
+            mapController.move(curLatLng!, Constants.defaultZoom);
+          });
         }
       }
     });
@@ -127,6 +133,10 @@ class _HomeOSMState extends State<HomeOSM> with WidgetsBindingObserver {
     setState(() {
       _captureLocation = prefs.getBool('captureLocation') ?? true;
       _locationCaptureFrequency = prefs.getInt('locationCaptureFrequency') ?? 1;
+      // Check _captureLocation and set curLatLng
+      if (!_captureLocation) {
+        curLatLng = Constants.defaultLatLng;
+      }
     });
   }
 
@@ -155,37 +165,43 @@ class _HomeOSMState extends State<HomeOSM> with WidgetsBindingObserver {
             // TIME. BUT WE SHOULD ADD A SETTING TO TURN THIS OFF RATHER THAN
             // COMMENT OUT THE CODE.
 
-              timer = Timer.periodic(
-                  Duration(seconds: _locationCaptureFrequency * 60), (timer) async {
-                    if(_captureLocation){
-                      debugPrint("refresh the map and write position info into pod");
-                      if (autoGeo) {
-                        if (Platform.isLinux ||
-                            Platform.isWindows ||
-                            Platform.isMacOS) {
-                          Location? location = await UserLocation.getValue();
-                          setState(() {
-                            curLatLng =
-                                LatLng(location!.latitude!, location.longitude!);
-                            Global.globalLatLng = curLatLng;
-                          });
-                          homePageService.saveGeoInfo(
-                              curLatLng!, widget.authData, DateTime.now());
-                        } else {
-                          Position position = await GeoUtils.getCurrentLocation();
-                          setState(() {
-                            curLatLng = LatLng(position.latitude, position.longitude);
-                            Global.globalLatLng = curLatLng;
-                          });
-                          homePageService.saveGeoInfo(
-                              curLatLng!, widget.authData, DateTime.now());
-                        }
-                      } else {
-                        homePageService.saveGeoInfo(
-                            curLatLng!, widget.authData, DateTime.now());
-                      }
-                    }
-              });
+            timer = Timer.periodic(
+                Duration(seconds: _locationCaptureFrequency * 60), (timer) async {
+              if(_captureLocation){
+                debugPrint("refresh the map and write position info into pod");
+                if (autoGeo) {
+                  if (Platform.isLinux ||
+                      Platform.isWindows ||
+                      Platform.isMacOS) {
+                    Location? location = await UserLocation.getValue();
+                    setState(() {
+                      curLatLng =
+                          LatLng(location!.latitude!, location.longitude!);
+                      Global.globalLatLng = curLatLng;
+                    });
+                    homePageService.saveGeoInfo(
+                        curLatLng!, widget.authData, DateTime.now());
+                  } else {
+                    Position position = await GeoUtils.getCurrentLocation();
+                    setState(() {
+                      curLatLng = LatLng(position.latitude, position.longitude);
+                      Global.globalLatLng = curLatLng;
+                    });
+                    homePageService.saveGeoInfo(
+                        curLatLng!, widget.authData, DateTime.now());
+                  }
+                } else {
+                  homePageService.saveGeoInfo(
+                      curLatLng!, widget.authData, DateTime.now());
+                }
+              } else {
+                setState(() {
+                  curLatLng = Constants.defaultLatLng;
+                  Global.globalLatLng = curLatLng;
+                  mapController.move(curLatLng!, Constants.defaultZoom);
+                });
+              }
+            });
           },
           onTap: (tapPosition, latLng) {
             autoGeo = false;
@@ -236,7 +252,21 @@ class _HomeOSMState extends State<HomeOSM> with WidgetsBindingObserver {
                       Global.globalLatLng = curLatLng;
                       mapController.move(curLatLng!, Constants.defaultZoom);
                     });
+                    print(_captureLocation);
+                    print(curLatLng?.latitude);
                   }
+                } else {
+                  print("before:");
+                  print(_captureLocation);
+                  print(curLatLng?.latitude);
+                  setState(() {
+                    curLatLng = Constants.defaultLatLng;
+                    Global.globalLatLng = curLatLng;
+                    mapController.move(curLatLng!, Constants.defaultZoom);
+                  });
+                  print("after:");
+                  print(_captureLocation);
+                  print(curLatLng?.latitude);
                 }
               },
               backgroundColor: Colors.teal,
