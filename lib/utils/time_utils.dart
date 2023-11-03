@@ -87,4 +87,19 @@ class TimeUtils {
     String day = date.substring(6, 8);
     return "$year-$month-$day";
   }
+
+  /// this method format a datetime into YYYY-mm-DD-HH-MM-SS format
+  /// @param dateTime - the current date time
+  /// @return formattedTimeStr - formatted time
+  static String reformatYYYYMMDDHHMMSS(String date) {
+    if (date.length != 14) {
+      return "Invalid date";
+    }
+    String year = date.substring(0, 4);
+    String month = date.substring(4, 6);
+    String day = date.substring(6, 8);
+    String hour = date.substring(8, 10);
+    String minute = date.substring(10, 12);
+    return "$year-$month-$day $hour:$minute";
+  }
 }

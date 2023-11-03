@@ -26,6 +26,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter/services.dart';
 import 'package:securedialog/constants/app.dart';
+import 'package:securedialog/utils/time_utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../service/home_page_service.dart';
@@ -48,12 +49,16 @@ class _HomeSettingsState extends State<HomeSettings> {
   TextEditingController webIdController = TextEditingController();
   final HomePageService homePageService = HomePageService();
   bool isTextVisible = false;
+  bool isCaptureLocationEnabled = false;
+  int locationCaptureFrequency = 1; // Default to 1 minute
+  String? lastSurveyTime;
 
   @override
   void initState() {
     super.initState();
     _loadEncryptionKey();
     _loadWebID();
+    _loadSettings();
   }
 
   _loadEncryptionKey() async {
@@ -80,6 +85,21 @@ class _HomeSettingsState extends State<HomeSettings> {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString(Constants.lastInputURLKey, newWebID);
   }
+
+  _loadSettings() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      isCaptureLocationEnabled = prefs.getBool('captureLocation') ?? false;
+      locationCaptureFrequency = prefs.getInt('locationCaptureFrequency') ?? 1;
+    });
+  }
+
+  _saveSettings() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool('captureLocation', isCaptureLocationEnabled);
+    prefs.setInt('locationCaptureFrequency', locationCaptureFrequency);
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -251,6 +271,90 @@ class _HomeSettingsState extends State<HomeSettings> {
                                 child: const Text(" SAVE "),
                               ),
                             ],
+                          ),
+                          const SizedBox(height: 20),
+                          SwitchListTile(
+                            title: Text(
+                                'Capture Location',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontFamily: "KleeOne",
+                                fontWeight: FontWeight.bold,
+                                color: Colors.teal[800],
+                              ),
+                            ),
+                            value: isCaptureLocationEnabled,
+                            onChanged: (bool value) {
+                              print("Switch toggled to: $value");
+                              setState(() {
+                                isCaptureLocationEnabled = value;
+                              });
+                              _saveSettings();
+                            },
+                          ),
+                          const SizedBox(height: 20),
+                          Text(
+                            'Location Capture Frequency:',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontFamily: "KleeOne",
+                              fontWeight: FontWeight.bold,
+                              color: Colors.teal[800],
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          DropdownButton<int>(
+                            value: locationCaptureFrequency,
+                            items: const [
+                              DropdownMenuItem<int>(value: 1, child: Text('1 Minute')),
+                              DropdownMenuItem<int>(value: 5, child: Text('5 Minutes')),
+                              DropdownMenuItem<int>(value: 60, child: Text('1 hour')),
+                            ],
+                            onChanged: (int? newValue) {
+                              setState(() {
+                                locationCaptureFrequency = newValue!;
+                              });
+                              _saveSettings();
+                            },
+                          ),
+                          const SizedBox(height: 20),
+                          FutureBuilder<String>(
+                            future: homePageService.getLastSurveyTime(widget.authData!),
+                            builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+                              if (snapshot.connectionState == ConnectionState.waiting) {
+                                return const CircularProgressIndicator();
+                              } else if (snapshot.hasError) {
+                                return Text("Error: ${snapshot.error}");
+                              } else {
+                                lastSurveyTime = snapshot.data ?? Constants.none;
+                                return Padding(
+                                  padding: const EdgeInsets.only(top: 0.0, left: 0.0),
+                                  child: Row(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Last Survey Time:',
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                          fontFamily: "KleeOne",
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.teal[800],
+                                        ),
+                                      ),
+                                      const SizedBox(width: 18),
+                                      Text(
+                                        TimeUtils.reformatYYYYMMDDHHMMSS(lastSurveyTime!),
+                                        style: TextStyle(
+                                            fontSize: 18,
+                                            fontFamily: "KleeOne",
+                                            color: Colors.blueGrey[700]
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                );
+                              }
+                            },
                           ),
                         ],
                       ),
