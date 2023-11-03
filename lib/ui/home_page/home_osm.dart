@@ -140,12 +140,6 @@ class _HomeOSMState extends State<HomeOSM> with WidgetsBindingObserver {
     });
   }
 
-  _saveLocationCaptureSettings() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setBool('captureLocation', _captureLocation);
-    prefs.setInt('locationCaptureFrequency', _locationCaptureFrequency);
-  }
-
 
   @override
   Widget build(BuildContext context) {
