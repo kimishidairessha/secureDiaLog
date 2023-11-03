@@ -69,10 +69,24 @@ class TimeUtils {
     if (date.length != 8) {
       return "Invalid date";
     }
-    String year = date.substring(0, 4);
+    Map<String, String> monthMap = {
+      '01': 'Jan',
+      '02': 'Feb',
+      '03': 'Mar',
+      '04': 'Apr',
+      '05': 'May',
+      '06': 'Jun',
+      '07': 'Jul',
+      '08': 'Aug',
+      '09': 'Sep',
+      '10': 'Oct',
+      '11': 'Nov',
+      '12': 'Dec',
+    };
     String month = date.substring(4, 6);
     String day = date.substring(6, 8);
-    return "$year\n$month-$day";
+    String monthName = monthMap[month] ?? "Invalid";
+    return "$day $monthName";
   }
 
   /// this method format a datetime into YYYY-mm-DD format
