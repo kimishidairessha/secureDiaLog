@@ -21,6 +21,7 @@
 /// Authors: Ye Duan
 
 import 'package:flutter/material.dart';
+import 'package:securedialog/constants/app.dart';
 import 'package:securedialog/model/tooltip.dart';
 import 'package:securedialog/utils/time_utils.dart';
 
@@ -95,7 +96,7 @@ class _DataTableWidget extends State<DataTableWidget> {
           children: [
             // Header row
             Container(
-              color: Colors.white,
+              color: Constants.tableColor,
               child: const DefaultTextStyle(
                 style: TextStyle(
                   fontSize: 15,
@@ -162,7 +163,7 @@ class _DataTableWidget extends State<DataTableWidget> {
                 child: SingleChildScrollView(
                   controller: controller,
                   child: Container(
-                    color: Colors.white,
+                    color: Constants.tableColor,
                     child: DataTable(
                       headingRowHeight: 0,
                       columns: const [
