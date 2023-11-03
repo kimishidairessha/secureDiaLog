@@ -25,7 +25,6 @@
 import 'package:flutter/material.dart';
 
 import 'package:awesome_notifications/awesome_notifications.dart';
-import 'package:securedialog/model/chart_point.dart';
 import 'package:securedialog/model/survey_day_info.dart';
 
 import 'package:securedialog/service/home_page_service.dart';
@@ -37,7 +36,6 @@ import 'package:securedialog/ui/home_page/home_settings.dart';
 import 'package:securedialog/ui/home_page/home_survey.dart';
 import 'package:securedialog/utils/base_widget.dart';
 import 'package:securedialog/constants/app.dart';
-import 'package:securedialog/utils/chart_utils.dart';
 import 'package:securedialog/utils/global.dart';
 import 'package:securedialog/utils/notify_utils.dart';
 import 'package:securedialog/utils/time_utils.dart';
