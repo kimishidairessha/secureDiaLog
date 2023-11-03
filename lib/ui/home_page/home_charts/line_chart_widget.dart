@@ -182,7 +182,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
                         print(adjustedGroupIndex);
                         String time = widget.timeList[adjustedGroupIndex];
                         String strength =
-                            widget.yList[adjustedGroupIndex].toString();
+                            widget.yList[adjustedGroupIndex].toInt().toString();
 
                         String tooltipText = "$time\nValue: $strength";
 
@@ -239,7 +239,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
                 .take(4)
                 .toList()
                 .map((toolTip) =>
-                    "${TimeUtils.convertHHmmToClock(toolTip.time)} - ${toolTip.val}")
+                    "${TimeUtils.convertHHmmToClock(toolTip.time)} - ${toolTip.val.toInt()}")
                 .join(', '),
             style: const TextStyle(
               color: Colors.teal,

@@ -181,9 +181,9 @@ class _GroupChartWidgetState extends State<GroupChartWidget> {
                         print(adjustedGroupIndex);
                         String time = widget.timeList[adjustedGroupIndex];
                         String systolic =
-                            widget.yList[adjustedGroupIndex].toString();
+                            widget.yList[adjustedGroupIndex].toInt().toString();
                         String diastolic =
-                            widget.yList2[adjustedGroupIndex].toString();
+                            widget.yList2[adjustedGroupIndex].toInt().toString();
 
                         String tooltipText =
                             "$time\nSystolic: $systolic\nDiastolic: $diastolic";
@@ -241,7 +241,7 @@ class _GroupChartWidgetState extends State<GroupChartWidget> {
                 .take(4)
                 .toList()
                 .map((toolTip) =>
-                    "${TimeUtils.convertHHmmToClock(toolTip.time)} - ${toolTip.val}")
+                    "${TimeUtils.convertHHmmToClock(toolTip.time)} - ${toolTip.val.toInt()}")
                 .join(', '),
             style: const TextStyle(
               color: Colors.teal,
@@ -263,7 +263,7 @@ class _GroupChartWidgetState extends State<GroupChartWidget> {
                 .take(4)
                 .toList()
                 .map((toolTip) =>
-                    "${TimeUtils.convertHHmmToClock(toolTip.time)} - ${toolTip.val}")
+                    "${TimeUtils.convertHHmmToClock(toolTip.time)} - ${toolTip.val.toInt()}")
                 .join(', '),
             style: const TextStyle(
               color: Colors.teal,
