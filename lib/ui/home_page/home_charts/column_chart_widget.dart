@@ -152,14 +152,20 @@ class _ColumnChartWidgetState extends State<ColumnChartWidget> {
                   barTouchData: BarTouchData(
                     touchCallback:
                         (FlTouchEvent event, BarTouchResponse? touchResponse) {
-                      if (touchResponse != null && touchResponse.spot != null) {
-                        setState(() {
-                          selectedBarIndex =
-                              touchResponse.spot!.touchedBarGroupIndex +
-                                  firstVisibleDataIndex;
-                          print("Selected bar index: $selectedBarIndex");
-                        });
-                      }
+                          if (event is FlLongPressStart || event is FlTapDownEvent){
+                            if (touchResponse != null && touchResponse.spot != null) {
+                              setState(() {
+                                selectedBarIndex =
+                                    touchResponse.spot!.touchedBarGroupIndex +
+                                        firstVisibleDataIndex;
+                                print("Selected bar index: $selectedBarIndex");
+                              });
+                            }
+                          } else if (event is FlLongPressEnd || event is FlTapCancelEvent) {
+                            setState(() {
+                              selectedBarIndex = null;
+                            });
+                          }
                     },
                     touchTooltipData: BarTouchTooltipData(
                       tooltipBgColor: Colors.green[600],
