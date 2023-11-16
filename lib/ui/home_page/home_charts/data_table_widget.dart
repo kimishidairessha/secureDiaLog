@@ -207,8 +207,8 @@ class _DataTableWidget extends State<DataTableWidget> {
           DataCell(
            IconButton(
                 icon: const Icon(Icons.delete, size: 25, color: Colors.green),
-                padding: EdgeInsets.all(0), // Remove padding
-                constraints: BoxConstraints(), // Remove constraints
+                padding: const EdgeInsets.all(0), // Remove padding
+                constraints: const BoxConstraints(), // Remove constraints
                 onPressed: () => onDeleteRow(rowIndex, false),
               )),
           DataCell(Text(widget.timeList[rowIndex])),
@@ -228,8 +228,8 @@ class _DataTableWidget extends State<DataTableWidget> {
             DataCell(
                 IconButton(
                     icon: const Icon(Icons.delete, size: 25, color: Colors.green),
-                    padding: EdgeInsets.all(0), // Remove padding
-                    constraints: BoxConstraints(), // Remove constraints
+                    padding: const EdgeInsets.all(0), // Remove padding
+                    constraints: const BoxConstraints(), // Remove constraints
                     onPressed: () => onDeleteRow(rowIndex, true, i),
                   )),
             DataCell(
