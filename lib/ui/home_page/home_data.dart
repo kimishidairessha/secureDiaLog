@@ -199,6 +199,89 @@ class _HomeDataState extends State<HomeData> {
     }
   }
 
+  void onDelete(String date, String time) async {
+    // Combine date and time to form the criteria or file name
+    String criteria = "$date$time";
+    // Call the method to delete the file from the POD
+    await homePageService.deleteFileMatchingCriteria(widget.authData, criteria);
+  }
+
+  Future<void> refreshData() async {
+    try {
+      // Fetch the new survey data
+      List<SurveyDayInfo>? newSurveyDayInfoList = await homePageService.getSurveyDayInfoList(
+          Constants.barNumber, widget.authData);
+
+      if (newSurveyDayInfoList != null) {
+        // Parse the new data
+        List<TablePoint> newTableList = ChartUtils.parseToTable(newSurveyDayInfoList);
+
+        // Clear the existing data lists
+        clearDataLists();
+
+        // Update the data lists with the new data
+        for (TablePoint tablePoint in newTableList) {
+          strengthList1.add(tablePoint.strengthMax);
+          strengthTimeList1.add(tablePoint.strengthMaxTime);
+          fastingList1.add(tablePoint.fastingMax);
+          fastingTimeList1.add(tablePoint.fastingMaxTime);
+          postprandialList1.add(tablePoint.postprandialMax);
+          postprandialTimeList1.add(tablePoint.postprandialMaxTime);
+          diastolicList1.add(tablePoint.diastolicMax);
+          diastolicTimeList1.add(tablePoint.diastolicMaxTime);
+          weightList1.add(tablePoint.weightMax);
+          weightTimeList1.add(tablePoint.weightMaxTime);
+          systolicList1.add(tablePoint.systolicMax);
+          systolicTimeList1.add(tablePoint.systolicMaxTime);
+          heartRateList1.add(tablePoint.heartRateMax);
+          heartRateTimeList1.add(tablePoint.heartRateMaxTime);
+          timeList1.add(
+              TimeUtils.reformatDateForTable(tablePoint.obTimeDay));
+          strengthToolTipsList1.add(tablePoint.otherStrength);
+          fastingToolTipsList1.add(tablePoint.otherFasting);
+          postprandialToolTipsList1.add(tablePoint.otherPostprandial);
+          diastolicToolTipsList1.add(tablePoint.otherDiastolic);
+          weightToolTipsList1.add(tablePoint.otherWeight);
+          systolicToolTipsList1.add(tablePoint.otherSystolic);
+          heartRateToolTipsList1.add(tablePoint.otherHeartRate);
+        }
+
+        // Update the UI with the new data
+        setState(() {});
+      }
+    } catch (e) {
+      // Handle any errors
+      print("Error while refreshing data: $e");
+    }
+  }
+
+  void clearDataLists() {
+    strengthList1.clear();
+    strengthTimeList1.clear();
+    fastingList1.clear();
+    fastingTimeList1.clear();
+    postprandialList1.clear();
+    postprandialTimeList1.clear();
+    diastolicList1.clear();
+    diastolicTimeList1.clear();
+    weightList1.clear();
+    weightTimeList1.clear();
+    systolicList1.clear();
+    systolicTimeList1.clear();
+    heartRateList1.clear();
+    heartRateTimeList1.clear();
+    timeList1.clear();
+    strengthToolTipsList1.clear();
+    fastingToolTipsList1.clear();
+    postprandialToolTipsList1.clear();
+    diastolicToolTipsList1.clear();
+    weightToolTipsList1.clear();
+    systolicToolTipsList1.clear();
+    heartRateToolTipsList1.clear();
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -377,7 +460,8 @@ class _HomeDataState extends State<HomeData> {
                         diastolicToolTipsList1,
                         weightToolTipsList1,
                         systolicToolTipsList1,
-                        heartRateToolTipsList1),
+                        heartRateToolTipsList1,
+                        onDelete),
                     BaseWidget.getPadding(10),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -397,6 +481,12 @@ class _HomeDataState extends State<HomeData> {
                             backgroundColor: MaterialStateProperty.all(Colors.teal[400]),
                           ),
                           child: const Text("Import from CSV"),
+                        ),
+                        const SizedBox(width: 18),
+                        IconButton(
+                          icon: const Icon(Icons.refresh),
+                          color: Colors.teal[400],
+                          onPressed: refreshData,
                         ),
                       ],
                     ),

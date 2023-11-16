@@ -116,4 +116,20 @@ class TimeUtils {
     String minute = date.substring(10, 12);
     return "$year-$month-$day $hour:$minute";
   }
+
+  static String reverseDateFormat(String formattedDate) {
+    List<String> parts = formattedDate.split('-');
+    if (parts.length != 3) {
+      return "Invalid date";
+    }
+    String year = parts[0];
+    String month = parts[1];
+    String day = parts[2];
+    return "$year$month$day";
+  }
+
+  static String reverseTimeFormat(String formattedTime) {
+    return formattedTime.replaceAll(':', '');
+  }
+
 }
