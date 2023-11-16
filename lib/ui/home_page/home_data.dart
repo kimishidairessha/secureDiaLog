@@ -20,6 +20,7 @@
 ///
 /// Authors: Ye Duan
 
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:securedialog/model/survey_day_info.dart';
@@ -136,6 +137,66 @@ class _HomeDataState extends State<HomeData> {
 
     // Use the share plugin to share the file
     Share.shareFiles(['$path/export.csv'], text: 'My CSV data');
+  }
+
+  Future<void> importFromCsv() async {
+    try {
+      // Let the user pick a CSV file
+      FilePickerResult? result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['csv'],
+      );
+
+      if (result != null) {
+        File file = File(result.files.single.path!);
+
+        final csvString = await file.readAsString();
+        List<List<dynamic>> rows = const CsvToListConverter().convert(csvString);
+
+        // Skip the header row and append data
+        for (int i = 1; i < rows.length; i++) {
+          List<dynamic> row = rows[i];
+          if (row.length >= 9) {
+            String dateString = "${row[0]} ${row[1]}"; // Combines date and time
+            dateString = dateString.replaceAll('/', '-'); // Replace '/' with '-'
+            List<String> parts = dateString.split(" ");
+            if (parts.length == 2) {
+              List<String> timeParts = parts[1].split(":");
+              if (timeParts.length == 2) {
+                String hour = timeParts[0].padLeft(2, '0'); // Pad hour with 0 if it's one digit
+                String minute = timeParts[1].padLeft(2, '0'); // Pad minute with 0 if it's one digit
+                dateString = "${parts[0]} $hour:$minute"; // Reconstruct the date string
+              }
+            }
+            DateTime? dateTime = DateTime.tryParse(dateString);
+            if (dateTime == null) {
+              // Handle the case where the date-time is invalid
+              print("Invalid date-time format in CSV: ${row[0]} ${row[1]}");
+              continue; // Skip this row or handle appropriately
+            }
+            await homePageService.saveSurveyInfo(
+                row[6].toString(),
+                row[7].toString(),
+                row[8].toString(),
+                row[2].toString(),
+                row[3].toString(),
+                row[5].toString(),
+                row[4].toString(),
+                widget.authData,
+                dateTime
+            );
+          }
+        }
+        setState(() {
+          // Update the UI with the new data
+        });
+      } else {
+        // User canceled the picker
+      }
+    } catch (e) {
+      // Handle any exceptions
+      print("Error while importing CSV: $e");
+    }
   }
 
   @override
@@ -318,13 +379,26 @@ class _HomeDataState extends State<HomeData> {
                         systolicToolTipsList1,
                         heartRateToolTipsList1),
                     BaseWidget.getPadding(10),
-                    ElevatedButton(
-                      onPressed: exportToCsv,
-                      style: ButtonStyle(
-                        backgroundColor:
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ElevatedButton(
+                          onPressed: exportToCsv,
+                          style: ButtonStyle(
+                            backgroundColor:
                             MaterialStateProperty.all(Colors.teal[400]),
-                      ),
-                      child: const Text("Export to CSV"),
+                          ),
+                          child: const Text("Export to CSV"),
+                        ),
+                        const SizedBox(width: 18),
+                        ElevatedButton(
+                          onPressed: importFromCsv,
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all(Colors.teal[400]),
+                          ),
+                          child: const Text("Import from CSV"),
+                        ),
+                      ],
                     ),
                   ],
                 );
