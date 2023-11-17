@@ -114,12 +114,6 @@ class HomePageService {
     for (SurveyInfo surveyInfo in surveyInfoList) {
       String obTime = surveyInfo.obTime;
 
-      // 20230930 gjw TODO WHY IS THIS N/A. AS A RESULT IT FAILS TO EXTRACT THE
-      // LENGTH 8 SUBSTRING. SO ONLY SUBSTRING THIS IF THE LENGTH IS AT LEAST
-      // 8. ONCE CONFIRMED WHY IT IS N/A THEN REMOVE THE PRINT AND POTENTIALY
-      // CATCH THE N/A AND RAISE AN ERROR, OR IF ACCEPTABLE THEN DON'T SUBSTRING
-      // IF N/A. ALSO DOCUMENT WHAT FORMAT IS EXPECTED.
-
       String date = obTime.length < 8 ? obTime : obTime.substring(0, 8);
 
       if (!tempMap.containsKey(date)) {
