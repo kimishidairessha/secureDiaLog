@@ -60,35 +60,11 @@ class _KeyPageState extends State<KeyPage> {
   _loadEncryptionKey() async {
     String? storedKey = await storage.read(key: 'encKey');
     if (storedKey != null) {
-      if (await keyPageService.checkAndSetEncKey(
-          widget.authData, storedKey)) {
-        Global.isEncKeySet = true;
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-              builder: (context) =>
-                  HomePage(widget.authData, Constants.indexPage)),
-        );
-      } else {
-        // If the stored key is invalid, show it in the text field
-        // and pop up a warning
         setState(() {
           encKeyController.text = storedKey;
           isIconVisible =
           false; // Make the visibility icon visible if text is present
         });
-        showDialog<bool>(
-          context: context,
-          builder: (context) {
-            return BaseWidget.getNoticeDialog(
-                context,
-                "Warning",
-                "The encryption key you stored is incorrect. "
-                    "Please enter the correct key.",
-                "Try again");
-          },
-        );
-      }
     }
   }
 
