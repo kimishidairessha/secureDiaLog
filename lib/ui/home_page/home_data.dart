@@ -20,6 +20,7 @@
 ///
 /// Authors: Ye Duan
 
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:securedialog/model/survey_day_info.dart';
@@ -137,6 +138,149 @@ class _HomeDataState extends State<HomeData> {
     // Use the share plugin to share the file
     Share.shareFiles(['$path/export.csv'], text: 'My CSV data');
   }
+
+  Future<void> importFromCsv() async {
+    try {
+      // Let the user pick a CSV file
+      FilePickerResult? result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['csv'],
+      );
+
+      if (result != null) {
+        File file = File(result.files.single.path!);
+
+        final csvString = await file.readAsString();
+        List<List<dynamic>> rows = const CsvToListConverter().convert(csvString);
+
+        // Skip the header row and append data
+        for (int i = 1; i < rows.length; i++) {
+          List<dynamic> row = rows[i];
+          if (row.length >= 9) {
+            String dateString = "${row[0]} ${row[1]}"; // Combines date and time
+            dateString = dateString.replaceAll('/', '-'); // Replace '/' with '-'
+            List<String> parts = dateString.split(" ");
+            if (parts.length == 2) {
+              List<String> timeParts = parts[1].split(":");
+              if (timeParts.length == 2) {
+                String hour = timeParts[0].padLeft(2, '0'); // Pad hour with 0 if it's one digit
+                String minute = timeParts[1].padLeft(2, '0'); // Pad minute with 0 if it's one digit
+                dateString = "${parts[0]} $hour:$minute"; // Reconstruct the date string
+              }
+            }
+            DateTime? dateTime = DateTime.tryParse(dateString);
+            if (dateTime == null) {
+              // Handle the case where the date-time is invalid
+              print("Invalid date-time format in CSV: ${row[0]} ${row[1]}");
+              continue; // Skip this row or handle appropriately
+            }
+            await homePageService.saveSurveyInfo(
+                row[6].toString(),
+                row[7].toString(),
+                row[8].toString(),
+                row[2].toString(),
+                row[3].toString(),
+                row[5].toString(),
+                row[4].toString(),
+                widget.authData,
+                dateTime
+            );
+          }
+        }
+        setState(() {
+          // Update the UI with the new data
+        });
+      } else {
+        // User canceled the picker
+      }
+    } catch (e) {
+      // Handle any exceptions
+      print("Error while importing CSV: $e");
+    }
+  }
+
+  void onDelete(String date, String time) async {
+    // Combine date and time to form the criteria or file name
+    String criteria = "$date$time";
+    // Call the method to delete the file from the POD
+    await homePageService.deleteFileMatchingCriteria(widget.authData, criteria);
+  }
+
+  Future<void> refreshData() async {
+    try {
+      // Fetch the new survey data
+      List<SurveyDayInfo>? newSurveyDayInfoList = await homePageService.getSurveyDayInfoList(
+          Constants.barNumber, widget.authData);
+
+      if (newSurveyDayInfoList != null) {
+        // Parse the new data
+        List<TablePoint> newTableList = ChartUtils.parseToTable(newSurveyDayInfoList);
+
+        // Clear the existing data lists
+        clearDataLists();
+
+        // Update the data lists with the new data
+        for (TablePoint tablePoint in newTableList) {
+          strengthList1.add(tablePoint.strengthMax);
+          strengthTimeList1.add(tablePoint.strengthMaxTime);
+          fastingList1.add(tablePoint.fastingMax);
+          fastingTimeList1.add(tablePoint.fastingMaxTime);
+          postprandialList1.add(tablePoint.postprandialMax);
+          postprandialTimeList1.add(tablePoint.postprandialMaxTime);
+          diastolicList1.add(tablePoint.diastolicMax);
+          diastolicTimeList1.add(tablePoint.diastolicMaxTime);
+          weightList1.add(tablePoint.weightMax);
+          weightTimeList1.add(tablePoint.weightMaxTime);
+          systolicList1.add(tablePoint.systolicMax);
+          systolicTimeList1.add(tablePoint.systolicMaxTime);
+          heartRateList1.add(tablePoint.heartRateMax);
+          heartRateTimeList1.add(tablePoint.heartRateMaxTime);
+          timeList1.add(
+              TimeUtils.reformatDateForTable(tablePoint.obTimeDay));
+          strengthToolTipsList1.add(tablePoint.otherStrength);
+          fastingToolTipsList1.add(tablePoint.otherFasting);
+          postprandialToolTipsList1.add(tablePoint.otherPostprandial);
+          diastolicToolTipsList1.add(tablePoint.otherDiastolic);
+          weightToolTipsList1.add(tablePoint.otherWeight);
+          systolicToolTipsList1.add(tablePoint.otherSystolic);
+          heartRateToolTipsList1.add(tablePoint.otherHeartRate);
+        }
+
+        // Update the UI with the new data
+        setState(() {});
+      }
+    } catch (e) {
+      // Handle any errors
+      print("Error while refreshing data: $e");
+    }
+  }
+
+  void clearDataLists() {
+    strengthList1.clear();
+    strengthTimeList1.clear();
+    fastingList1.clear();
+    fastingTimeList1.clear();
+    postprandialList1.clear();
+    postprandialTimeList1.clear();
+    diastolicList1.clear();
+    diastolicTimeList1.clear();
+    weightList1.clear();
+    weightTimeList1.clear();
+    systolicList1.clear();
+    systolicTimeList1.clear();
+    heartRateList1.clear();
+    heartRateTimeList1.clear();
+    timeList1.clear();
+    strengthToolTipsList1.clear();
+    fastingToolTipsList1.clear();
+    postprandialToolTipsList1.clear();
+    diastolicToolTipsList1.clear();
+    weightToolTipsList1.clear();
+    systolicToolTipsList1.clear();
+    heartRateToolTipsList1.clear();
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -316,15 +460,35 @@ class _HomeDataState extends State<HomeData> {
                         diastolicToolTipsList1,
                         weightToolTipsList1,
                         systolicToolTipsList1,
-                        heartRateToolTipsList1),
+                        heartRateToolTipsList1,
+                        onDelete),
                     BaseWidget.getPadding(10),
-                    ElevatedButton(
-                      onPressed: exportToCsv,
-                      style: ButtonStyle(
-                        backgroundColor:
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ElevatedButton(
+                          onPressed: exportToCsv,
+                          style: ButtonStyle(
+                            backgroundColor:
                             MaterialStateProperty.all(Colors.teal[400]),
-                      ),
-                      child: const Text("Export to CSV"),
+                          ),
+                          child: const Text("Export to CSV"),
+                        ),
+                        const SizedBox(width: 18),
+                        ElevatedButton(
+                          onPressed: importFromCsv,
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all(Colors.teal[400]),
+                          ),
+                          child: const Text("Import from CSV"),
+                        ),
+                        const SizedBox(width: 18),
+                        IconButton(
+                          icon: const Icon(Icons.refresh),
+                          color: Colors.teal[400],
+                          onPressed: refreshData,
+                        ),
+                      ],
                     ),
                   ],
                 );
