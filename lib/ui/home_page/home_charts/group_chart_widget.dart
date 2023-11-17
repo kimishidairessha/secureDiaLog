@@ -110,7 +110,6 @@ class _GroupChartWidgetState extends State<GroupChartWidget> {
   int firstVisibleDataIndex = 8;
 
   void updateVisibleData() {
-    print("updateVisibleData called");
     int calculatedIndex = (scrollController.offset / 15).floor();
     int maxFirstIndex = rawBarGroups.length - visibleLength;
 
@@ -125,7 +124,6 @@ class _GroupChartWidgetState extends State<GroupChartWidget> {
             rawBarGroups.sublist(firstVisibleDataIndex, lastVisibleDataIndex);
       });
     }
-    print("First: $firstVisibleDataIndex, Last: $lastVisibleDataIndex");
   }
 
   @override
@@ -163,7 +161,6 @@ class _GroupChartWidgetState extends State<GroupChartWidget> {
                                 selectedBarIndex =
                                     touchResponse.spot!.touchedBarGroupIndex +
                                         firstVisibleDataIndex;
-                                print("Selected bar index: $selectedBarIndex");
                               });
                             }
                           } else if (event is FlLongPressEnd || event is FlTapCancelEvent) {
@@ -175,10 +172,8 @@ class _GroupChartWidgetState extends State<GroupChartWidget> {
                     touchTooltipData: BarTouchTooltipData(
                       tooltipBgColor: Colors.green[600],
                       getTooltipItem: (group, groupIndex, rod, rodIndex) {
-                        print("Group index: $groupIndex, Rod index: $rodIndex");
                         int adjustedGroupIndex =
                             groupIndex + firstVisibleDataIndex;
-                        print(adjustedGroupIndex);
                         String time = widget.timeList[adjustedGroupIndex];
                         String systolic =
                             widget.yList[adjustedGroupIndex].toInt().toString();

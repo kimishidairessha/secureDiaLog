@@ -106,7 +106,6 @@ class _ColumnChartWidgetState extends State<ColumnChartWidget> {
   int firstVisibleDataIndex = 8;
 
   void updateVisibleData() {
-    print("updateVisibleData called");
     int calculatedIndex = (scrollController.offset / 15).floor();
     int maxFirstIndex = rawBarGroups.length - visibleLength;
 
@@ -121,7 +120,6 @@ class _ColumnChartWidgetState extends State<ColumnChartWidget> {
             rawBarGroups.sublist(firstVisibleDataIndex, lastVisibleDataIndex);
       });
     }
-    print("First: $firstVisibleDataIndex, Last: $lastVisibleDataIndex");
   }
 
   @override
@@ -158,7 +156,6 @@ class _ColumnChartWidgetState extends State<ColumnChartWidget> {
                                 selectedBarIndex =
                                     touchResponse.spot!.touchedBarGroupIndex +
                                         firstVisibleDataIndex;
-                                print("Selected bar index: $selectedBarIndex");
                               });
                             }
                           } else if (event is FlLongPressEnd || event is FlTapCancelEvent) {
@@ -170,10 +167,8 @@ class _ColumnChartWidgetState extends State<ColumnChartWidget> {
                     touchTooltipData: BarTouchTooltipData(
                       tooltipBgColor: Colors.green[600],
                       getTooltipItem: (group, groupIndex, rod, rodIndex) {
-                        print("Group index: $groupIndex, Rod index: $rodIndex");
                         int adjustedGroupIndex =
                             groupIndex + firstVisibleDataIndex;
-                        print(adjustedGroupIndex);
                         String time = widget.timeList[adjustedGroupIndex];
                         String strength = mapIntToValueString(
                             widget.yList[adjustedGroupIndex]);

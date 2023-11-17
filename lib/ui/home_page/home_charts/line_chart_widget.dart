@@ -92,7 +92,6 @@ class _LineChartWidgetState extends State<LineChartWidget> {
           showingTooltipIndicators: [],
         ),
       );
-      print(widget.yList[i]);
     }
     // Create the scroll controller and add a listener to it
     scrollController = ScrollController(
@@ -124,7 +123,6 @@ class _LineChartWidgetState extends State<LineChartWidget> {
             rawBarGroups.sublist(firstVisibleDataIndex, lastVisibleDataIndex);
       });
     }
-    print("First: $firstVisibleDataIndex, Last: $lastVisibleDataIndex");
   }
 
   @override
@@ -164,7 +162,6 @@ class _LineChartWidgetState extends State<LineChartWidget> {
                                 selectedBarIndex =
                                     touchResponse.spot!.touchedBarGroupIndex +
                                         firstVisibleDataIndex;
-                                print("Selected bar index: $selectedBarIndex");
                               });
                             }
                           } else if (event is FlLongPressEnd || event is FlTapCancelEvent) {
@@ -176,10 +173,8 @@ class _LineChartWidgetState extends State<LineChartWidget> {
                     touchTooltipData: BarTouchTooltipData(
                       tooltipBgColor: Colors.green[600],
                       getTooltipItem: (group, groupIndex, rod, rodIndex) {
-                        print("Group index: $groupIndex, Rod index: $rodIndex");
                         int adjustedGroupIndex =
                             groupIndex + firstVisibleDataIndex;
-                        print(adjustedGroupIndex);
                         String time = widget.timeList[adjustedGroupIndex];
                         String strength =
                             widget.yList[adjustedGroupIndex].toInt().toString();
