@@ -49,6 +49,8 @@ class DataTableWidget extends StatefulWidget {
   final List<List<ToolTip>> systolicToolTipsList;
   final List<List<ToolTip>> heartRateToolTipsList;
 
+  final Function(String date, String time) onDelete; // Callback for deletion
+
   const DataTableWidget(
       this.timeList,
       this.strengthTimeList,
@@ -72,6 +74,7 @@ class DataTableWidget extends StatefulWidget {
       this.weightToolTipsList,
       this.systolicToolTipsList,
       this.heartRateToolTipsList,
+      this.onDelete,
       {Key? key})
       : super(key: key);
 
@@ -105,6 +108,11 @@ class _DataTableWidget extends State<DataTableWidget> {
                 ),
                 child: Row(
                   children: [
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 40.0, vertical: 15.0),
+                      child: Text(''),
+                    ),
                     Padding(
                       padding: EdgeInsets.symmetric(
                           horizontal: 42.0, vertical: 15.0),
@@ -167,6 +175,7 @@ class _DataTableWidget extends State<DataTableWidget> {
                     child: DataTable(
                       headingRowHeight: 0,
                       columns: const [
+                        DataColumn(label: SizedBox(width: 5, child: Text(''))),
                         DataColumn(label: Text('Data')),
                         DataColumn(label: Text('Time')),
                         DataColumn(label: Text('Systolic')),
@@ -195,6 +204,13 @@ class _DataTableWidget extends State<DataTableWidget> {
       if (widget.strengthTimeList[rowIndex] != 'none') {
         // Main data row
         allRows.add(DataRow(cells: [
+          DataCell(
+           IconButton(
+                icon: const Icon(Icons.delete, size: 25, color: Colors.green),
+                padding: const EdgeInsets.all(0), // Remove padding
+                constraints: const BoxConstraints(), // Remove constraints
+                onPressed: () => onDeleteRow(rowIndex, false),
+              )),
           DataCell(Text(widget.timeList[rowIndex])),
           DataCell(Text(widget.strengthTimeList[rowIndex])),
           DataCell(Text('${widget.systolicList[rowIndex]}')),
@@ -209,6 +225,13 @@ class _DataTableWidget extends State<DataTableWidget> {
         // Tooltip rows for strength
         for (int i = 0; i < widget.strengthToolTipsList[rowIndex].length; i++) {
           allRows.add(DataRow(cells: [
+            DataCell(
+                IconButton(
+                    icon: const Icon(Icons.delete, size: 25, color: Colors.green),
+                    padding: const EdgeInsets.all(0), // Remove padding
+                    constraints: const BoxConstraints(), // Remove constraints
+                    onPressed: () => onDeleteRow(rowIndex, true, i),
+                  )),
             DataCell(
                 Text(widget.timeList[rowIndex])), // Date empty for tooltip rows
             DataCell(Text(TimeUtils.convertHHmmToClock(widget
@@ -232,6 +255,39 @@ class _DataTableWidget extends State<DataTableWidget> {
     }
     return allRows;
   }
+
+  void onDeleteRow(int rowIndex, bool isToolTip, [int i = 0]) {
+    if (isToolTip) {
+      String date = TimeUtils.reverseDateFormat(widget.timeList[rowIndex]);
+      String time = widget.strengthToolTipsList[rowIndex][i].time;
+      setState(() {
+        widget.strengthToolTipsList[rowIndex].removeAt(i);
+        widget.systolicToolTipsList[rowIndex].removeAt(i);
+        widget.diastolicToolTipsList[rowIndex].removeAt(i);
+        widget.heartRateToolTipsList[rowIndex].removeAt(i);
+        widget.weightToolTipsList[rowIndex].removeAt(i);
+        widget.fastingToolTipsList[rowIndex].removeAt(i);
+        widget.postprandialToolTipsList[rowIndex].removeAt(i);
+      });
+      widget.onDelete(date, time);
+    } else {
+      String date = TimeUtils.reverseDateFormat(widget.timeList[rowIndex]);
+      String time = TimeUtils.reverseTimeFormat(widget.strengthTimeList[rowIndex]);
+      setState(() {
+        widget.timeList.removeAt(rowIndex);
+        widget.strengthTimeList.removeAt(rowIndex);
+        widget.systolicList.removeAt(rowIndex);
+        widget.diastolicList.removeAt(rowIndex);
+        widget.heartRateList.removeAt(rowIndex);
+        widget.weightList.removeAt(rowIndex);
+        widget.strengthList.removeAt(rowIndex);
+        widget.fastingList.removeAt(rowIndex);
+        widget.postprandialList.removeAt(rowIndex);
+      });
+      widget.onDelete(date, time);
+    }
+  }
+
 
   String mapValueToText(double value) {
     switch (value.toInt()) {

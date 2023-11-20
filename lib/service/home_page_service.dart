@@ -79,7 +79,7 @@ class HomePageService {
       // 20231001 kimi the net layer works well.
 
       List<String> fileNameList = SolidUtils.getSurveyFileNameList(
-          surveyContainerContent, webId, dayNum * 7);
+          surveyContainerContent, webId, 2147483647);
 
       // 20231001 gjw TODO WHY IS THIS DONE TWICE?? EVERYTHING TO DO WITH
       // LOADING AND PARSING SEEMS TO BE DONE TWICE??
@@ -140,6 +140,34 @@ class HomePageService {
 
     return surveyDayInfoList;
   }
+
+  Future<void> deleteFileMatchingCriteria(
+      Map<dynamic, dynamic>? authData,
+      String criteria) async {
+    Map<String, dynamic> podInfo = SolidUtils.parseAuthData(authData);
+    String? accessToken = podInfo[Constants.accessToken];
+    String? surveyContainerURI = podInfo[Constants.surveyContainerURI];
+    dynamic rsa = podInfo[Constants.rsa];
+    dynamic pubKeyJwk = podInfo[Constants.pubKeyJwk];
+
+    try {
+      String surveyContainerContent = await homePageNet.readFile(
+          surveyContainerURI!, accessToken!, rsa, pubKeyJwk);
+
+      List<String> fileNameList = SolidUtils.getSurveyFileNameList(
+          surveyContainerContent, podInfo[Constants.webId], 2147483647);
+
+      for (String fileName in fileNameList) {
+        if (fileName.startsWith(criteria)) {
+          String fileURI = surveyContainerURI + fileName;
+          await homePageNet.deleteFile(fileURI, accessToken, rsa, pubKeyJwk);
+        }
+      }
+    } catch (e) {
+      debugPrint("Error on deleting file matching criteria: $e");
+    }
+  }
+
 
   /// the method is to save the answered survey information into a POD
   /// @param answer1 - q1's answer
