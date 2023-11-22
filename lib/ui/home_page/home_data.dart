@@ -171,7 +171,7 @@ class _HomeDataState extends State<HomeData> {
             DateTime? dateTime = DateTime.tryParse(dateString);
             if (dateTime == null) {
               // Handle the case where the date-time is invalid
-              print("Invalid date-time format in CSV: ${row[0]} ${row[1]}");
+              debugPrint("Invalid date-time format in CSV: ${row[0]} ${row[1]}");
               continue; // Skip this row or handle appropriately
             }
             await homePageService.saveSurveyInfo(
@@ -195,7 +195,7 @@ class _HomeDataState extends State<HomeData> {
       }
     } catch (e) {
       // Handle any exceptions
-      print("Error while importing CSV: $e");
+      debugPrint("Error while importing CSV: $e");
     }
   }
 
@@ -251,7 +251,7 @@ class _HomeDataState extends State<HomeData> {
       }
     } catch (e) {
       // Handle any errors
-      print("Error while refreshing data: $e");
+      debugPrint("Error while refreshing data: $e");
     }
   }
 

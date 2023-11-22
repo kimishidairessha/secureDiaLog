@@ -24,6 +24,7 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 
 import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:securedialog/utils/debug_print_config.dart';
 import 'package:universal_io/io.dart' show Platform;
 import 'package:window_manager/window_manager.dart';
 
@@ -33,9 +34,12 @@ import 'package:securedialog/utils/geo_utils.dart';
 /// Main entry point for the application.
 
 void main() async {
-  debugPrint = (String? message, {int? wrapWidth}) {
-    null;
-  };
+
+  if (DebugPrintConfig.debugPrint == 'FALSE'){
+    debugPrint = (String? message, {int? wrapWidth}) {
+      null;
+    };
+  }
 
   // Identify if Desktop or Mobile app.
 
