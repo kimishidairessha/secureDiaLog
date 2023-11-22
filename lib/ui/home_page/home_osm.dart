@@ -153,12 +153,6 @@ class _HomeOSMState extends State<HomeOSM> with WidgetsBindingObserver {
           keepAlive: true,
           onMapReady: () {
             debugPrint("map init complete");
-
-            // 20230930 gjw TODO LET'S TURN OFF THE MAP UPDATES FOR NOW. GEO
-            // CAPABILITY IS NOT BEING USED FOR THE SECUREDIALOG APP AT THIS
-            // TIME. BUT WE SHOULD ADD A SETTING TO TURN THIS OFF RATHER THAN
-            // COMMENT OUT THE CODE.
-
             timer = Timer.periodic(
                 Duration(seconds: _locationCaptureFrequency * 60), (timer) async {
               if(_captureLocation){
@@ -206,21 +200,6 @@ class _HomeOSMState extends State<HomeOSM> with WidgetsBindingObserver {
           },
         ),
         nonRotatedChildren: [
-          // 20230630 gjw The following results in
-          //
-          // ERROR: lib/ui/home_page/home_osm.dart:147:11: Error: The getter 'AttributionWidget' isn't defined for the class '_HomeOSMState'.
-          // ERROR:  - '_HomeOSMState' is from 'package:securedialog/ui/home_page/home_osm.dart' ('lib/ui/home_page/home_osm.dart').
-          // ERROR: Try correcting the name to the name of an existing getter, or defining a getter or field named 'AttributionWidget'.
-          // ERROR:           AttributionWidget.defaultWidget(
-          // ERROR:           ^^^^^^^^^^^^^^^^^
-          // ERROR: Target kernel_snapshot failed: Exception
-          //
-          // What is the purpose of this code? Seems to work when commented out.
-          //
-          // AttributionWidget.defaultWidget(
-          //   source: 'OpenStreetMap',
-          //   onSourceTapped: null,
-          // ),
           Container(
             alignment: Alignment.bottomCenter,
             padding: const EdgeInsets.fromLTRB(0, 0, 0, 25),
@@ -246,21 +225,13 @@ class _HomeOSMState extends State<HomeOSM> with WidgetsBindingObserver {
                       Global.globalLatLng = curLatLng;
                       mapController.move(curLatLng!, Constants.defaultZoom);
                     });
-                    print(_captureLocation);
-                    print(curLatLng?.latitude);
                   }
                 } else {
-                  print("before:");
-                  print(_captureLocation);
-                  print(curLatLng?.latitude);
                   setState(() {
                     curLatLng = Constants.defaultLatLng;
                     Global.globalLatLng = curLatLng;
                     mapController.move(curLatLng!, Constants.defaultZoom);
                   });
-                  print("after:");
-                  print(_captureLocation);
-                  print(curLatLng?.latitude);
                 }
               },
               backgroundColor: Colors.teal,

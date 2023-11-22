@@ -285,7 +285,6 @@ class _HomeSettingsState extends State<HomeSettings> {
                             ),
                             value: isCaptureLocationEnabled,
                             onChanged: (bool value) {
-                              print("Switch toggled to: $value");
                               setState(() {
                                 isCaptureLocationEnabled = value;
                               });
