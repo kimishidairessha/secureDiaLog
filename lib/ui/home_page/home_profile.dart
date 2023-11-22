@@ -34,7 +34,6 @@ import 'package:flutter/material.dart';
 
 import 'package:securedialog/model/chart_point.dart';
 import 'package:securedialog/model/survey_day_info.dart';
-import 'package:securedialog/model/table_point.dart';
 import 'package:securedialog/model/tooltip.dart';
 import 'package:securedialog/service/home_page_service.dart';
 import 'package:securedialog/ui/login_page/login_page.dart';
