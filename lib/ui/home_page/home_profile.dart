@@ -34,6 +34,7 @@ import 'package:flutter/material.dart';
 
 import 'package:securedialog/model/chart_point.dart';
 import 'package:securedialog/model/survey_day_info.dart';
+import 'package:securedialog/model/table_point.dart';
 import 'package:securedialog/model/tooltip.dart';
 import 'package:securedialog/service/home_page_service.dart';
 import 'package:securedialog/ui/login_page/login_page.dart';
@@ -62,6 +63,104 @@ class HomeProfile extends StatefulWidget {
 
 class _HomeProfileState extends State<HomeProfile> {
   final HomePageService homePageService = HomePageService();
+
+  List<double> strengthList = [];
+  List<String> strengthTimeList = [];
+  List<double> fastingList = [];
+  List<String> fastingTimeList = [];
+  List<double> postprandialList = [];
+  List<String> postprandialTimeList = [];
+  List<double> diastolicList = [];
+  List<String> diastolicTimeList = [];
+  List<double> weightList = [];
+  List<String> weightTimeList = [];
+  List<double> systolicList = [];
+  List<String> systolicTimeList = [];
+  List<double> heartRateList = [];
+  List<String> heartRateTimeList = [];
+  List<String> obTimeList = [];
+  List<String> timeList = [];
+  List<List<ToolTip>> strengthToolTipsList = [];
+  List<List<ToolTip>> fastingToolTipsList = [];
+  List<List<ToolTip>> postprandialToolTipsList = [];
+  List<List<ToolTip>> diastolicToolTipsList = [];
+  List<List<ToolTip>> weightToolTipsList = [];
+  List<List<ToolTip>> systolicToolTipsList = [];
+  List<List<ToolTip>> heartRateToolTipsList = [];
+
+  Future<void> refreshData() async {
+    try {
+      // Fetch the new survey data
+      List<SurveyDayInfo>? newSurveyDayInfoList = await homePageService.getSurveyDayInfoList(
+          Constants.barNumber, widget.authData);
+
+      if (newSurveyDayInfoList != null) {
+        List<ChartPoint> newChartPointList = ChartUtils.parseToChart(
+            newSurveyDayInfoList, Constants.barNumber);
+
+        // Clear the existing data lists
+        clearDataLists();
+
+        for (ChartPoint charPoint in newChartPointList) {
+          strengthList.add(charPoint.strengthMax);
+          strengthTimeList.add(charPoint.strengthMaxTime);
+          fastingList.add(charPoint.fastingMax);
+          fastingTimeList.add(charPoint.fastingMaxTime);
+          postprandialList.add(charPoint.postprandialMax);
+          postprandialTimeList.add(charPoint.postprandialMaxTime);
+          diastolicList.add(charPoint.diastolicMax);
+          diastolicTimeList.add(charPoint.diastolicMaxTime);
+          weightList.add(charPoint.weightMax);
+          weightTimeList.add(charPoint.weightMaxTime);
+          systolicList.add(charPoint.systolicMax);
+          systolicTimeList.add(charPoint.systolicMaxTime);
+          heartRateList.add(charPoint.heartRateMax);
+          heartRateTimeList.add(charPoint.heartRateMaxTime);
+          obTimeList.add(
+              TimeUtils.convertDateToWeekDay(charPoint.obTimeDay));
+          timeList.add(TimeUtils.reformatDate(charPoint.obTimeDay));
+          strengthToolTipsList.add(charPoint.otherStrength);
+          fastingToolTipsList.add(charPoint.otherFasting);
+          postprandialToolTipsList.add(charPoint.otherPostprandial);
+          diastolicToolTipsList.add(charPoint.otherDiastolic);
+          weightToolTipsList.add(charPoint.otherWeight);
+          systolicToolTipsList.add(charPoint.otherSystolic);
+          heartRateToolTipsList.add(charPoint.otherHeartRate);
+        }
+
+        // Update the UI with the new data
+        setState(() {});
+      }
+    } catch (e) {
+      // Handle any errors
+      debugPrint("Error while refreshing data: $e");
+    }
+  }
+
+  void clearDataLists() {
+    strengthList.clear();
+    strengthTimeList.clear();
+    fastingList.clear();
+    fastingTimeList.clear();
+    postprandialList.clear();
+    postprandialTimeList.clear();
+    diastolicList.clear();
+    diastolicTimeList.clear();
+    weightList.clear();
+    weightTimeList.clear();
+    systolicList.clear();
+    systolicTimeList.clear();
+    heartRateList.clear();
+    heartRateTimeList.clear();
+    timeList.clear();
+    strengthToolTipsList.clear();
+    fastingToolTipsList.clear();
+    postprandialToolTipsList.clear();
+    diastolicToolTipsList.clear();
+    weightToolTipsList.clear();
+    systolicToolTipsList.clear();
+    heartRateToolTipsList.clear();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -137,29 +236,29 @@ class _HomeProfileState extends State<HomeProfile> {
                   );
                 } else {
                   // request success
-                  List<double> strengthList = [];
-                  List<String> strengthTimeList = [];
-                  List<double> fastingList = [];
-                  List<String> fastingTimeList = [];
-                  List<double> postprandialList = [];
-                  List<String> postprandialTimeList = [];
-                  List<double> diastolicList = [];
-                  List<String> diastolicTimeList = [];
-                  List<double> weightList = [];
-                  List<String> weightTimeList = [];
-                  List<double> systolicList = [];
-                  List<String> systolicTimeList = [];
-                  List<double> heartRateList = [];
-                  List<String> heartRateTimeList = [];
-                  List<String> obTimeList = [];
-                  List<String> timeList = [];
-                  List<List<ToolTip>> strengthToolTipsList = [];
-                  List<List<ToolTip>> fastingToolTipsList = [];
-                  List<List<ToolTip>> postprandialToolTipsList = [];
-                  List<List<ToolTip>> diastolicToolTipsList = [];
-                  List<List<ToolTip>> weightToolTipsList = [];
-                  List<List<ToolTip>> systolicToolTipsList = [];
-                  List<List<ToolTip>> heartRateToolTipsList = [];
+                  strengthList = [];
+                  strengthTimeList = [];
+                  fastingList = [];
+                  fastingTimeList = [];
+                  postprandialList = [];
+                  postprandialTimeList = [];
+                  diastolicList = [];
+                  diastolicTimeList = [];
+                  weightList = [];
+                  weightTimeList = [];
+                  systolicList = [];
+                  systolicTimeList = [];
+                  heartRateList = [];
+                  heartRateTimeList = [];
+                  obTimeList = [];
+                  timeList = [];
+                  strengthToolTipsList = [];
+                  fastingToolTipsList = [];
+                  postprandialToolTipsList = [];
+                  diastolicToolTipsList = [];
+                  weightToolTipsList = [];
+                  systolicToolTipsList = [];
+                  heartRateToolTipsList = [];
                   List<SurveyDayInfo>? surveyDayInfoList = snapshot.data;
                   if (surveyDayInfoList == null) {
                     return Column(
@@ -251,20 +350,23 @@ class _HomeProfileState extends State<HomeProfile> {
                   return Column(
                     children: <Widget>[
                       BaseWidget.getPadding(15.0),
-                      Center(
-                        child: Container(
-                          constraints: BoxConstraints(
-                            maxWidth: MediaQuery.of(context).size.width,
-                          ),
-                          child: const Text(
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text(
                             "Welcome to your POD",
                             style: TextStyle(
-                              fontSize: 30,
+                              fontSize: 28,
                               fontFamily: "KleeOne",
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                        ),
+                          IconButton(
+                            icon: const Icon(Icons.refresh, size: 30),
+                            color: Colors.teal[400],
+                            onPressed: refreshData,
+                          ),
+                        ],
                       ),
                       BaseWidget.getPadding(15),
                       BaseWidget.getQuestionText("Systolic & Diastolic"),
