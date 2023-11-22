@@ -20,6 +20,7 @@
 APP=$(shell pwd | xargs basename)
 VER=0.0.1
 DATE=$(shell date +%Y-%m-%d)
+DEST=/var/www/html/$(APP)
 
 ########################################################################
 # Supported Makefile modules.
