@@ -50,20 +50,6 @@ class HomeData extends StatefulWidget {
 class _HomeDataState extends State<HomeData> {
   final HomePageService homePageService = HomePageService();
 
-  List<double> strengthList1 = [];
-  List<String> strengthTimeList1 = [];
-  List<double> fastingList1 = [];
-  List<String> fastingTimeList1 = [];
-  List<double> postprandialList1 = [];
-  List<String> postprandialTimeList1 = [];
-  List<double> diastolicList1 = [];
-  List<String> diastolicTimeList1 = [];
-  List<double> weightList1 = [];
-  List<String> weightTimeList1 = [];
-  List<double> systolicList1 = [];
-  List<String> systolicTimeList1 = [];
-  List<double> heartRateList1 = [];
-  List<String> heartRateTimeList1 = [];
   List<String> timeList1 = [];
   List<List<ToolTip>> strengthToolTipsList1 = [];
   List<List<ToolTip>> fastingToolTipsList1 = [];
@@ -91,25 +77,10 @@ class _HomeDataState extends State<HomeData> {
 
     // Data
     for (int rowIndex = 0; rowIndex < timeList1.length; rowIndex++) {
-      if (strengthTimeList1[rowIndex] != 'none') {
-        // Main data row
-        List<dynamic> row = [
-          timeList1[rowIndex],
-          strengthTimeList1[rowIndex],
-          systolicList1[rowIndex],
-          diastolicList1[rowIndex],
-          heartRateList1[rowIndex],
-          weightList1[rowIndex],
-          mapValueToText(strengthList1[rowIndex]),
-          fastingList1[rowIndex],
-          postprandialList1[rowIndex],
-        ];
-
-        rows.add(row);
-
+      if (timeList1[rowIndex] != 'none') {
         // Tooltip rows for strength
         for (int i = 0; i < strengthToolTipsList1[rowIndex].length; i++) {
-          List<dynamic> row1 = [
+          List<dynamic> row = [
             timeList1[rowIndex],
             TimeUtils.convertHHmmToClock(
                 strengthToolTipsList1[rowIndex][i].time),
@@ -121,7 +92,7 @@ class _HomeDataState extends State<HomeData> {
             setNull(fastingToolTipsList1[rowIndex][i].val),
             setNull(postprandialToolTipsList1[rowIndex][i].val),
           ];
-          rows.add(row1);
+          rows.add(row);
         }
       }
     }
@@ -206,82 +177,6 @@ class _HomeDataState extends State<HomeData> {
     await homePageService.deleteFileMatchingCriteria(widget.authData, criteria);
   }
 
-  Future<void> refreshData() async {
-    try {
-      // Fetch the new survey data
-      List<SurveyDayInfo>? newSurveyDayInfoList = await homePageService.getSurveyDayInfoList(
-          Constants.barNumber, widget.authData);
-
-      if (newSurveyDayInfoList != null) {
-        // Parse the new data
-        List<TablePoint> newTableList = ChartUtils.parseToTable(newSurveyDayInfoList);
-
-        // Clear the existing data lists
-        clearDataLists();
-
-        // Update the data lists with the new data
-        for (TablePoint tablePoint in newTableList) {
-          strengthList1.add(tablePoint.strengthMax);
-          strengthTimeList1.add(tablePoint.strengthMaxTime);
-          fastingList1.add(tablePoint.fastingMax);
-          fastingTimeList1.add(tablePoint.fastingMaxTime);
-          postprandialList1.add(tablePoint.postprandialMax);
-          postprandialTimeList1.add(tablePoint.postprandialMaxTime);
-          diastolicList1.add(tablePoint.diastolicMax);
-          diastolicTimeList1.add(tablePoint.diastolicMaxTime);
-          weightList1.add(tablePoint.weightMax);
-          weightTimeList1.add(tablePoint.weightMaxTime);
-          systolicList1.add(tablePoint.systolicMax);
-          systolicTimeList1.add(tablePoint.systolicMaxTime);
-          heartRateList1.add(tablePoint.heartRateMax);
-          heartRateTimeList1.add(tablePoint.heartRateMaxTime);
-          timeList1.add(
-              TimeUtils.reformatDateForTable(tablePoint.obTimeDay));
-          strengthToolTipsList1.add(tablePoint.otherStrength);
-          fastingToolTipsList1.add(tablePoint.otherFasting);
-          postprandialToolTipsList1.add(tablePoint.otherPostprandial);
-          diastolicToolTipsList1.add(tablePoint.otherDiastolic);
-          weightToolTipsList1.add(tablePoint.otherWeight);
-          systolicToolTipsList1.add(tablePoint.otherSystolic);
-          heartRateToolTipsList1.add(tablePoint.otherHeartRate);
-        }
-
-        // Update the UI with the new data
-        setState(() {});
-      }
-    } catch (e) {
-      // Handle any errors
-      print("Error while refreshing data: $e");
-    }
-  }
-
-  void clearDataLists() {
-    strengthList1.clear();
-    strengthTimeList1.clear();
-    fastingList1.clear();
-    fastingTimeList1.clear();
-    postprandialList1.clear();
-    postprandialTimeList1.clear();
-    diastolicList1.clear();
-    diastolicTimeList1.clear();
-    weightList1.clear();
-    weightTimeList1.clear();
-    systolicList1.clear();
-    systolicTimeList1.clear();
-    heartRateList1.clear();
-    heartRateTimeList1.clear();
-    timeList1.clear();
-    strengthToolTipsList1.clear();
-    fastingToolTipsList1.clear();
-    postprandialToolTipsList1.clear();
-    diastolicToolTipsList1.clear();
-    weightToolTipsList1.clear();
-    systolicToolTipsList1.clear();
-    heartRateToolTipsList1.clear();
-  }
-
-
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -332,20 +227,6 @@ class _HomeDataState extends State<HomeData> {
                 );
               } else {
                 // request success
-                strengthList1 = [];
-                strengthTimeList1 = [];
-                fastingList1 = [];
-                fastingTimeList1 = [];
-                postprandialList1 = [];
-                postprandialTimeList1 = [];
-                diastolicList1 = [];
-                diastolicTimeList1 = [];
-                weightList1 = [];
-                weightTimeList1 = [];
-                systolicList1 = [];
-                systolicTimeList1 = [];
-                heartRateList1 = [];
-                heartRateTimeList1 = [];
                 timeList1 = [];
                 strengthToolTipsList1 = [];
                 fastingToolTipsList1 = [];
@@ -393,22 +274,8 @@ class _HomeDataState extends State<HomeData> {
                   );
                 }
                 List<TablePoint> tableList =
-                    ChartUtils.parseToTable(surveyDayInfoList);
+                ChartUtils.parseToTable(surveyDayInfoList);
                 for (TablePoint tablePoint in tableList) {
-                  strengthList1.add(tablePoint.strengthMax);
-                  strengthTimeList1.add(tablePoint.strengthMaxTime);
-                  fastingList1.add(tablePoint.fastingMax);
-                  fastingTimeList1.add(tablePoint.fastingMaxTime);
-                  postprandialList1.add(tablePoint.postprandialMax);
-                  postprandialTimeList1.add(tablePoint.postprandialMaxTime);
-                  diastolicList1.add(tablePoint.diastolicMax);
-                  diastolicTimeList1.add(tablePoint.diastolicMaxTime);
-                  weightList1.add(tablePoint.weightMax);
-                  weightTimeList1.add(tablePoint.weightMaxTime);
-                  systolicList1.add(tablePoint.systolicMax);
-                  systolicTimeList1.add(tablePoint.systolicMaxTime);
-                  heartRateList1.add(tablePoint.heartRateMax);
-                  heartRateTimeList1.add(tablePoint.heartRateMaxTime);
                   timeList1.add(
                       TimeUtils.reformatDateForTable(tablePoint.obTimeDay));
                   strengthToolTipsList1.add(tablePoint.otherStrength);
@@ -440,20 +307,6 @@ class _HomeDataState extends State<HomeData> {
                     BaseWidget.getPadding(15),
                     DataTableWidget(
                         timeList1,
-                        strengthTimeList1,
-                        strengthList1,
-                        fastingList1,
-                        fastingTimeList1,
-                        postprandialList1,
-                        postprandialTimeList1,
-                        diastolicList1,
-                        diastolicTimeList1,
-                        weightList1,
-                        weightTimeList1,
-                        systolicList1,
-                        systolicTimeList1,
-                        heartRateList1,
-                        heartRateTimeList1,
                         strengthToolTipsList1,
                         fastingToolTipsList1,
                         postprandialToolTipsList1,
@@ -481,12 +334,6 @@ class _HomeDataState extends State<HomeData> {
                             backgroundColor: MaterialStateProperty.all(Colors.teal[400]),
                           ),
                           child: const Text("Import from CSV"),
-                        ),
-                        const SizedBox(width: 18),
-                        IconButton(
-                          icon: const Icon(Icons.refresh),
-                          color: Colors.teal[400],
-                          onPressed: refreshData,
                         ),
                       ],
                     ),
