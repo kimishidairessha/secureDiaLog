@@ -23,8 +23,9 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:securedialog/constants/app.dart';
-import '../../../model/tooltip.dart';
-import '../../../utils/time_utils.dart';
+import 'package:flutter/foundation.dart';
+import 'package:securedialog/model/tooltip.dart';
+import 'package:securedialog/utils/time_utils.dart';
 
 class ColumnChartWidget extends StatefulWidget {
   final List<double> yList;
@@ -90,35 +91,41 @@ class _ColumnChartWidgetState extends State<ColumnChartWidget> {
         ),
       );
     }
-    // Create the scroll controller and add a listener to it
-    scrollController = ScrollController(
-      initialScrollOffset: (rawBarGroups.length - visibleLength) * 15.0,
-    )..addListener(() {
+    if(kIsWeb){
+      visibleBarGroups = rawBarGroups;
+    } else {
+      // Create the scroll controller and add a listener to it
+      scrollController = ScrollController(
+        initialScrollOffset: (rawBarGroups.length - visibleLength) * 15.0,
+      )..addListener(() {
         updateVisibleData();
       });
 
-    int initialIndex = (rawBarGroups.length > visibleLength)
-        ? rawBarGroups.length - visibleLength
-        : 0;
-    visibleBarGroups = rawBarGroups.sublist(initialIndex, rawBarGroups.length);
+      int initialIndex = (rawBarGroups.length > visibleLength)
+          ? rawBarGroups.length - visibleLength
+          : 0;
+      visibleBarGroups = rawBarGroups.sublist(initialIndex, rawBarGroups.length);
+    }
   }
 
   int firstVisibleDataIndex = 8;
 
   void updateVisibleData() {
-    int calculatedIndex = (scrollController.offset / 15).floor();
-    int maxFirstIndex = rawBarGroups.length - visibleLength;
+    if(!kIsWeb){
+      int calculatedIndex = (scrollController.offset / 15).floor();
+      int maxFirstIndex = rawBarGroups.length - visibleLength;
 
-    // Constrain firstVisibleDataIndex within valid bounds
-    firstVisibleDataIndex = calculatedIndex.clamp(0, maxFirstIndex);
-    int lastVisibleDataIndex = firstVisibleDataIndex + visibleLength;
+      // Constrain firstVisibleDataIndex within valid bounds
+      firstVisibleDataIndex = calculatedIndex.clamp(0, maxFirstIndex);
+      int lastVisibleDataIndex = firstVisibleDataIndex + visibleLength;
 
-    if (firstVisibleDataIndex >= 0 &&
-        lastVisibleDataIndex <= rawBarGroups.length) {
-      setState(() {
-        visibleBarGroups =
-            rawBarGroups.sublist(firstVisibleDataIndex, lastVisibleDataIndex);
-      });
+      if (firstVisibleDataIndex >= 0 &&
+          lastVisibleDataIndex <= rawBarGroups.length) {
+        setState(() {
+          visibleBarGroups =
+              rawBarGroups.sublist(firstVisibleDataIndex, lastVisibleDataIndex);
+        });
+      }
     }
   }
 
@@ -135,84 +142,10 @@ class _ColumnChartWidgetState extends State<ColumnChartWidget> {
 
     return Column(
       children: [
-        SingleChildScrollView(
-          controller: scrollController,
-          scrollDirection: Axis.horizontal, // makes it horizontally scrollable
-          child: Container(
-            color: Constants.tableColor,
-            child: SizedBox(
-              height: 200,
-              width: 38 * rawBarGroups.length.toDouble(),
-              child: BarChart(
-                BarChartData(
-                  maxY: 10,
-                  barGroups: visibleBarGroups,
-                  barTouchData: BarTouchData(
-                    touchCallback:
-                        (FlTouchEvent event, BarTouchResponse? touchResponse) {
-                          if (event is FlLongPressStart || event is FlTapDownEvent){
-                            if (touchResponse != null && touchResponse.spot != null) {
-                              setState(() {
-                                selectedBarIndex =
-                                    touchResponse.spot!.touchedBarGroupIndex +
-                                        firstVisibleDataIndex;
-                              });
-                            }
-                          } else if (event is FlLongPressEnd || event is FlTapCancelEvent) {
-                            setState(() {
-                              selectedBarIndex = null;
-                            });
-                          }
-                    },
-                    touchTooltipData: BarTouchTooltipData(
-                      tooltipBgColor: Colors.green[600],
-                      getTooltipItem: (group, groupIndex, rod, rodIndex) {
-                        int adjustedGroupIndex =
-                            groupIndex + firstVisibleDataIndex;
-                        String time = widget.timeList[adjustedGroupIndex];
-                        String strength = mapIntToValueString(
-                            widget.yList[adjustedGroupIndex]);
-
-                        String tooltipText = "$time\nStrength level: $strength";
-
-                        return BarTooltipItem(
-                            tooltipText, const TextStyle(color: Colors.white));
-                      },
-                      fitInsideVertically: true,
-                      fitInsideHorizontally: true,
-                    ),
-                    touchExtraThreshold: const EdgeInsets.all(4),
-                  ),
-                  titlesData: FlTitlesData(
-                    show: true,
-                    leftTitles: const AxisTitles(
-                      sideTitles: SideTitles(showTitles: false),
-                    ),
-                    rightTitles: const AxisTitles(
-                      sideTitles: SideTitles(showTitles: false),
-                    ),
-                    bottomTitles: AxisTitles(
-                      sideTitles: SideTitles(
-                        showTitles: true,
-                        reservedSize: 40,
-                        getTitlesWidget: bottomTitleWidget,
-                      ),
-                    ),
-                    topTitles: const AxisTitles(
-                      sideTitles: SideTitles(showTitles: false),
-                    ),
-                  ),
-                  borderData: FlBorderData(
-                    show: false,
-                  ),
-                  gridData: const FlGridData(
-                    show: false,
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
+        if (kIsWeb)
+          _buildChartWithoutScrolling() // Method to build chart without scrolling
+        else
+          _buildChartWithScrolling(), // Existing method to build chart with scrolling
         const SizedBox(height: 10.0),
         if (selectedBarIndex != null) ...[
           const Text(
@@ -238,6 +171,162 @@ class _ColumnChartWidgetState extends State<ColumnChartWidget> {
           ),
         ],
       ],
+    );
+  }
+
+  Widget _buildChartWithoutScrolling() {
+    return Container(
+      color: Constants.tableColor,
+      child: SizedBox(
+        height: 200,
+        width: 60 * rawBarGroups.length.toDouble(), // Width to accommodate all bars
+        child: BarChart(
+            BarChartData(
+              maxY: 10,
+              barGroups: visibleBarGroups,
+              barTouchData: BarTouchData(
+                touchCallback:
+                    (FlTouchEvent event, BarTouchResponse? touchResponse) {
+                  if (event is FlLongPressStart || event is FlTapDownEvent){
+                    if (touchResponse != null && touchResponse.spot != null) {
+                      setState(() {
+                        selectedBarIndex =
+                            touchResponse.spot!.touchedBarGroupIndex;
+                      });
+                    }
+                  } else if (event is FlLongPressEnd || event is FlTapCancelEvent) {
+                    setState(() {
+                      selectedBarIndex = null;
+                    });
+                  }
+                },
+                touchTooltipData: BarTouchTooltipData(
+                  tooltipBgColor: Colors.green[600],
+                  getTooltipItem: (group, groupIndex, rod, rodIndex) {
+                    int adjustedGroupIndex = groupIndex;
+                    String time = widget.timeList[adjustedGroupIndex];
+                    String strength = mapIntToValueString(
+                        widget.yList[adjustedGroupIndex]);
+
+                    String tooltipText = "$time\nStrength level: $strength";
+
+                    return BarTooltipItem(
+                        tooltipText, const TextStyle(color: Colors.white));
+                  },
+                  fitInsideVertically: true,
+                  fitInsideHorizontally: true,
+                ),
+                touchExtraThreshold: const EdgeInsets.all(4),
+              ),
+              titlesData: FlTitlesData(
+                show: true,
+                leftTitles: const AxisTitles(
+                  sideTitles: SideTitles(showTitles: false),
+                ),
+                rightTitles: const AxisTitles(
+                  sideTitles: SideTitles(showTitles: false),
+                ),
+                bottomTitles: AxisTitles(
+                  sideTitles: SideTitles(
+                    showTitles: true,
+                    reservedSize: 40,
+                    getTitlesWidget: bottomTitleWidget,
+                  ),
+                ),
+                topTitles: const AxisTitles(
+                  sideTitles: SideTitles(showTitles: false),
+                ),
+              ),
+              borderData: FlBorderData(
+                show: false,
+              ),
+              gridData: const FlGridData(
+                show: false,
+              ),
+        )
+        ),
+      ),
+    );
+  }
+
+  Widget _buildChartWithScrolling() {
+    return SingleChildScrollView(
+      controller: scrollController,
+      scrollDirection: Axis.horizontal,
+      child: Container(
+        color: Constants.tableColor,
+        child: SizedBox(
+          height: 200,
+          width: 38 * rawBarGroups.length.toDouble(),
+          child: BarChart(
+            BarChartData(
+              maxY: 10,
+              barGroups: visibleBarGroups,
+              barTouchData: BarTouchData(
+                touchCallback:
+                    (FlTouchEvent event, BarTouchResponse? touchResponse) {
+                  if (event is FlLongPressStart || event is FlTapDownEvent){
+                    if (touchResponse != null && touchResponse.spot != null) {
+                      setState(() {
+                        selectedBarIndex =
+                            touchResponse.spot!.touchedBarGroupIndex +
+                                firstVisibleDataIndex;
+                      });
+                    }
+                  } else if (event is FlLongPressEnd || event is FlTapCancelEvent) {
+                    setState(() {
+                      selectedBarIndex = null;
+                    });
+                  }
+                },
+                touchTooltipData: BarTouchTooltipData(
+                  tooltipBgColor: Colors.green[600],
+                  getTooltipItem: (group, groupIndex, rod, rodIndex) {
+                    int adjustedGroupIndex =
+                        groupIndex + firstVisibleDataIndex;
+                    String time = widget.timeList[adjustedGroupIndex];
+                    String strength = mapIntToValueString(
+                        widget.yList[adjustedGroupIndex]);
+
+                    String tooltipText = "$time\nStrength level: $strength";
+
+                    return BarTooltipItem(
+                        tooltipText, const TextStyle(color: Colors.white));
+                  },
+                  fitInsideVertically: true,
+                  fitInsideHorizontally: true,
+                ),
+                touchExtraThreshold: const EdgeInsets.all(4),
+              ),
+              titlesData: FlTitlesData(
+                show: true,
+                leftTitles: const AxisTitles(
+                  sideTitles: SideTitles(showTitles: false),
+                ),
+                rightTitles: const AxisTitles(
+                  sideTitles: SideTitles(showTitles: false),
+                ),
+                bottomTitles: AxisTitles(
+                  sideTitles: SideTitles(
+                    showTitles: true,
+                    reservedSize: 40,
+                    getTitlesWidget: bottomTitleWidget,
+                  ),
+                ),
+                topTitles: const AxisTitles(
+                  sideTitles: SideTitles(showTitles: false),
+                ),
+              ),
+              borderData: FlBorderData(
+                show: false,
+              ),
+              gridData: const FlGridData(
+                show: false,
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 
