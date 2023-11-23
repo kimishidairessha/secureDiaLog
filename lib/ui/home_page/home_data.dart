@@ -21,21 +21,21 @@
 /// Authors: Ye Duan
 
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:securedialog/model/survey_day_info.dart';
 import 'package:securedialog/ui/home_page/home_charts/data_table_widget.dart';
 import 'package:securedialog/utils/base_widget.dart';
 import 'package:securedialog/utils/chart_utils.dart';
 import 'package:securedialog/utils/time_utils.dart';
-import 'package:share/share.dart';
-
 import 'package:securedialog/model/table_point.dart';
 import 'package:securedialog/model/tooltip.dart';
 import 'package:securedialog/service/home_page_service.dart';
 import 'package:securedialog/constants/app.dart';
 import 'package:csv/csv.dart';
 import 'dart:io';
+import 'package:securedialog/utils/file_saver_mobile.dart'
+if (dart.library.html) 'package:securedialog/utils/file_saver_web.dart' as file_saver;
 
 /// the view layer of profile widget in home page
 class HomeData extends StatefulWidget {
@@ -59,7 +59,7 @@ class _HomeDataState extends State<HomeData> {
   List<List<ToolTip>> systolicToolTipsList1 = [];
   List<List<ToolTip>> heartRateToolTipsList1 = [];
 
-  Future<void> exportToCsv() async {
+  Future<void> exportToCsv(String fileName) async {
     List<List<dynamic>> rows = [];
 
     // Header
@@ -100,14 +100,39 @@ class _HomeDataState extends State<HomeData> {
     // Convert to CSV
     String csv = const ListToCsvConverter().convert(rows);
 
-    // Save CSV string to a file (or share it)
-    final directory = await getApplicationDocumentsDirectory();
-    final path = directory!.path;
-    final file = File("$path/export.csv");
-    await file.writeAsString(csv);
+    file_saver.saveAndShareCsv(csv, fileName);
 
-    // Use the share plugin to share the file
-    Share.shareFiles(['$path/export.csv'], text: 'My CSV data');
+  }
+
+  Future<void> promptFileNameAndExport() async {
+    TextEditingController fileNameController = TextEditingController();
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Enter Filename'),
+          content: TextField(
+            controller: fileNameController,
+            decoration: InputDecoration(hintText: "Enter filename for CSV"),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text('Export'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                exportToCsv(fileNameController.text.isNotEmpty ? fileNameController.text : "default_export.csv");
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   Future<void> importFromCsv() async {
@@ -181,62 +206,16 @@ class _HomeDataState extends State<HomeData> {
   Widget build(BuildContext context) {
     return Container(
       color: Constants.backgroundColor,
-      child: SafeArea(
-        child: FutureBuilder<List<SurveyDayInfo>?>(
-          future: homePageService.getSurveyDayInfoList(
-              Constants.barNumber, widget.authData),
-          builder: (BuildContext context, AsyncSnapshot snapshot) {
-            // request is complete
-            if (snapshot.connectionState == ConnectionState.done) {
-              if (snapshot.hasError) {
-                // request failed
-                return Column(
-                  children: <Widget>[
-                    BaseWidget.getPadding(15.0),
-                    Center(
-                      child: Container(
-                        constraints: BoxConstraints(
-                          maxWidth: MediaQuery.of(context).size.width,
-                        ),
-                        child: const Text(
-                          "Historical data in your Pod",
-                          style: TextStyle(
-                            fontSize: 30,
-                            fontFamily: "KleeOne",
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
-                    BaseWidget.getPadding(25),
-                    Container(
-                      height: 200,
-                      width: MediaQuery.of(context).size.width,
-                      alignment: Alignment.center,
-                      child: Text(
-                        "Server Error:${snapshot.error}",
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          fontSize: 20,
-                          fontFamily: "KleeOne",
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ],
-                );
-              } else {
-                // request success
-                timeList1 = [];
-                strengthToolTipsList1 = [];
-                fastingToolTipsList1 = [];
-                postprandialToolTipsList1 = [];
-                diastolicToolTipsList1 = [];
-                weightToolTipsList1 = [];
-                systolicToolTipsList1 = [];
-                heartRateToolTipsList1 = [];
-                List<SurveyDayInfo>? surveyDayInfoList = snapshot.data;
-                if (surveyDayInfoList == null) {
+      child: SingleChildScrollView(
+        child: SafeArea(
+          child: FutureBuilder<List<SurveyDayInfo>?>(
+            future: homePageService.getSurveyDayInfoList(
+                Constants.barNumber, widget.authData),
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+              // request is complete
+              if (snapshot.connectionState == ConnectionState.done) {
+                if (snapshot.hasError) {
+                  // request failed
                   return Column(
                     children: <Widget>[
                       BaseWidget.getPadding(15.0),
@@ -260,10 +239,10 @@ class _HomeDataState extends State<HomeData> {
                         height: 200,
                         width: MediaQuery.of(context).size.width,
                         alignment: Alignment.center,
-                        child: const Text(
-                          """Ops, something wrong when fetching your reports' data (::>_<::)\nThe data analysis function will only start working after reporting at least one Q&A survey""",
+                        child: Text(
+                          "Server Error:${snapshot.error}",
                           textAlign: TextAlign.center,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 20,
                             fontFamily: "KleeOne",
                             fontWeight: FontWeight.bold,
@@ -272,83 +251,132 @@ class _HomeDataState extends State<HomeData> {
                       ),
                     ],
                   );
-                }
-                List<TablePoint> tableList =
-                ChartUtils.parseToTable(surveyDayInfoList);
-                for (TablePoint tablePoint in tableList) {
-                  timeList1.add(
-                      TimeUtils.reformatDateForTable(tablePoint.obTimeDay));
-                  strengthToolTipsList1.add(tablePoint.otherStrength);
-                  fastingToolTipsList1.add(tablePoint.otherFasting);
-                  postprandialToolTipsList1.add(tablePoint.otherPostprandial);
-                  diastolicToolTipsList1.add(tablePoint.otherDiastolic);
-                  weightToolTipsList1.add(tablePoint.otherWeight);
-                  systolicToolTipsList1.add(tablePoint.otherSystolic);
-                  heartRateToolTipsList1.add(tablePoint.otherHeartRate);
-                }
-                return Column(
-                  children: <Widget>[
-                    BaseWidget.getPadding(15.0),
-                    Center(
-                      child: Container(
-                        constraints: BoxConstraints(
-                          maxWidth: MediaQuery.of(context).size.width,
+                } else {
+                  // request success
+                  timeList1 = [];
+                  strengthToolTipsList1 = [];
+                  fastingToolTipsList1 = [];
+                  postprandialToolTipsList1 = [];
+                  diastolicToolTipsList1 = [];
+                  weightToolTipsList1 = [];
+                  systolicToolTipsList1 = [];
+                  heartRateToolTipsList1 = [];
+                  List<SurveyDayInfo>? surveyDayInfoList = snapshot.data;
+                  if (surveyDayInfoList == null) {
+                    return Column(
+                      children: <Widget>[
+                        BaseWidget.getPadding(15.0),
+                        Center(
+                          child: Container(
+                            constraints: BoxConstraints(
+                              maxWidth: MediaQuery.of(context).size.width,
+                            ),
+                            child: const Text(
+                              "Historical data in your Pod",
+                              style: TextStyle(
+                                fontSize: 30,
+                                fontFamily: "KleeOne",
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
                         ),
-                        child: const Text(
-                          "Historical data in your Pod",
-                          style: TextStyle(
-                            fontSize: 30,
-                            fontFamily: "KleeOne",
-                            fontWeight: FontWeight.bold,
+                        BaseWidget.getPadding(25),
+                        Container(
+                          height: 200,
+                          width: MediaQuery.of(context).size.width,
+                          alignment: Alignment.center,
+                          child: const Text(
+                            """Ops, something wrong when fetching your reports' data (::>_<::)\nThe data analysis function will only start working after reporting at least one Q&A survey""",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontFamily: "KleeOne",
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
+                    );
+                  }
+                  List<TablePoint> tableList =
+                  ChartUtils.parseToTable(surveyDayInfoList);
+                  for (TablePoint tablePoint in tableList) {
+                    timeList1.add(
+                        TimeUtils.reformatDateForTable(tablePoint.obTimeDay));
+                    strengthToolTipsList1.add(tablePoint.otherStrength);
+                    fastingToolTipsList1.add(tablePoint.otherFasting);
+                    postprandialToolTipsList1.add(tablePoint.otherPostprandial);
+                    diastolicToolTipsList1.add(tablePoint.otherDiastolic);
+                    weightToolTipsList1.add(tablePoint.otherWeight);
+                    systolicToolTipsList1.add(tablePoint.otherSystolic);
+                    heartRateToolTipsList1.add(tablePoint.otherHeartRate);
+                  }
+                  return Column(
+                    children: <Widget>[
+                      BaseWidget.getPadding(15.0),
+                      Center(
+                        child: Container(
+                          constraints: BoxConstraints(
+                            maxWidth: MediaQuery.of(context).size.width,
+                          ),
+                          child: const Text(
+                            "Historical data in your Pod",
+                            style: TextStyle(
+                              fontSize: 30,
+                              fontFamily: "KleeOne",
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    BaseWidget.getPadding(15),
-                    DataTableWidget(
-                        timeList1,
-                        strengthToolTipsList1,
-                        fastingToolTipsList1,
-                        postprandialToolTipsList1,
-                        diastolicToolTipsList1,
-                        weightToolTipsList1,
-                        systolicToolTipsList1,
-                        heartRateToolTipsList1,
-                        onDelete),
-                    BaseWidget.getPadding(10),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        ElevatedButton(
-                          onPressed: exportToCsv,
-                          style: ButtonStyle(
-                            backgroundColor:
-                            MaterialStateProperty.all(Colors.teal[400]),
+                      BaseWidget.getPadding(15),
+                      DataTableWidget(
+                          timeList1,
+                          strengthToolTipsList1,
+                          fastingToolTipsList1,
+                          postprandialToolTipsList1,
+                          diastolicToolTipsList1,
+                          weightToolTipsList1,
+                          systolicToolTipsList1,
+                          heartRateToolTipsList1,
+                          onDelete),
+                      BaseWidget.getPadding(10),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          ElevatedButton(
+                            onPressed: promptFileNameAndExport,
+                            style: ButtonStyle(
+                              backgroundColor:
+                              MaterialStateProperty.all(Colors.teal[400]),
+                            ),
+                            child: const Text("Export to CSV"),
                           ),
-                          child: const Text("Export to CSV"),
-                        ),
-                        const SizedBox(width: 18),
-                        ElevatedButton(
-                          onPressed: importFromCsv,
-                          style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all(Colors.teal[400]),
+                          const SizedBox(width: 18),
+                          ElevatedButton(
+                            onPressed: importFromCsv,
+                            style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all(Colors.teal[400]),
+                            ),
+                            child: const Text("Import from CSV"),
                           ),
-                          child: const Text("Import from CSV"),
-                        ),
-                      ],
-                    ),
-                  ],
+                        ],
+                      ),
+                      BaseWidget.getPadding(60),
+                    ],
+                  );
+                }
+              } else {
+                // requesting，display 'loading'
+                return Container(
+                  height: MediaQuery.of(context).size.height - 150,
+                  alignment: Alignment.center,
+                  child: const CircularProgressIndicator(),
                 );
               }
-            } else {
-              // requesting，display 'loading'
-              return Container(
-                height: MediaQuery.of(context).size.height - 150,
-                alignment: Alignment.center,
-                child: const CircularProgressIndicator(),
-              );
-            }
-          },
+            },
+          ),
         ),
       ),
     );
