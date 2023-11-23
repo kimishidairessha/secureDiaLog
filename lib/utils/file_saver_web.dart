@@ -28,6 +28,7 @@ void saveAndShareCsv(String csv, String fileName) {
   final bytes = Uint8List.fromList(csv.codeUnits);
   final blob = html.Blob([bytes], 'text/plain', 'native');
   final url = html.Url.createObjectUrlFromBlob(blob);
+  // ignore: unused_local_variable
   final anchor = html.AnchorElement(href: url)
     ..setAttribute("download", '$fileName.csv')
     ..click();

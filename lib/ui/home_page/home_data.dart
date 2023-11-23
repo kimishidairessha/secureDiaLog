@@ -21,7 +21,6 @@
 /// Authors: Ye Duan
 
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:securedialog/model/survey_day_info.dart';
 import 'package:securedialog/ui/home_page/home_charts/data_table_widget.dart';
@@ -110,20 +109,20 @@ class _HomeDataState extends State<HomeData> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text('Enter Filename'),
+          title: const Text('Enter Filename'),
           content: TextField(
             controller: fileNameController,
-            decoration: InputDecoration(hintText: "Enter filename for CSV"),
+            decoration: const InputDecoration(hintText: "Enter filename for CSV"),
           ),
           actions: <Widget>[
             TextButton(
-              child: Text('Cancel'),
+              child: const Text('Cancel'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
             TextButton(
-              child: Text('Export'),
+              child: const Text('Export'),
               onPressed: () {
                 Navigator.of(context).pop();
                 exportToCsv(fileNameController.text.isNotEmpty ? fileNameController.text : "default_export.csv");
