@@ -20,6 +20,8 @@
 ///
 /// Authors: Ye Duan
 
+import 'dart:io';
+
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:securedialog/constants/app.dart';
@@ -91,7 +93,7 @@ class _ColumnChartWidgetState extends State<ColumnChartWidget> {
         ),
       );
     }
-    if(kIsWeb){
+    if(kIsWeb || Platform.isWindows || Platform.isLinux){
       visibleBarGroups = rawBarGroups;
     } else {
       // Create the scroll controller and add a listener to it
@@ -111,7 +113,7 @@ class _ColumnChartWidgetState extends State<ColumnChartWidget> {
   int firstVisibleDataIndex = 8;
 
   void updateVisibleData() {
-    if(!kIsWeb){
+    if(!kIsWeb && !Platform.isWindows && !Platform.isLinux){
       int calculatedIndex = (scrollController.offset / 15).floor();
       int maxFirstIndex = rawBarGroups.length - visibleLength;
 
@@ -142,7 +144,7 @@ class _ColumnChartWidgetState extends State<ColumnChartWidget> {
 
     return Column(
       children: [
-        if (kIsWeb)
+        if (kIsWeb || Platform.isWindows || Platform.isLinux)
           _buildChartWithoutScrolling() // Method to build chart without scrolling
         else
           _buildChartWithScrolling(), // Existing method to build chart with scrolling
