@@ -363,7 +363,7 @@ class _HomeDataState extends State<HomeData> {
                           ),
                         ],
                       ),
-                      BaseWidget.getPadding(60),
+                      BaseWidget.getPadding(70),
                     ],
                   );
                 }
