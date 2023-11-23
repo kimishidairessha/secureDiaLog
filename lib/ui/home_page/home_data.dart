@@ -30,9 +30,9 @@ import 'package:securedialog/utils/chart_utils.dart';
 import 'package:securedialog/utils/time_utils.dart';
 import 'package:share/share.dart';
 
-import '../../model/table_point.dart';
-import '../../model/tooltip.dart';
-import '../../service/home_page_service.dart';
+import 'package:securedialog/model/table_point.dart';
+import 'package:securedialog/model/tooltip.dart';
+import 'package:securedialog/service/home_page_service.dart';
 import 'package:securedialog/constants/app.dart';
 import 'package:csv/csv.dart';
 import 'dart:io';
@@ -64,7 +64,7 @@ class _HomeDataState extends State<HomeData> {
 
     // Header
     rows.add([
-      "Data",
+      "Date",
       "Time",
       "Systolic",
       "Diastolic",
@@ -101,7 +101,7 @@ class _HomeDataState extends State<HomeData> {
     String csv = const ListToCsvConverter().convert(rows);
 
     // Save CSV string to a file (or share it)
-    final directory = await getExternalStorageDirectory();
+    final directory = await getApplicationDocumentsDirectory();
     final path = directory!.path;
     final file = File("$path/export.csv");
     await file.writeAsString(csv);
