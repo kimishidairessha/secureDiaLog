@@ -95,7 +95,7 @@ class _HomeIndexState extends State<HomeIndex> {
                   Constants.indexPageInstructionText5,
                   Icons.settings,
                   Constants.settingsPage),
-              const SizedBox(height: 20),
+              const SizedBox(height: 120),
             ],
           ),
         ),
