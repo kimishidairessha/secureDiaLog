@@ -36,7 +36,11 @@ class BaseWidget {
   static AppBar getAppBar(String barName) {
     return AppBar(
       title: Text(barName),
-      titleTextStyle: const TextStyle(fontSize: 25, fontFamily: "KleeOne"),
+      titleTextStyle: const TextStyle(
+          fontSize: 25,
+          fontFamily: "KleeOne",
+        color: Colors.white,
+      ),
       elevation: 2.5,
       centerTitle: true,
       backgroundColor: Colors.teal,
@@ -124,7 +128,10 @@ class BaseWidget {
       onPressed: tapEvent,
       style: ElevatedButton.styleFrom(
         minimumSize: Size(width, height),
-        textStyle: const TextStyle(fontSize: 25, fontFamily: "KleeOne"),
+        textStyle: const TextStyle(
+            fontSize: 25,
+            fontFamily: "KleeOne",
+            color: Colors.white),
         backgroundColor: Colors.teal,
       ),
       child: Text(label),
