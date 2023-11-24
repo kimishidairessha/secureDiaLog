@@ -71,6 +71,7 @@ dependencies:
   share: ^2.0.4
   permission_handler: ^10.0.0
   table_sticky_headers: ^2.0.5
+  share_plus: ^7.2.1
 
 dev_dependencies:
 
