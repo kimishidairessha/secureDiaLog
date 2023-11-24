@@ -86,6 +86,66 @@ settings.
 	alt="Home Screen" width="400">
 </div>
 
+### App Survey Screen
+
+Users can easily input various health metrics, including [specific metrics e.g., 
+heart rate, blood glucose, etc.], along with the date and time of recording. The app 
+allows submission of multiple surveys per day, catering to the need for tracking 
+varying health parameters throughout the day.
+
+<div align="center">
+	<img
+	src="https://github.com/kimishidairessha/secureDiaLog/blob/main/images/survey.PNG"
+	alt="Survey Screen" width="400">
+</div>
+
+### App Charts Screen
+
+Displays the latest 15 days of health data in an easy-to-understand chart format. 
+Highlights the highest recorded metric of each day and provides additional details 
+via a tooltip view. Offers the functionality to refresh data following modifications 
+in the POD.
+
+<div align="center">
+	<img
+	src="https://github.com/kimishidairessha/secureDiaLog/blob/main/images/charts.PNG"
+	alt="Charts Screen" width="400">
+</div>
+
+### App Data Screen
+
+Users can view all personal health data stored in the POD. Features include the 
+ability to delete data, export data to CSV via the internet, and import data 
+from the user's device.
+
+<div align="center">
+	<img
+	src="https://github.com/kimishidairessha/secureDiaLog/blob/main/images/data.PNG"
+	alt="Data Screen" width="400">
+</div>
+
+### App Map Screen
+
+Visual representation of location information, enhancing the context of health data.
+
+<div align="center">
+	<img
+	src="https://github.com/kimishidairessha/secureDiaLog/blob/main/images/map.PNG"
+	alt="Map Screen" width="400">
+</div>
+
+### App Settings Screen
+
+Users can record their encryption key and WebID on their devices. Options to hide 
+location data and adjust the frequency of location capturing. Displays the time 
+of the last completed survey. Secure and easy logout process.
+
+<div align="center">
+	<img
+	src="https://github.com/kimishidairessha/secureDiaLog/blob/main/images/settings.PNG"
+	alt="Settings Screen" width="400">
+</div>
+
 ## Features
 
 * Data storage is private to the user
