@@ -51,7 +51,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<void> _showErrorDialog(String message) async {
-    print("Trying to show dialog"); // Debug print
+    debugPrint("Trying to show dialog"); // Debug print
     return showDialog<void>(
       context: context,
       barrierDismissible: false,
@@ -134,7 +134,7 @@ class _LoginPageState extends State<LoginPage> {
                         .then((result) {
                       authData = result;
                     }).catchError((error) {
-                      print("Caught error: $error");
+                      debugPrint("Caught error: $error");
                       _showErrorDialog(
                           "The server may be down. \nPlease Try again later.");
                     });
@@ -149,7 +149,7 @@ class _LoginPageState extends State<LoginPage> {
                           builder: (context) => KeyPage(authData)),
                     );
                   } catch (e) {
-                    print("Exception caught: $e");
+                    debugPrint("Exception caught: $e");
                     _showErrorDialog(
                         "The server may be down. \nPlease Try again later.");
                   }
@@ -215,7 +215,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 );
               } catch (e) {
-                print("Exception caught: $e");
+                debugPrint("Exception caught: $e");
                 _showErrorDialog(
                     "The server may be down. \nPlease try again later.");
               }
