@@ -2,7 +2,7 @@
 #
 # Generic Makefile
 #
-# Time-stamp: <Friday 2023-09-22 15:14:41 +1000 Graham Williams>
+# Time-stamp: <Sunday 2023-11-26 19:17:08 +1100 >
 #
 # Copyright (c) Graham.Williams@togaware.com
 #
@@ -17,7 +17,7 @@
 #   Minor update
 #   Trivial update or bug fix
 
-APP=$(shell pwd | xargs basename)
+APP=securedialog
 VER=0.0.1
 DATE=$(shell date +%Y-%m-%d)
 DEST=/var/www/html/$(APP)
