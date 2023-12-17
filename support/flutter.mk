@@ -8,6 +8,15 @@
 #
 ########################################################################
 
+# App version numbers
+#   Major release
+#   Minor update
+#   Trivial update or bug fix
+
+ifeq ($(VER),)
+  VER = $(shell egrep '^version:' pubspec.yaml | cut -d' ' -f2)
+endif
+
 define FLUTTER_HELP
 flutter:
 
@@ -39,6 +48,9 @@ flutter:
   runner    Build the auto generated code as *.g.dart files.
 
   desktops  Set up for all desktop platforms (linux, windows, macos)
+
+  distributions
+    targz   Builds $(APP)-$(VER)-linux-x86_64.tar.gz
 
 Also supported:
 
@@ -215,6 +227,16 @@ qtest:
 	flutter test --dart-define=PAUSE=0 --device-id \
 	$(shell flutter devices | grep desktop | perl -pe 's|^[^•]*• ([^ ]*) .*|\1|') \
 	integration_test/$*_test.dart
+
+targz: $(APP)-$(VER)-linux-x86_64.tar.gz
+
+$(APP)-$(VER)-linux-x86_64.tar.gz:
+	mkdir -p installers
+	rm -rf build/linux/x64/release
+	flutter build linux
+	tar --transform 's|^build/linux/x64/release/bundle|$(APP)|' -czvf $@ build/linux/x64/release/bundle
+	mv $@ installers/
+
 
 realclean::
 	flutter clean

@@ -2,7 +2,7 @@
 #
 # Generic Makefile
 #
-# Time-stamp: <Sunday 2023-11-26 19:17:08 +1100 >
+# Time-stamp: <Sunday 2023-12-17 17:01:35 +1100 Graham Williams>
 #
 # Copyright (c) Graham.Williams@togaware.com
 #
@@ -18,8 +18,9 @@
 #   Trivial update or bug fix
 
 APP=securedialog
-VER=0.0.1
+VER=
 DATE=$(shell date +%Y-%m-%d)
+
 DEST=/var/www/html/$(APP)
 
 ########################################################################
@@ -54,7 +55,7 @@ endif
 define HELP
 $(APP):
 
-  locals	E.g., install $(APP)
+  solidcommunity	Install to https://$(APP).solidcommunity.au
 
 endef
 export HELP
@@ -68,6 +69,22 @@ help::
 locals:
 	@echo "This might be the instructions to install $(APP)"
 
-.PHONY: prep
-prep: checks tests docs
+.PHONY: docs
+docs::
+	rsync -avzh doc/api/ root@solidcommunity.au:/var/www/html/docs/$(APP)/
 
+#.PHONY: versions
+#versions:
+#	perl -pi -e 's|applicationVersion = ".*";|applicationVersion = "$(VER)";|' \
+#	lib/constants/app.dart
+
+#
+# Manage the production install on the remote server.
+#
+
+.PHONY: solidcommunity
+solidcommunity:
+	rsync -avzh ./ solidcommunity.au:projects/$(APP)/ \
+	--exclude .dart_tool --exclude build --exclude ios --exclude macos \
+	--exclude linux --exclude windows --exclude android
+	ssh solidcommunity.au '(cd projects/$(APP); flutter upgrade; make prod)'
