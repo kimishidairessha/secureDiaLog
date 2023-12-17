@@ -90,12 +90,12 @@ class _HomeProfileState extends State<HomeProfile> {
   Future<void> refreshData() async {
     try {
       // Fetch the new survey data
-      List<SurveyDayInfo>? newSurveyDayInfoList = await homePageService.getSurveyDayInfoList(
-          Constants.barNumber, widget.authData);
+      List<SurveyDayInfo>? newSurveyDayInfoList = await homePageService
+          .getSurveyDayInfoList(Constants.barNumber, widget.authData);
 
       if (newSurveyDayInfoList != null) {
-        List<ChartPoint> newChartPointList = ChartUtils.parseToChart(
-            newSurveyDayInfoList, Constants.barNumber);
+        List<ChartPoint> newChartPointList =
+            ChartUtils.parseToChart(newSurveyDayInfoList, Constants.barNumber);
 
         // Clear the existing data lists
         clearDataLists();
@@ -115,8 +115,7 @@ class _HomeProfileState extends State<HomeProfile> {
           systolicTimeList.add(charPoint.systolicMaxTime);
           heartRateList.add(charPoint.heartRateMax);
           heartRateTimeList.add(charPoint.heartRateMaxTime);
-          obTimeList.add(
-              TimeUtils.convertDateToWeekDay(charPoint.obTimeDay));
+          obTimeList.add(TimeUtils.convertDateToWeekDay(charPoint.obTimeDay));
           timeList.add(TimeUtils.reformatDate(charPoint.obTimeDay));
           strengthToolTipsList.add(charPoint.otherStrength);
           fastingToolTipsList.add(charPoint.otherFasting);

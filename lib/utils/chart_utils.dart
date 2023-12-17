@@ -300,69 +300,69 @@ class ChartUtils {
       List<ToolTip> toolTipHeartRate = [];
 
       for (SurveyInfo surveyInfo in curSurveyInfoList) {
-          ToolTip toolTip;
-          toolTip = ToolTip();
-          if (surveyInfo.strength <= Constants.optionNull) {
-            toolTip.val = Constants.toolTipNoneVal;
-          } else {
-            toolTip.val = surveyInfo.strength;
-          }
-          toolTip.time = surveyInfo.obTime.substring(8, 12);
-          toolTipStrength.add(toolTip);
+        ToolTip toolTip;
+        toolTip = ToolTip();
+        if (surveyInfo.strength <= Constants.optionNull) {
+          toolTip.val = Constants.toolTipNoneVal;
+        } else {
+          toolTip.val = surveyInfo.strength;
+        }
+        toolTip.time = surveyInfo.obTime.substring(8, 12);
+        toolTipStrength.add(toolTip);
 
-          toolTip = ToolTip();
-          if (surveyInfo.fasting <= Constants.fastingMinY) {
-            toolTip.val = Constants.toolTipNoneVal;
-          } else {
-            toolTip.val = surveyInfo.fasting;
-          }
-          toolTip.time = surveyInfo.obTime.substring(8, 12);
-          toolTipFasting.add(toolTip);
+        toolTip = ToolTip();
+        if (surveyInfo.fasting <= Constants.fastingMinY) {
+          toolTip.val = Constants.toolTipNoneVal;
+        } else {
+          toolTip.val = surveyInfo.fasting;
+        }
+        toolTip.time = surveyInfo.obTime.substring(8, 12);
+        toolTipFasting.add(toolTip);
 
-          toolTip = ToolTip();
-          if (surveyInfo.postprandial <= Constants.postprandialMinY) {
-            toolTip.val = Constants.toolTipNoneVal;
-          } else {
-            toolTip.val = surveyInfo.postprandial;
-          }
-          toolTip.time = surveyInfo.obTime.substring(8, 12);
-          toolTipPostprandial.add(toolTip);
+        toolTip = ToolTip();
+        if (surveyInfo.postprandial <= Constants.postprandialMinY) {
+          toolTip.val = Constants.toolTipNoneVal;
+        } else {
+          toolTip.val = surveyInfo.postprandial;
+        }
+        toolTip.time = surveyInfo.obTime.substring(8, 12);
+        toolTipPostprandial.add(toolTip);
 
-          toolTip = ToolTip();
-          if (surveyInfo.diastolic <= Constants.diastolicMinY) {
-            toolTip.val = Constants.toolTipNoneVal;
-          } else {
-            toolTip.val = surveyInfo.diastolic;
-          }
-          toolTip.time = surveyInfo.obTime.substring(8, 12);
-          toolTipDiastolic.add(toolTip);
+        toolTip = ToolTip();
+        if (surveyInfo.diastolic <= Constants.diastolicMinY) {
+          toolTip.val = Constants.toolTipNoneVal;
+        } else {
+          toolTip.val = surveyInfo.diastolic;
+        }
+        toolTip.time = surveyInfo.obTime.substring(8, 12);
+        toolTipDiastolic.add(toolTip);
 
-          toolTip = ToolTip();
-          if (surveyInfo.weight <= Constants.weightMinY) {
-            toolTip.val = Constants.toolTipNoneVal;
-          } else {
-            toolTip.val = surveyInfo.weight;
-          }
-          toolTip.time = surveyInfo.obTime.substring(8, 12);
-          toolTipWeight.add(toolTip);
+        toolTip = ToolTip();
+        if (surveyInfo.weight <= Constants.weightMinY) {
+          toolTip.val = Constants.toolTipNoneVal;
+        } else {
+          toolTip.val = surveyInfo.weight;
+        }
+        toolTip.time = surveyInfo.obTime.substring(8, 12);
+        toolTipWeight.add(toolTip);
 
-          toolTip = ToolTip();
-          if (surveyInfo.systolic <= Constants.systolicMinY) {
-            toolTip.val = Constants.toolTipNoneVal;
-          } else {
-            toolTip.val = surveyInfo.systolic;
-          }
-          toolTip.time = surveyInfo.obTime.substring(8, 12);
-          toolTipSystolic.add(toolTip);
+        toolTip = ToolTip();
+        if (surveyInfo.systolic <= Constants.systolicMinY) {
+          toolTip.val = Constants.toolTipNoneVal;
+        } else {
+          toolTip.val = surveyInfo.systolic;
+        }
+        toolTip.time = surveyInfo.obTime.substring(8, 12);
+        toolTipSystolic.add(toolTip);
 
-          toolTip = ToolTip();
-          if (surveyInfo.heartRate <= Constants.heartRateMinY) {
-            toolTip.val = Constants.toolTipNoneVal;
-          } else {
-            toolTip.val = surveyInfo.heartRate;
-          }
-          toolTip.time = surveyInfo.obTime.substring(8, 12);
-          toolTipHeartRate.add(toolTip);
+        toolTip = ToolTip();
+        if (surveyInfo.heartRate <= Constants.heartRateMinY) {
+          toolTip.val = Constants.toolTipNoneVal;
+        } else {
+          toolTip.val = surveyInfo.heartRate;
+        }
+        toolTip.time = surveyInfo.obTime.substring(8, 12);
+        toolTipHeartRate.add(toolTip);
       }
       TablePoint tablePoint = TablePoint();
       tablePoint.obTimeDay = requiredDate;

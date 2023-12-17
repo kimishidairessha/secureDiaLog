@@ -18,20 +18,22 @@
 // You should have received a copy of the GNU General Public License along with
 // this program.  If not, see <https://www.gnu.org/licenses/>.
 ///
-/// Authors: Ye Duan
+/// Authors: Ye Duan, Graham Williams
 
 // ignore_for_file: library_private_types_in_public_api, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter/services.dart';
-import 'package:securedialog/constants/app.dart';
-import 'package:securedialog/utils/time_utils.dart';
+
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../service/home_page_service.dart';
-import '../../utils/base_widget.dart';
-import '../login_page/login_page.dart';
+import 'package:securedialog/constants/app.dart';
+import 'package:securedialog/utils/time_utils.dart';
+
+import 'package:securedialog/service/home_page_service.dart';
+import 'package:securedialog/ui/login_page/login_page.dart';
+import 'package:securedialog/utils/base_widget.dart';
 
 const storage = FlutterSecureStorage(); // Initialize secure storage
 
@@ -100,7 +102,6 @@ class _HomeSettingsState extends State<HomeSettings> {
     prefs.setInt('locationCaptureFrequency', locationCaptureFrequency);
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -114,9 +115,7 @@ class _HomeSettingsState extends State<HomeSettings> {
                 'Your Information',
                 style: TextStyle(
                   fontSize: 30,
-                  fontFamily: "KleeOne",
                   fontWeight: FontWeight.bold,
-                  color: Colors.teal[800],
                 ),
               ),
             ),
@@ -136,13 +135,10 @@ class _HomeSettingsState extends State<HomeSettings> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
+                          const Text(
                             'Encryption Key:',
                             style: TextStyle(
                               fontSize: 20,
-                              fontFamily: "KleeOne",
-                              fontWeight: FontWeight.bold,
-                              color: Colors.teal[800],
                             ),
                           ),
                           const SizedBox(height: 12),
@@ -157,7 +153,6 @@ class _HomeSettingsState extends State<HomeSettings> {
                                   obscureText: !isTextVisible,
                                   style: TextStyle(
                                       fontSize: 18,
-                                      fontFamily: "KleeOne",
                                       color: Colors.blueGrey[700]),
                                   textAlign: TextAlign.left,
                                   autofocus: false,
@@ -210,18 +205,16 @@ class _HomeSettingsState extends State<HomeSettings> {
                                       Colors.teal[400]),
                                   // Other styles here
                                 ),
-                                child: const Text(" SAVE "),
+                                child: const Text(" SAVE ",
+                                    style: TextStyle(color: Colors.white)),
                               ),
                             ],
                           ),
                           const SizedBox(height: 20),
-                          Text(
+                          const Text(
                             'WebID:',
                             style: TextStyle(
                               fontSize: 20,
-                              fontFamily: "KleeOne",
-                              fontWeight: FontWeight.bold,
-                              color: Colors.teal[800],
                             ),
                           ),
                           const SizedBox(height: 12),
@@ -235,7 +228,6 @@ class _HomeSettingsState extends State<HomeSettings> {
                                   readOnly: false,
                                   style: TextStyle(
                                       fontSize: 18,
-                                      fontFamily: "KleeOne",
                                       color: Colors.blueGrey[700]),
                                   decoration: InputDecoration(
                                     hintText:
@@ -268,19 +260,17 @@ class _HomeSettingsState extends State<HomeSettings> {
                                   backgroundColor: MaterialStateProperty.all(
                                       Colors.teal[400]),
                                 ),
-                                child: const Text(" SAVE "),
+                                child: const Text(" SAVE ",
+                                    style: TextStyle(color: Colors.white)),
                               ),
                             ],
                           ),
                           const SizedBox(height: 20),
                           SwitchListTile(
-                            title: Text(
-                                'Capture Location',
+                            title: const Text(
+                              'Capture Location',
                               style: TextStyle(
                                 fontSize: 20,
-                                fontFamily: "KleeOne",
-                                fontWeight: FontWeight.bold,
-                                color: Colors.teal[800],
                               ),
                             ),
                             value: isCaptureLocationEnabled,
@@ -292,22 +282,22 @@ class _HomeSettingsState extends State<HomeSettings> {
                             },
                           ),
                           const SizedBox(height: 20),
-                          Text(
+                          const Text(
                             'Location Capture Frequency:',
                             style: TextStyle(
                               fontSize: 20,
-                              fontFamily: "KleeOne",
-                              fontWeight: FontWeight.bold,
-                              color: Colors.teal[800],
                             ),
                           ),
                           const SizedBox(height: 12),
                           DropdownButton<int>(
                             value: locationCaptureFrequency,
                             items: const [
-                              DropdownMenuItem<int>(value: 1, child: Text('1 Minute')),
-                              DropdownMenuItem<int>(value: 5, child: Text('5 Minutes')),
-                              DropdownMenuItem<int>(value: 60, child: Text('1 hour')),
+                              DropdownMenuItem<int>(
+                                  value: 1, child: Text('1 Minute')),
+                              DropdownMenuItem<int>(
+                                  value: 5, child: Text('5 Minutes')),
+                              DropdownMenuItem<int>(
+                                  value: 60, child: Text('1 hour')),
                             ],
                             onChanged: (int? newValue) {
                               setState(() {
@@ -318,36 +308,38 @@ class _HomeSettingsState extends State<HomeSettings> {
                           ),
                           const SizedBox(height: 20),
                           FutureBuilder<String>(
-                            future: homePageService.getLastSurveyTime(widget.authData!),
-                            builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
-                              if (snapshot.connectionState == ConnectionState.waiting) {
+                            future: homePageService
+                                .getLastSurveyTime(widget.authData!),
+                            builder: (BuildContext context,
+                                AsyncSnapshot<String> snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
                                 return const CircularProgressIndicator();
                               } else if (snapshot.hasError) {
                                 return Text("Error: ${snapshot.error}");
                               } else {
-                                lastSurveyTime = snapshot.data ?? Constants.none;
+                                lastSurveyTime =
+                                    snapshot.data ?? Constants.none;
                                 return Padding(
-                                  padding: const EdgeInsets.only(top: 0.0, left: 0.0),
+                                  padding: const EdgeInsets.only(
+                                      top: 0.0, left: 0.0),
                                   child: Row(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
-                                      Text(
+                                      const Text(
                                         'Last Survey Time:',
                                         style: TextStyle(
                                           fontSize: 20,
-                                          fontFamily: "KleeOne",
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.teal[800],
                                         ),
                                       ),
                                       const SizedBox(width: 18),
                                       Text(
-                                        TimeUtils.reformatYYYYMMDDHHMMSS(lastSurveyTime!),
+                                        TimeUtils.reformatYYYYMMDDHHMMSS(
+                                            lastSurveyTime!),
                                         style: TextStyle(
                                             fontSize: 18,
-                                            fontFamily: "KleeOne",
-                                            color: Colors.blueGrey[700]
-                                        ),
+                                            color: Colors.blueGrey[700]),
                                       )
                                     ],
                                   ),

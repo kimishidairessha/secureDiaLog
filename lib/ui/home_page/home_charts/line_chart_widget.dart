@@ -96,27 +96,28 @@ class _LineChartWidgetState extends State<LineChartWidget> {
         ),
       );
     }
-    if(kIsWeb || Platform.isWindows || Platform.isLinux){
+    if (kIsWeb || Platform.isWindows || Platform.isLinux) {
       visibleBarGroups = rawBarGroups;
     } else {
       // Create the scroll controller and add a listener to it
       scrollController = ScrollController(
         initialScrollOffset: (rawBarGroups.length - visibleLength) * 15.0,
       )..addListener(() {
-        updateVisibleData();
-      });
+          updateVisibleData();
+        });
 
       int initialIndex = (rawBarGroups.length > visibleLength)
           ? rawBarGroups.length - visibleLength
           : 0;
-      visibleBarGroups = rawBarGroups.sublist(initialIndex, rawBarGroups.length);
+      visibleBarGroups =
+          rawBarGroups.sublist(initialIndex, rawBarGroups.length);
     }
   }
 
   int firstVisibleDataIndex = 8;
 
   void updateVisibleData() {
-    if(!kIsWeb && !Platform.isWindows && !Platform.isLinux){
+    if (!kIsWeb && !Platform.isWindows && !Platform.isLinux) {
       int calculatedIndex = (scrollController.offset / 15).floor();
       int maxFirstIndex = rawBarGroups.length - visibleLength;
 
@@ -184,72 +185,70 @@ class _LineChartWidgetState extends State<LineChartWidget> {
       color: Constants.tableColor,
       child: SizedBox(
         height: 200,
-        width: 60 * rawBarGroups.length.toDouble(), // Width to accommodate all bars
-        child: BarChart(
-            BarChartData(
-              maxY: 220,
-              barGroups: visibleBarGroups,
-              barTouchData: BarTouchData(
-                touchCallback:
-                    (FlTouchEvent event, BarTouchResponse? touchResponse) {
-                  if (event is FlLongPressStart || event is FlTapDownEvent){
-                    if (touchResponse != null && touchResponse.spot != null) {
-                      setState(() {
-                        selectedBarIndex =
-                            touchResponse.spot!.touchedBarGroupIndex;
-                      });
-                    }
-                  } else if (event is FlLongPressEnd || event is FlTapCancelEvent) {
-                    setState(() {
-                      selectedBarIndex = null;
-                    });
-                  }
-                },
-                touchTooltipData: BarTouchTooltipData(
-                  tooltipBgColor: Colors.green[600],
-                  getTooltipItem: (group, groupIndex, rod, rodIndex) {
-                    int adjustedGroupIndex = groupIndex;
-                    String time = widget.timeList[adjustedGroupIndex];
-                    String strength =
+        width: 60 *
+            rawBarGroups.length.toDouble(), // Width to accommodate all bars
+        child: BarChart(BarChartData(
+          maxY: 220,
+          barGroups: visibleBarGroups,
+          barTouchData: BarTouchData(
+            touchCallback:
+                (FlTouchEvent event, BarTouchResponse? touchResponse) {
+              if (event is FlLongPressStart || event is FlTapDownEvent) {
+                if (touchResponse != null && touchResponse.spot != null) {
+                  setState(() {
+                    selectedBarIndex = touchResponse.spot!.touchedBarGroupIndex;
+                  });
+                }
+              } else if (event is FlLongPressEnd || event is FlTapCancelEvent) {
+                setState(() {
+                  selectedBarIndex = null;
+                });
+              }
+            },
+            touchTooltipData: BarTouchTooltipData(
+              tooltipBgColor: Colors.green[600],
+              getTooltipItem: (group, groupIndex, rod, rodIndex) {
+                int adjustedGroupIndex = groupIndex;
+                String time = widget.timeList[adjustedGroupIndex];
+                String strength =
                     widget.yList[adjustedGroupIndex].toInt().toString();
 
-                    String tooltipText = "$time\nValue: $strength";
+                String tooltipText = "$time\nValue: $strength";
 
-                    return BarTooltipItem(
-                        tooltipText, const TextStyle(color: Colors.white));
-                  },
-                  fitInsideVertically: true,
-                  fitInsideHorizontally: true,
-                ),
-                touchExtraThreshold: const EdgeInsets.all(4),
+                return BarTooltipItem(
+                    tooltipText, const TextStyle(color: Colors.white));
+              },
+              fitInsideVertically: true,
+              fitInsideHorizontally: true,
+            ),
+            touchExtraThreshold: const EdgeInsets.all(4),
+          ),
+          titlesData: FlTitlesData(
+            show: true,
+            leftTitles: const AxisTitles(
+              sideTitles: SideTitles(showTitles: false),
+            ),
+            rightTitles: const AxisTitles(
+              sideTitles: SideTitles(showTitles: false),
+            ),
+            bottomTitles: AxisTitles(
+              sideTitles: SideTitles(
+                showTitles: true,
+                reservedSize: 40,
+                getTitlesWidget: bottomTitleWidget,
               ),
-              titlesData: FlTitlesData(
-                show: true,
-                leftTitles: const AxisTitles(
-                  sideTitles: SideTitles(showTitles: false),
-                ),
-                rightTitles: const AxisTitles(
-                  sideTitles: SideTitles(showTitles: false),
-                ),
-                bottomTitles: AxisTitles(
-                  sideTitles: SideTitles(
-                    showTitles: true,
-                    reservedSize: 40,
-                    getTitlesWidget: bottomTitleWidget,
-                  ),
-                ),
-                topTitles: const AxisTitles(
-                  sideTitles: SideTitles(showTitles: false),
-                ),
-              ),
-              borderData: FlBorderData(
-                show: false,
-              ),
-              gridData: const FlGridData(
-                show: false,
-              ),
-            )
-        ),
+            ),
+            topTitles: const AxisTitles(
+              sideTitles: SideTitles(showTitles: false),
+            ),
+          ),
+          borderData: FlBorderData(
+            show: false,
+          ),
+          gridData: const FlGridData(
+            show: false,
+          ),
+        )),
       ),
     );
   }
@@ -270,7 +269,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
               barTouchData: BarTouchData(
                 touchCallback:
                     (FlTouchEvent event, BarTouchResponse? touchResponse) {
-                  if (event is FlLongPressStart || event is FlTapDownEvent){
+                  if (event is FlLongPressStart || event is FlTapDownEvent) {
                     if (touchResponse != null && touchResponse.spot != null) {
                       setState(() {
                         selectedBarIndex =
@@ -278,7 +277,8 @@ class _LineChartWidgetState extends State<LineChartWidget> {
                                 firstVisibleDataIndex;
                       });
                     }
-                  } else if (event is FlLongPressEnd || event is FlTapCancelEvent) {
+                  } else if (event is FlLongPressEnd ||
+                      event is FlTapCancelEvent) {
                     setState(() {
                       selectedBarIndex = null;
                     });
@@ -287,11 +287,10 @@ class _LineChartWidgetState extends State<LineChartWidget> {
                 touchTooltipData: BarTouchTooltipData(
                   tooltipBgColor: Colors.green[600],
                   getTooltipItem: (group, groupIndex, rod, rodIndex) {
-                    int adjustedGroupIndex =
-                        groupIndex + firstVisibleDataIndex;
+                    int adjustedGroupIndex = groupIndex + firstVisibleDataIndex;
                     String time = widget.timeList[adjustedGroupIndex];
                     String strength =
-                    widget.yList[adjustedGroupIndex].toInt().toString();
+                        widget.yList[adjustedGroupIndex].toInt().toString();
 
                     String tooltipText = "$time\nValue: $strength";
 

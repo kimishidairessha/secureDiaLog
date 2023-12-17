@@ -131,5 +131,4 @@ class TimeUtils {
   static String reverseTimeFormat(String formattedTime) {
     return formattedTime.replaceAll(':', '');
   }
-
 }

@@ -18,12 +18,14 @@
 // You should have received a copy of the GNU General Public License along with
 // this program.  If not, see <https://www.gnu.org/licenses/>.
 ///
-/// Authors: Bowen Yang, Ye Duan
+/// Authors: Graham Williams, Ye Duan, Bowen Yang
 
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
-/// this class contains a lot of base widgets to reduce repeated codes and improve decoupling
+import 'package:fl_chart/fl_chart.dart';
+
+/// A class of base widgets to reduce repeated code and support decoupling.
+
 class BaseWidget {
   static BottomNavigationBarItem getNavBarItem(IconData icon, String label) {
     return BottomNavigationBarItem(
@@ -37,8 +39,7 @@ class BaseWidget {
     return AppBar(
       title: Text(barName),
       titleTextStyle: const TextStyle(
-          fontSize: 25,
-          fontFamily: "KleeOne",
+        fontSize: 25,
         color: Colors.white,
       ),
       elevation: 2.5,
@@ -59,7 +60,7 @@ class BaseWidget {
       String hint, TextEditingController textEditingController) {
     return TextField(
       controller: textEditingController,
-      style: const TextStyle(fontSize: 20, fontFamily: "KleeOne"),
+      style: const TextStyle(fontSize: 20),
       textAlign: TextAlign.center,
       autofocus: false,
       decoration: InputDecoration(
@@ -73,7 +74,7 @@ class BaseWidget {
       hintText,
       style: const TextStyle(
         fontSize: 15,
-        fontFamily: "KleeOne",
+        // fontFamily: "KleeOne",
         fontWeight: FontWeight.bold,
       ),
     );
@@ -128,13 +129,10 @@ class BaseWidget {
       onPressed: tapEvent,
       style: ElevatedButton.styleFrom(
         minimumSize: Size(width, height),
-        textStyle: const TextStyle(
-            fontSize: 25,
-            fontFamily: "KleeOne",
-            color: Colors.white),
+        textStyle: const TextStyle(fontSize: 25, color: Colors.white),
         backgroundColor: Colors.teal,
       ),
-      child: Text(label),
+      child: Text(label, style: TextStyle(color: Colors.white)),
     );
   }
 

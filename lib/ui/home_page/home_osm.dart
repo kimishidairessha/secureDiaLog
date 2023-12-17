@@ -87,7 +87,7 @@ class _HomeOSMState extends State<HomeOSM> with WidgetsBindingObserver {
           mapController.move(curLatLng!, Constants.defaultZoom);
         });
       } else {
-        if(_captureLocation){
+        if (_captureLocation) {
           if (Platform.isLinux || Platform.isWindows || Platform.isMacOS) {
             Location? location = await UserLocation.getValue();
             setState(() {
@@ -140,7 +140,6 @@ class _HomeOSMState extends State<HomeOSM> with WidgetsBindingObserver {
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -154,8 +153,9 @@ class _HomeOSMState extends State<HomeOSM> with WidgetsBindingObserver {
           onMapReady: () {
             debugPrint("map init complete");
             timer = Timer.periodic(
-                Duration(seconds: _locationCaptureFrequency * 60), (timer) async {
-              if(_captureLocation){
+                Duration(seconds: _locationCaptureFrequency * 60),
+                (timer) async {
+              if (_captureLocation) {
                 debugPrint("refresh the map and write position info into pod");
                 if (autoGeo) {
                   if (Platform.isLinux ||
@@ -206,7 +206,7 @@ class _HomeOSMState extends State<HomeOSM> with WidgetsBindingObserver {
             child: FloatingActionButton(
               heroTag: null,
               onPressed: () async {
-                if(_captureLocation){
+                if (_captureLocation) {
                   autoGeo = true;
                   if (Platform.isLinux ||
                       Platform.isWindows ||

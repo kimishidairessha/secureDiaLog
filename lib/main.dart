@@ -1,4 +1,4 @@
-/// Personal diabetes management tool with privacy
+/// Personal diabetes management tool with privacy.
 ///
 /// Copyright (C) 2023 The Authors
 ///
@@ -18,7 +18,7 @@
 // You should have received a copy of the GNU General Public License along with
 // this program.  If not, see <https://www.gnu.org/licenses/>.
 ///
-/// Authors: Bowen Yang, Ye Duan, Graham Williams
+/// Authors: Ye Duan, Graham Williams, Bowen Yang
 
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
@@ -34,8 +34,7 @@ import 'package:securedialog/utils/geo_utils.dart';
 /// Main entry point for the application.
 
 void main() async {
-
-  if (DebugPrintConfig.debugPrint == 'FALSE'){
+  if (DebugPrintConfig.debugPrint == 'FALSE') {
     debugPrint = (String? message, {int? wrapWidth}) {
       null;
     };
@@ -69,7 +68,7 @@ void main() async {
   }
 
   WidgetsFlutterBinding.ensureInitialized();
-  // init permissions
+
   AwesomeNotifications().initialize(
       null, //icon is null right now
       [
@@ -90,6 +89,7 @@ void main() async {
             channelGroupName: 'Basic group')
       ],
       debug: true);
+
   GeoUtils.getCurrentLocation();
   runApp(const SecureDiaLog());
 }
@@ -101,14 +101,10 @@ class SecureDiaLog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       debugShowCheckedModeBanner: false,
       title: "SecureDiaLog",
-      theme: ThemeData(
-        colorScheme: const ColorScheme.light().copyWith(
-            primary: Color(int.parse("e74c3c", radix: 16) | 0xFF000000)),
-      ),
-      home: const LoginPage(),
+      home: LoginPage(),
     );
   }
 }

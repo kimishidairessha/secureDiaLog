@@ -34,7 +34,8 @@ import 'package:securedialog/constants/app.dart';
 import 'package:csv/csv.dart';
 import 'dart:io';
 import 'package:securedialog/utils/file_saver_mobile.dart'
-if (dart.library.html) 'package:securedialog/utils/file_saver_web.dart' as file_saver;
+    if (dart.library.html) 'package:securedialog/utils/file_saver_web.dart'
+    as file_saver;
 
 /// the view layer of profile widget in home page
 class HomeData extends StatefulWidget {
@@ -100,7 +101,6 @@ class _HomeDataState extends State<HomeData> {
     String csv = const ListToCsvConverter().convert(rows);
 
     file_saver.saveAndShareCsv(csv, fileName);
-
   }
 
   Future<void> promptFileNameAndExport() async {
@@ -112,7 +112,8 @@ class _HomeDataState extends State<HomeData> {
           title: const Text('Enter Filename'),
           content: TextField(
             controller: fileNameController,
-            decoration: const InputDecoration(hintText: "Enter filename for CSV"),
+            decoration:
+                const InputDecoration(hintText: "Enter filename for CSV"),
           ),
           actions: <Widget>[
             TextButton(
@@ -125,7 +126,9 @@ class _HomeDataState extends State<HomeData> {
               child: const Text('Export'),
               onPressed: () {
                 Navigator.of(context).pop();
-                exportToCsv(fileNameController.text.isNotEmpty ? fileNameController.text : "default_export.csv");
+                exportToCsv(fileNameController.text.isNotEmpty
+                    ? fileNameController.text
+                    : "default_export.csv");
               },
             ),
           ],
@@ -146,27 +149,33 @@ class _HomeDataState extends State<HomeData> {
         File file = File(result.files.single.path!);
 
         final csvString = await file.readAsString();
-        List<List<dynamic>> rows = const CsvToListConverter().convert(csvString);
+        List<List<dynamic>> rows =
+            const CsvToListConverter().convert(csvString);
 
         // Skip the header row and append data
         for (int i = 1; i < rows.length; i++) {
           List<dynamic> row = rows[i];
           if (row.length >= 9) {
             String dateString = "${row[0]} ${row[1]}"; // Combines date and time
-            dateString = dateString.replaceAll('/', '-'); // Replace '/' with '-'
+            dateString =
+                dateString.replaceAll('/', '-'); // Replace '/' with '-'
             List<String> parts = dateString.split(" ");
             if (parts.length == 2) {
               List<String> timeParts = parts[1].split(":");
               if (timeParts.length == 2) {
-                String hour = timeParts[0].padLeft(2, '0'); // Pad hour with 0 if it's one digit
-                String minute = timeParts[1].padLeft(2, '0'); // Pad minute with 0 if it's one digit
-                dateString = "${parts[0]} $hour:$minute"; // Reconstruct the date string
+                String hour = timeParts[0]
+                    .padLeft(2, '0'); // Pad hour with 0 if it's one digit
+                String minute = timeParts[1]
+                    .padLeft(2, '0'); // Pad minute with 0 if it's one digit
+                dateString =
+                    "${parts[0]} $hour:$minute"; // Reconstruct the date string
               }
             }
             DateTime? dateTime = DateTime.tryParse(dateString);
             if (dateTime == null) {
               // Handle the case where the date-time is invalid
-              debugPrint("Invalid date-time format in CSV: ${row[0]} ${row[1]}");
+              debugPrint(
+                  "Invalid date-time format in CSV: ${row[0]} ${row[1]}");
               continue; // Skip this row or handle appropriately
             }
             await homePageService.saveSurveyInfo(
@@ -178,8 +187,7 @@ class _HomeDataState extends State<HomeData> {
                 row[5].toString(),
                 row[4].toString(),
                 widget.authData,
-                dateTime
-            );
+                dateTime);
           }
         }
         setState(() {
@@ -299,7 +307,7 @@ class _HomeDataState extends State<HomeData> {
                     );
                   }
                   List<TablePoint> tableList =
-                  ChartUtils.parseToTable(surveyDayInfoList);
+                      ChartUtils.parseToTable(surveyDayInfoList);
                   for (TablePoint tablePoint in tableList) {
                     timeList1.add(
                         TimeUtils.reformatDateForTable(tablePoint.obTimeDay));
@@ -348,17 +356,20 @@ class _HomeDataState extends State<HomeData> {
                             onPressed: promptFileNameAndExport,
                             style: ButtonStyle(
                               backgroundColor:
-                              MaterialStateProperty.all(Colors.teal[400]),
+                                  MaterialStateProperty.all(Colors.teal[400]),
                             ),
-                            child: const Text("Export to CSV"),
+                            child: const Text("Export to CSV",
+                                style: TextStyle(color: Colors.white)),
                           ),
                           const SizedBox(width: 18),
                           ElevatedButton(
                             onPressed: importFromCsv,
                             style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all(Colors.teal[400]),
+                              backgroundColor:
+                                  MaterialStateProperty.all(Colors.teal[400]),
                             ),
-                            child: const Text("Import from CSV"),
+                            child: const Text("Import from CSV",
+                                style: TextStyle(color: Colors.white)),
                           ),
                         ],
                       ),

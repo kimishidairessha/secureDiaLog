@@ -1,4 +1,4 @@
-/// The widget for displaying LOGIN page
+/// A widget for displaying the login page.
 ///
 /// Copyright (C) 2023 The Authors
 ///
@@ -18,19 +18,21 @@
 // You should have received a copy of the GNU General Public License along with
 // this program.  If not, see <https://www.gnu.org/licenses/>.
 ///
-/// Authors: Bowen Yang, Ye Duan
+/// Authors: Graham Williams, Ye Duan, Bowen Yang
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:securedialog/ui/key_page/key_page.dart';
-import 'package:securedialog/utils/base_widget.dart';
-import 'package:securedialog/constants/app.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../service/login_page_service.dart';
-import 'login_image.dart';
+import 'package:securedialog/constants/app.dart';
+import 'package:securedialog/service/login_page_service.dart';
+import 'package:securedialog/ui/key_page/key_page.dart';
+import 'package:securedialog/ui/login_page/login_image.dart';
+import 'package:securedialog/utils/base_widget.dart';
 
-/// the view layer of login page
+/// The view layer of login page.
+
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
 
@@ -157,12 +159,11 @@ class _LoginPageState extends State<LoginPage> {
               },
               child: TextField(
                 controller: webIdController,
-                style: const TextStyle(fontSize: 20, fontFamily: "KleeOne"),
+                style: const TextStyle(fontSize: 20),
                 textAlign: TextAlign.center,
                 autofocus: false,
                 decoration: const InputDecoration(
-                  hintText:
-                      "https://pod-url.example-server.net/profile/card#me",
+                  hintText: "https://pods.solidcommunity.au/pat-smith",
                 ),
                 onSubmitted: (value) async {
                   if (!loginPageService.loginPreCheck(webIdController.text)) {
@@ -196,8 +197,8 @@ class _LoginPageState extends State<LoginPage> {
                   await showDialog<bool>(
                       context: context,
                       builder: (context) {
-                        return BaseWidget.getNoticeDialog(context, "Warning",
-                            "You gave an invalid webId", "Try again");
+                        return BaseWidget.getNoticeDialog(
+                            context, "Warning", "Invalid webId", "Try again");
                       });
                   return;
                 }

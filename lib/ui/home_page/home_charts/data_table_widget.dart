@@ -176,13 +176,12 @@ class _DataTableWidget extends State<DataTableWidget> {
       if (widget.timeList[rowIndex] != 'none') {
         for (int i = 0; i < widget.strengthToolTipsList[rowIndex].length; i++) {
           allRows.add(DataRow(cells: [
-            DataCell(
-                IconButton(
-                    icon: const Icon(Icons.delete, size: 25, color: Colors.green),
-                    padding: const EdgeInsets.all(0), // Remove padding
-                    constraints: const BoxConstraints(), // Remove constraints
-                    onPressed: () => onDeleteRow(rowIndex, i),
-                  )),
+            DataCell(IconButton(
+              icon: const Icon(Icons.delete, size: 25, color: Colors.green),
+              padding: const EdgeInsets.all(0), // Remove padding
+              constraints: const BoxConstraints(), // Remove constraints
+              onPressed: () => onDeleteRow(rowIndex, i),
+            )),
             DataCell(
                 Text(widget.timeList[rowIndex])), // Date empty for tooltip rows
             DataCell(Text(TimeUtils.convertHHmmToClock(widget
@@ -208,20 +207,19 @@ class _DataTableWidget extends State<DataTableWidget> {
   }
 
   void onDeleteRow(int rowIndex, [int i = 0]) {
-      String date = TimeUtils.reverseDateFormat(widget.timeList[rowIndex]);
-      String time = widget.strengthToolTipsList[rowIndex][i].time;
-      setState(() {
-        widget.strengthToolTipsList[rowIndex].removeAt(i);
-        widget.systolicToolTipsList[rowIndex].removeAt(i);
-        widget.diastolicToolTipsList[rowIndex].removeAt(i);
-        widget.heartRateToolTipsList[rowIndex].removeAt(i);
-        widget.weightToolTipsList[rowIndex].removeAt(i);
-        widget.fastingToolTipsList[rowIndex].removeAt(i);
-        widget.postprandialToolTipsList[rowIndex].removeAt(i);
-      });
-      widget.onDelete(date, time);
+    String date = TimeUtils.reverseDateFormat(widget.timeList[rowIndex]);
+    String time = widget.strengthToolTipsList[rowIndex][i].time;
+    setState(() {
+      widget.strengthToolTipsList[rowIndex].removeAt(i);
+      widget.systolicToolTipsList[rowIndex].removeAt(i);
+      widget.diastolicToolTipsList[rowIndex].removeAt(i);
+      widget.heartRateToolTipsList[rowIndex].removeAt(i);
+      widget.weightToolTipsList[rowIndex].removeAt(i);
+      widget.fastingToolTipsList[rowIndex].removeAt(i);
+      widget.postprandialToolTipsList[rowIndex].removeAt(i);
+    });
+    widget.onDelete(date, time);
   }
-
 
   String mapValueToText(double value) {
     switch (value.toInt()) {

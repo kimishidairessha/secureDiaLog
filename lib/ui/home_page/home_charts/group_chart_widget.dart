@@ -29,7 +29,6 @@ import 'package:securedialog/model/tooltip.dart';
 import 'package:securedialog/utils/time_utils.dart';
 import 'package:flutter/foundation.dart';
 
-
 class GroupChartWidget extends StatefulWidget {
   final List<double> yList;
   final List<double> yList2;
@@ -97,27 +96,28 @@ class _GroupChartWidgetState extends State<GroupChartWidget> {
         ),
       );
     }
-    if(kIsWeb || Platform.isWindows || Platform.isLinux){
+    if (kIsWeb || Platform.isWindows || Platform.isLinux) {
       visibleBarGroups = rawBarGroups;
     } else {
       // Create the scroll controller and add a listener to it
       scrollController = ScrollController(
         initialScrollOffset: (rawBarGroups.length - visibleLength) * 15.0,
       )..addListener(() {
-        updateVisibleData();
-      });
+          updateVisibleData();
+        });
 
       int initialIndex = (rawBarGroups.length > visibleLength)
           ? rawBarGroups.length - visibleLength
           : 0;
-      visibleBarGroups = rawBarGroups.sublist(initialIndex, rawBarGroups.length);
+      visibleBarGroups =
+          rawBarGroups.sublist(initialIndex, rawBarGroups.length);
     }
   }
 
   int firstVisibleDataIndex = 8;
 
   void updateVisibleData() {
-    if(!kIsWeb && !Platform.isWindows && !Platform.isLinux){
+    if (!kIsWeb && !Platform.isWindows && !Platform.isLinux) {
       int calculatedIndex = (scrollController.offset / 15).floor();
       int maxFirstIndex = rawBarGroups.length - visibleLength;
 
@@ -206,9 +206,10 @@ class _GroupChartWidgetState extends State<GroupChartWidget> {
     return Container(
       color: Constants.tableColor,
       child: SizedBox(
-        height: 200,
-        width: 60 * rawBarGroups.length.toDouble(), // Width to accommodate all bars
-        child: BarChart(
+          height: 200,
+          width: 60 *
+              rawBarGroups.length.toDouble(), // Width to accommodate all bars
+          child: BarChart(
             BarChartData(
               maxY: 220,
               barGroups: visibleBarGroups,
@@ -216,14 +217,14 @@ class _GroupChartWidgetState extends State<GroupChartWidget> {
                 touchCallback:
                     (FlTouchEvent event, BarTouchResponse? touchResponse) {
                   if (event is FlLongPressStart || event is FlTapDownEvent) {
-                    if (touchResponse != null &&
-                        touchResponse.spot != null) {
+                    if (touchResponse != null && touchResponse.spot != null) {
                       setState(() {
                         selectedBarIndex =
                             touchResponse.spot!.touchedBarGroupIndex;
                       });
                     }
-                  } else if (event is FlLongPressEnd || event is FlTapCancelEvent) {
+                  } else if (event is FlLongPressEnd ||
+                      event is FlTapCancelEvent) {
                     setState(() {
                       selectedBarIndex = null;
                     });
@@ -235,9 +236,9 @@ class _GroupChartWidgetState extends State<GroupChartWidget> {
                     int adjustedGroupIndex = groupIndex;
                     String time = widget.timeList[adjustedGroupIndex];
                     String systolic =
-                    widget.yList[adjustedGroupIndex].toInt().toString();
+                        widget.yList[adjustedGroupIndex].toInt().toString();
                     String diastolic =
-                    widget.yList2[adjustedGroupIndex].toInt().toString();
+                        widget.yList2[adjustedGroupIndex].toInt().toString();
 
                     String tooltipText =
                         "$time\nSystolic: $systolic\nDiastolic: $diastolic";
@@ -276,9 +277,8 @@ class _GroupChartWidgetState extends State<GroupChartWidget> {
                 show: false,
               ),
             ),
-            )
-        ),
-      );
+          )),
+    );
   }
 
   Widget _buildChartWithScrolling() {
@@ -298,15 +298,15 @@ class _GroupChartWidgetState extends State<GroupChartWidget> {
                 touchCallback:
                     (FlTouchEvent event, BarTouchResponse? touchResponse) {
                   if (event is FlLongPressStart || event is FlTapDownEvent) {
-                    if (touchResponse != null &&
-                        touchResponse.spot != null) {
+                    if (touchResponse != null && touchResponse.spot != null) {
                       setState(() {
                         selectedBarIndex =
                             touchResponse.spot!.touchedBarGroupIndex +
                                 firstVisibleDataIndex;
                       });
                     }
-                  } else if (event is FlLongPressEnd || event is FlTapCancelEvent) {
+                  } else if (event is FlLongPressEnd ||
+                      event is FlTapCancelEvent) {
                     setState(() {
                       selectedBarIndex = null;
                     });
@@ -315,13 +315,12 @@ class _GroupChartWidgetState extends State<GroupChartWidget> {
                 touchTooltipData: BarTouchTooltipData(
                   tooltipBgColor: Colors.green[600],
                   getTooltipItem: (group, groupIndex, rod, rodIndex) {
-                    int adjustedGroupIndex =
-                        groupIndex + firstVisibleDataIndex;
+                    int adjustedGroupIndex = groupIndex + firstVisibleDataIndex;
                     String time = widget.timeList[adjustedGroupIndex];
                     String systolic =
-                    widget.yList[adjustedGroupIndex].toInt().toString();
+                        widget.yList[adjustedGroupIndex].toInt().toString();
                     String diastolic =
-                    widget.yList2[adjustedGroupIndex].toInt().toString();
+                        widget.yList2[adjustedGroupIndex].toInt().toString();
 
                     String tooltipText =
                         "$time\nSystolic: $systolic\nDiastolic: $diastolic";

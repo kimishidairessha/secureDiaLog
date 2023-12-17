@@ -60,8 +60,7 @@ class _KeyPageState extends State<KeyPage> {
   _loadEncryptionKey() async {
     String? storedKey = await storage.read(key: 'encKey');
     if (storedKey != null) {
-      if (await keyPageService.checkAndSetEncKey(
-          widget.authData, storedKey)) {
+      if (await keyPageService.checkAndSetEncKey(widget.authData, storedKey)) {
         Global.isEncKeySet = true;
         Navigator.pushReplacement(
           context,
@@ -75,7 +74,7 @@ class _KeyPageState extends State<KeyPage> {
         setState(() {
           encKeyController.text = storedKey;
           isIconVisible =
-          false; // Make the visibility icon visible if text is present
+              false; // Make the visibility icon visible if text is present
         });
         showDialog<bool>(
           context: context,

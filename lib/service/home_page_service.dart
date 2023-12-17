@@ -79,7 +79,6 @@ class HomePageService {
       List<String> fileNameList = SolidUtils.getSurveyFileNameList(
           surveyContainerContent, webId, 2147483647);
 
-
       for (int i = 0; i < fileNameList.length; i++) {
         String fileName = fileNameList[i];
         String fileURI = surveyContainerURI + fileName;
@@ -129,8 +128,7 @@ class HomePageService {
   }
 
   Future<void> deleteFileMatchingCriteria(
-      Map<dynamic, dynamic>? authData,
-      String criteria) async {
+      Map<dynamic, dynamic>? authData, String criteria) async {
     Map<String, dynamic> podInfo = SolidUtils.parseAuthData(authData);
     String? accessToken = podInfo[Constants.accessToken];
     String? surveyContainerURI = podInfo[Constants.surveyContainerURI];
@@ -154,7 +152,6 @@ class HomePageService {
       debugPrint("Error on deleting file matching criteria: $e");
     }
   }
-
 
   /// the method is to save the answered survey information into a POD
   /// @param answer1 - q1's answer
@@ -317,7 +314,7 @@ class HomePageService {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     bool? captureLocation = prefs.getBool('captureLocation');
     if (captureLocation == null || !captureLocation) {
-      return false;  // Don't save if location capture is off
+      return false; // Don't save if location capture is off
     }
     Map<String, dynamic> podInfo = SolidUtils.parseAuthData(authData);
     String? accessToken = podInfo[Constants.accessToken];

@@ -218,4 +218,5 @@ class Constants {
   // Background color
   static final Color? backgroundColor = Colors.orange[50];
   static final Color? tableColor = Colors.yellow[50];
+  static final Color? textColor = Colors.teal[800];
 }

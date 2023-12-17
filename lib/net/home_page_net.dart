@@ -88,7 +88,8 @@ class HomePageNet {
   /// @return void
   Future<void> deleteFile(String fileURI, String accessToken,
       dynamic rsaKeyPair, dynamic publicKeyJwk) async {
-    String dPopToken = genDpopToken(fileURI, rsaKeyPair, publicKeyJwk, "DELETE");
+    String dPopToken =
+        genDpopToken(fileURI, rsaKeyPair, publicKeyJwk, "DELETE");
     Response response = await delete(
       Uri.parse(fileURI),
       headers: <String, String>{
@@ -102,7 +103,6 @@ class HomePageNet {
       throw Exception("Error on deleting a file");
     }
   }
-
 
   /// this method is to create a new container in the root directory of a POD
   /// @param rootURI - the uri of a root directory of a POD
