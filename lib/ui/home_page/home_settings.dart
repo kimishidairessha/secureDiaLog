@@ -110,7 +110,7 @@ class _HomeSettingsState extends State<HomeSettings> {
         child: Column(
           children: [
             const SizedBox(height: 8),
-            Center(
+            const Center(
               child: Text(
                 'Your Information',
                 style: TextStyle(

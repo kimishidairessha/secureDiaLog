@@ -132,7 +132,7 @@ class BaseWidget {
         textStyle: const TextStyle(fontSize: 25, color: Colors.white),
         backgroundColor: Colors.teal,
       ),
-      child: Text(label, style: TextStyle(color: Colors.white)),
+      child: Text(label, style: const TextStyle(color: Colors.white)),
     );
   }
 
