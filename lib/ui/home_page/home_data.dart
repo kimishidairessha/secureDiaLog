@@ -109,7 +109,7 @@ class _HomeDataState extends State<HomeData> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text('Enter Filename'),
+          title: const Text('Change Filename'),
           content: TextField(
             controller: fileNameController,
             decoration:
@@ -127,8 +127,8 @@ class _HomeDataState extends State<HomeData> {
               onPressed: () {
                 Navigator.of(context).pop();
                 exportToCsv(fileNameController.text.isNotEmpty
-                    ? fileNameController.text
-                    : "default_export.csv");
+                    ? fileNameController.text :
+                'dialog_${TimeUtils.getFormattedTimeYYYYmmDD(DateTime.now())}');
               },
             ),
           ],
