@@ -21,6 +21,7 @@
 /// Authors: Ye Duan
 
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:securedialog/model/survey_day_info.dart';
 import 'package:securedialog/ui/home_page/home_charts/data_table_widget.dart';
@@ -147,12 +148,29 @@ class _HomeDataState extends State<HomeData> {
       FilePickerResult? result = await FilePicker.platform.pickFiles(
         type: FileType.custom,
         allowedExtensions: ['csv'],
+        withData: true,
       );
 
       if (result != null) {
-        File file = File(result.files.single.path!);
+        PlatformFile pickedFile = result.files.first;
 
-        final csvString = await file.readAsString();
+        String csvString;
+
+        // Check if running on the web
+        if (kIsWeb) {
+          // Use the 'bytes' property for web
+          final bytes = pickedFile.bytes;
+          csvString = String.fromCharCodes(bytes!);
+        } else {
+          // Use the 'path' property for other platforms
+          File file = File(pickedFile.path!);
+          csvString = await file.readAsString();
+        }
+        // File file = File(result.files.single.path!);
+        //
+        // final csvString = await file.readAsString();
+
+
         List<List<dynamic>> rows =
             const CsvToListConverter().convert(csvString);
 
