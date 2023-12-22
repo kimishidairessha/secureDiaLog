@@ -100,6 +100,10 @@ class _HomeDataState extends State<HomeData> {
     // Convert to CSV
     String csv = const ListToCsvConverter().convert(rows);
 
+    if (fileName.toLowerCase().endsWith('.csv')) {
+      fileName = fileName.substring(0, fileName.length - 4);
+    }
+
     file_saver.saveAndShareCsv(csv, fileName);
   }
 
