@@ -113,7 +113,10 @@ class _HomeDataState extends State<HomeData> {
           content: TextField(
             controller: fileNameController,
             decoration:
-                const InputDecoration(hintText: "Enter filename for CSV"),
+                InputDecoration(
+                    hintText:
+                    'dialog_${TimeUtils.getFormattedTimeYYYYmmDD(DateTime.now())}'
+                ),
           ),
           actions: <Widget>[
             TextButton(
