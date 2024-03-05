@@ -170,7 +170,6 @@ class _HomeDataState extends State<HomeData> {
         //
         // final csvString = await file.readAsString();
 
-
         List<List<dynamic>> rows =
             const CsvToListConverter().convert(csvString);
 
@@ -183,7 +182,14 @@ class _HomeDataState extends State<HomeData> {
                 dateString.replaceAll('/', '-'); // Replace '/' with '-'
             List<String> parts = dateString.split(" ");
             if (parts.length == 2) {
+              List<String> dateParts = parts[0].split("-");
               List<String> timeParts = parts[1].split(":");
+              if(dateParts.length == 3){
+                String year = dateParts[0];
+                String month = dateParts[1].padLeft(2, '0');
+                String day = dateParts[2].padLeft(2, '0');
+                parts[0] = "$year-$month-$day";
+              }
               if (timeParts.length == 2) {
                 String hour = timeParts[0]
                     .padLeft(2, '0'); // Pad hour with 0 if it's one digit

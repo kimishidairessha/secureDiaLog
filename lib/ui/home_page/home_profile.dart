@@ -87,6 +87,13 @@ class _HomeProfileState extends State<HomeProfile> {
   List<List<ToolTip>> systolicToolTipsList = [];
   List<List<ToolTip>> heartRateToolTipsList = [];
 
+  @override
+  void initState() {
+    super.initState();
+    // Call the refreshData function when the widget is initialized
+    refreshData();
+  }
+
   Future<void> refreshData() async {
     try {
       // Fetch the new survey data
