@@ -66,6 +66,7 @@ dependencies:
   url_launcher: ^6.1.11
   window_manager: ^0.3.5
   workmanager: ^0.5.2
+  provider: ^6.1.2
 
 dev_dependencies:
 

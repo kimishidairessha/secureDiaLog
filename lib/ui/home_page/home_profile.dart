@@ -31,6 +31,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'package:securedialog/model/chart_point.dart';
 import 'package:securedialog/model/survey_day_info.dart';
@@ -40,6 +41,7 @@ import 'package:securedialog/ui/login_page/login_page.dart';
 import 'package:securedialog/utils/base_widget.dart';
 import 'package:securedialog/utils/chart_utils.dart';
 import 'package:securedialog/constants/app.dart';
+import 'package:securedialog/utils/data_refresher.dart';
 import 'package:securedialog/utils/time_utils.dart';
 
 // 20230930 gjw TODO CAN THESE BE REPLACED WITH THE PACKAGE:SECUREDIALOG USAGE?
@@ -90,8 +92,15 @@ class _HomeProfileState extends State<HomeProfile> {
   @override
   void initState() {
     super.initState();
-    // Call the refreshData function when the widget is initialized
-    refreshData();
+    final refresher = Provider.of<DataRefresher>(context, listen: false);
+    refresher.addListener(refreshData);
+  }
+
+  @override
+  void dispose() {
+    final refresher = Provider.of<DataRefresher>(context, listen: false);
+    refresher.removeListener(refreshData);
+    super.dispose();
   }
 
   Future<void> refreshData() async {
