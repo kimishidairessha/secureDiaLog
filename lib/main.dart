@@ -24,6 +24,8 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 
 import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:provider/provider.dart';
+import 'package:securedialog/utils/data_refresher.dart';
 import 'package:securedialog/utils/debug_print_config.dart';
 import 'package:universal_io/io.dart' show Platform;
 import 'package:window_manager/window_manager.dart';
@@ -101,10 +103,19 @@ class SecureDiaLog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: "SecureDiaLog",
-      home: LoginPage(),
+    // ChangeNotifierProvider wraps MaterialApp
+    return ChangeNotifierProvider<DataRefresher>(
+      create: (context) => DataRefresher(),
+      child: const MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'SecureDiaLog',
+        home: LoginPage(),
+      ),
     );
+    // return const MaterialApp(
+    //   debugShowCheckedModeBanner: false,
+    //   title: "SecureDiaLog",
+    //   home: LoginPage(),
+    // );
   }
 }
