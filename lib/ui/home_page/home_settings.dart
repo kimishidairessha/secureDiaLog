@@ -274,6 +274,7 @@ class _HomeSettingsState extends State<HomeSettings> {
                               ),
                             ),
                             value: isCaptureLocationEnabled,
+                            controlAffinity: ListTileControlAffinity.leading,
                             onChanged: (bool value) {
                               setState(() {
                                 isCaptureLocationEnabled = value;
@@ -370,7 +371,7 @@ class _HomeSettingsState extends State<HomeSettings> {
                   MaterialPageRoute(builder: (_) {
                 return const LoginPage();
               }));
-            }, "Logout", MediaQuery.of(context).size.width / 1.25, 50),
+            }, "Logout", 300, 50),
             BaseWidget.getPadding(101),
           ],
         ),
