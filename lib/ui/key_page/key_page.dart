@@ -198,49 +198,53 @@ class _KeyPageState extends State<KeyPage> {
               ),
             ),
             BaseWidget.getPadding(15),
-            BaseWidget.getElevatedButton(() async {
-              if (await keyPageService.checkAndSetEncKey(
-                  widget.authData, encKeyController.text)) {
-                // await storage.write(key: 'encKey', value: encKeyController.text);
-                Global.isEncKeySet = true;
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          HomePage(widget.authData, Constants.indexPage)),
-                );
-              } else {
-                await showDialog<bool>(
-                  context: context,
-                  builder: (context) {
-                    return BaseWidget.getNoticeDialog(
-                        context,
-                        "Warning",
-                        "You didn't enter your enc-key or the key is not correct",
-                        "Try again");
-                  },
-                );
-                return;
-              }
-            }, "Start Now", MediaQuery.of(context).size.width / 1.25, 50),
-            BaseWidget.getPadding(15),
-            BaseWidget.getElevatedButton(() async {
-              bool? isLogout = await showDialog<bool>(
-                  context: context,
-                  builder: (context) {
-                    return BaseWidget.getConfirmationDialog(context, "Message",
-                        "Are you sure to logout?", "Emm, not yet", "Goodbye");
-                  });
-              if (isLogout == null || !isLogout || !mounted) {
-                return;
-              }
-              homePageService.logout(widget.authData!["logoutUrl"]);
-              Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (_) {
-                return const LoginPage();
-              }));
-            }, "Logout", MediaQuery.of(context).size.width / 1.25, 50),
-
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                BaseWidget.getElevatedButton(() async {
+                  if (await keyPageService.checkAndSetEncKey(
+                      widget.authData, encKeyController.text)) {
+                    // await storage.write(key: 'encKey', value: encKeyController.text);
+                    Global.isEncKeySet = true;
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              HomePage(widget.authData, Constants.indexPage)),
+                    );
+                  } else {
+                    await showDialog<bool>(
+                      context: context,
+                      builder: (context) {
+                        return BaseWidget.getNoticeDialog(
+                            context,
+                            "Warning",
+                            "You didn't enter your enc-key or the key is not correct",
+                            "Try again");
+                      },
+                    );
+                    return;
+                  }
+                }, "Start Now", 150, 50),
+                const SizedBox(width: 20),
+                BaseWidget.getElevatedButton(() async {
+                  bool? isLogout = await showDialog<bool>(
+                      context: context,
+                      builder: (context) {
+                        return BaseWidget.getConfirmationDialog(context, "Message",
+                            "Are you sure to logout?", "Emm, not yet", "Goodbye");
+                      });
+                  if (isLogout == null || !isLogout || !mounted) {
+                    return;
+                  }
+                  homePageService.logout(widget.authData!["logoutUrl"]);
+                  Navigator.pushReplacement(context,
+                      MaterialPageRoute(builder: (_) {
+                        return const LoginPage();
+                      }));
+                }, "Logout", 150, 50),
+              ],
+            ),
             // // Button to trigger key recovery
             // BaseWidget.getPadding(15),
             // BaseWidget.getElevatedButton(() async {
