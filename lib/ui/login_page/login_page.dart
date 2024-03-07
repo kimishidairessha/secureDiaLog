@@ -220,7 +220,7 @@ class _LoginPageState extends State<LoginPage> {
                 _showErrorDialog(
                     "The server may be down. \nPlease try again later.");
               }
-            }, "Login", MediaQuery.of(context).size.width / 1.25, 50),
+            }, "Login", 320, 50),
             BaseWidget.getPadding(150.0),
           ],
         ),
