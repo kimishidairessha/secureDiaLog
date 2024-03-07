@@ -598,62 +598,78 @@ class _HomeSurveyState extends State<HomeSurvey> {
                 ),
               ),
               BaseWidget.getPadding(2.5),
-              BaseWidget.getHintText(Constants.radioListHintText),
-              Row(
-                children: <Widget>[
-                  Flexible(
-                    child: RadioListTile<String>(
-                      value: "No",
-                      title: BaseWidget.getRadioBoxAnswerText("0"),
-                      activeColor: Colors.teal,
-                      groupValue: q1Answer,
-                      onChanged: (value) {
-                        setState(() {
-                          q1Answer = value;
-                        });
-                      },
+              Padding(
+                padding: const EdgeInsets.only(left: 50.0),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: IntrinsicWidth(
+                    child: BaseWidget.getHintText(Constants.radioListHintText),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 15.0),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: IntrinsicWidth(
+                    child: Row(
+                      children: <Widget>[
+                        Flexible(
+                          child: RadioListTile<String>(
+                            value: "No",
+                            title: BaseWidget.getRadioBoxAnswerText("0"),
+                            activeColor: Colors.teal,
+                            groupValue: q1Answer,
+                            onChanged: (value) {
+                              setState(() {
+                                q1Answer = value;
+                              });
+                            },
+                          ),
+                        ),
+                        Flexible(
+                          child: RadioListTile<String>(
+                            value: "Mild",
+                            title: BaseWidget.getRadioBoxAnswerText("1"),
+                            groupValue: q1Answer,
+                            activeColor: Colors.teal,
+                            onChanged: (value) {
+                              setState(() {
+                                q1Answer = value;
+                              });
+                            },
+                          ),
+                        ),
+                        Flexible(
+                          child: RadioListTile<String>(
+                            value: "Moderate",
+                            title: BaseWidget.getRadioBoxAnswerText("2"),
+                            groupValue: q1Answer,
+                            activeColor: Colors.teal,
+                            onChanged: (value) {
+                              setState(() {
+                                q1Answer = value;
+                              });
+                            },
+                          ),
+                        ),
+                        Flexible(
+                          child: RadioListTile<String>(
+                            value: "Severe",
+                            title: BaseWidget.getRadioBoxAnswerText("3"),
+                            groupValue: q1Answer,
+                            activeColor: Colors.teal,
+                            onChanged: (value) {
+                              setState(() {
+                                q1Answer = value;
+                              });
+                            },
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  Flexible(
-                    child: RadioListTile<String>(
-                      value: "Mild",
-                      title: BaseWidget.getRadioBoxAnswerText("1"),
-                      groupValue: q1Answer,
-                      activeColor: Colors.teal,
-                      onChanged: (value) {
-                        setState(() {
-                          q1Answer = value;
-                        });
-                      },
-                    ),
-                  ),
-                  Flexible(
-                    child: RadioListTile<String>(
-                      value: "Moderate",
-                      title: BaseWidget.getRadioBoxAnswerText("2"),
-                      groupValue: q1Answer,
-                      activeColor: Colors.teal,
-                      onChanged: (value) {
-                        setState(() {
-                          q1Answer = value;
-                        });
-                      },
-                    ),
-                  ),
-                  Flexible(
-                    child: RadioListTile<String>(
-                      value: "Severe",
-                      title: BaseWidget.getRadioBoxAnswerText("3"),
-                      groupValue: q1Answer,
-                      activeColor: Colors.teal,
-                      onChanged: (value) {
-                        setState(() {
-                          q1Answer = value;
-                        });
-                      },
-                    ),
-                  ),
-                ],
+                ),
               ),
               BaseWidget.getPadding(15.0),
               // BaseWidget.getQuestionText(Constants.q2Text),
@@ -875,7 +891,7 @@ class _HomeSurveyState extends State<HomeSurvey> {
                         });
                   }
                 }
-              }, "Submit", MediaQuery.of(context).size.width / 1.25, 50),
+              }, "Submit", 320, 50),
               BaseWidget.getPadding(50.0),
             ],
           ),
