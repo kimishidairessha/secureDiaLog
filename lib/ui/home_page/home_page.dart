@@ -110,7 +110,7 @@ class _HomePageState extends State<HomePage> {
           });
       if (isGoBack == null || isGoBack || !mounted) {
         setState(() {
-          curWidgetIdx = Constants.mapPage;
+          curWidgetIdx = Constants.monitorPage;
         });
       } else {
         setState(() {
@@ -139,7 +139,7 @@ class _HomePageState extends State<HomePage> {
           BaseWidget.getNavBarItem(Icons.note_alt_outlined, "SURVEY"),
           BaseWidget.getNavBarItem(Icons.bar_chart_rounded, "CHARTS"),
           BaseWidget.getNavBarItem(Icons.table_view_rounded, "DATA"),
-          BaseWidget.getNavBarItem(Icons.map_outlined, "MAP"),
+          BaseWidget.getNavBarItem(Icons.medical_information, "MONITOR"),
           BaseWidget.getNavBarItem(Icons.settings, "SETTINGS"),
         ],
         onTap: _onTapEvent,

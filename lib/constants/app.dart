@@ -32,7 +32,7 @@ class Constants {
   static const int surveyPage = 1;
   static const int podPage = 2;
   static const int dataPage = 3;
-  static const int mapPage = 4;
+  static const int monitorPage = 4;
   static const int settingsPage = 5; // Add this line
 
   // Login State Constants
@@ -186,7 +186,7 @@ class Constants {
 
   // Index Page Instructions
   static const String subTitle1 = "Home Page:";
-  static const String subTitle2 = "Map Page:";
+  static const String subTitle2 = "Monitor Page:";
   static const String subTitle3 = "Survey Page:";
   static const String subTitle4 = "Chart Page:";
   static const String subTitle5 = "Settings Page:";
@@ -195,7 +195,7 @@ class Constants {
   static const String indexPageInstructionText1 =
       "An overview of the functionality available.";
   static const String indexPageInstructionText2 =
-      "Manage your location for your POD.";
+      "Monitor your glucose regulation and your medication intake.";
   static const String indexPageInstructionText3 =
       "Submit your health report everyday.";
   static const String indexPageInstructionText4 =
