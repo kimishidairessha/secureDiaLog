@@ -88,8 +88,8 @@ class _HomeIndexState extends State<HomeIndex> {
               _buildInstructionCard(
                   Constants.subTitle2,
                   Constants.indexPageInstructionText2,
-                  Icons.map_outlined,
-                  Constants.mapPage),
+                  Icons.medical_information,
+                  Constants.monitorPage),
               _buildInstructionCard(
                   Constants.subTitle5,
                   Constants.indexPageInstructionText5,

@@ -96,11 +96,11 @@ class _HomeSettingsState extends State<HomeSettings> {
     });
   }
 
-  _saveSettings() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setBool('captureLocation', isCaptureLocationEnabled);
-    prefs.setInt('locationCaptureFrequency', locationCaptureFrequency);
-  }
+  // _saveSettings() async {
+  //   final SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   prefs.setBool('captureLocation', isCaptureLocationEnabled);
+  //   prefs.setInt('locationCaptureFrequency', locationCaptureFrequency);
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -265,49 +265,49 @@ class _HomeSettingsState extends State<HomeSettings> {
                               ),
                             ],
                           ),
-                          const SizedBox(height: 20),
-                          SwitchListTile(
-                            title: const Text(
-                              'Capture Location',
-                              style: TextStyle(
-                                fontSize: 20,
-                              ),
-                            ),
-                            value: isCaptureLocationEnabled,
-                            controlAffinity: ListTileControlAffinity.leading,
-                            onChanged: (bool value) {
-                              setState(() {
-                                isCaptureLocationEnabled = value;
-                              });
-                              _saveSettings();
-                            },
-                          ),
-                          const SizedBox(height: 20),
-                          const Text(
-                            'Location Capture Frequency:',
-                            style: TextStyle(
-                              fontSize: 20,
-                            ),
-                          ),
-                          const SizedBox(height: 12),
-                          DropdownButton<int>(
-                            value: locationCaptureFrequency,
-                            items: const [
-                              DropdownMenuItem<int>(
-                                  value: 1, child: Text('1 Minute')),
-                              DropdownMenuItem<int>(
-                                  value: 5, child: Text('5 Minutes')),
-                              DropdownMenuItem<int>(
-                                  value: 60, child: Text('1 hour')),
-                            ],
-                            onChanged: (int? newValue) {
-                              setState(() {
-                                locationCaptureFrequency = newValue!;
-                              });
-                              _saveSettings();
-                            },
-                          ),
-                          const SizedBox(height: 20),
+                          // const SizedBox(height: 20),
+                          // SwitchListTile(
+                          //   title: const Text(
+                          //     'Capture Location',
+                          //     style: TextStyle(
+                          //       fontSize: 20,
+                          //     ),
+                          //   ),
+                          //   value: isCaptureLocationEnabled,
+                          //   controlAffinity: ListTileControlAffinity.leading,
+                          //   onChanged: (bool value) {
+                          //     setState(() {
+                          //       isCaptureLocationEnabled = value;
+                          //     });
+                          //     _saveSettings();
+                          //   },
+                          // ),
+                          // const SizedBox(height: 20),
+                          // const Text(
+                          //   'Location Capture Frequency:',
+                          //   style: TextStyle(
+                          //     fontSize: 20,
+                          //   ),
+                          // ),
+                          // const SizedBox(height: 12),
+                          // DropdownButton<int>(
+                          //   value: locationCaptureFrequency,
+                          //   items: const [
+                          //     DropdownMenuItem<int>(
+                          //         value: 1, child: Text('1 Minute')),
+                          //     DropdownMenuItem<int>(
+                          //         value: 5, child: Text('5 Minutes')),
+                          //     DropdownMenuItem<int>(
+                          //         value: 60, child: Text('1 hour')),
+                          //   ],
+                          //   onChanged: (int? newValue) {
+                          //     setState(() {
+                          //       locationCaptureFrequency = newValue!;
+                          //     });
+                          //     _saveSettings();
+                          //   },
+                          // ),
+                          const SizedBox(height: 30),
                           FutureBuilder<String>(
                             future: homePageService
                                 .getLastSurveyTime(widget.authData!),
