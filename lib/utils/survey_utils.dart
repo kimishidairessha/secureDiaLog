@@ -20,6 +20,7 @@
 ///
 /// Authors: Bowen Yang, Ye Duan
 
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
@@ -225,6 +226,60 @@ class SurveyUtils {
         q5Key: EncryptUtils.encode(answer5, encryptClient)!,
         q6Key: EncryptUtils.encode(answer6, encryptClient)!,
         q7Key: EncryptUtils.encode(answer7, encryptClient)!,
+        deviceKey: EncryptUtils.encode(deviceInfo!, encryptClient)!,
+        obTimeKey: EncryptUtils.encode(
+            TimeUtils.getFormattedTimeYYYYmmDDHHmmSS(dateTime), encryptClient)!,
+        latitudeKey: EncryptUtils.encode(
+            Global.globalLatLng!.latitude.toString(), encryptClient)!,
+        longitudeKey: EncryptUtils.encode(
+            Global.globalLatLng!.longitude.toString(), encryptClient)!,
+      };
+    }
+  }
+
+  /// get a map of formatted monitor information for further processing
+  /// @param cgmList - a list data of cgm
+  ///        mealList - a list data of meal
+  ///        insList - a list data of insulin
+  ///        dateTime - time of survey submitting
+  /// @return surveyMap - K-V structure to make further process more convenient
+  static Future<Map<String, String>> getFormattedMonitor(
+      List<String> cgmList,
+      List<String> mealList,
+      List<String> insList,
+      DateTime dateTime,
+      EncryptClient encryptClient) async {
+    String? deviceInfo = await PlatformDeviceId.getDeviceId;
+    if ((deviceInfo == null || deviceInfo.trim() == "") && Platform.isLinux) {
+      deviceInfo = DeviceInfoPlugin().linuxInfo.toString();
+    }
+    String cgmKey = EncryptUtils.encode(Constants.cgmKey, encryptClient)!;
+    String mealKey = EncryptUtils.encode(Constants.mealKey, encryptClient)!;
+    String insKey = EncryptUtils.encode(Constants.insKey, encryptClient)!;
+    String deviceKey = EncryptUtils.encode(Constants.deviceKey, encryptClient)!;
+    String obTimeKey = EncryptUtils.encode(Constants.obTimeKey, encryptClient)!;
+    String latitudeKey =
+    EncryptUtils.encode(Constants.latitudeKey, encryptClient)!;
+    String longitudeKey =
+    EncryptUtils.encode(Constants.longitudeKey, encryptClient)!;
+    if (Global.globalLatLng == null) {
+      return <String, String>{
+        cgmKey: EncryptUtils.encode(jsonEncode(cgmList), encryptClient)!,
+        mealKey: EncryptUtils.encode(jsonEncode(mealList), encryptClient)!,
+        insKey: EncryptUtils.encode(jsonEncode(insList), encryptClient)!,
+        deviceKey: EncryptUtils.encode(deviceInfo!, encryptClient)!,
+        obTimeKey: EncryptUtils.encode(
+            TimeUtils.getFormattedTimeYYYYmmDDHHmmSS(dateTime), encryptClient)!,
+        latitudeKey: EncryptUtils.encode(
+            Constants.defaultLatLng.latitude.toString(), encryptClient)!,
+        longitudeKey: EncryptUtils.encode(
+            Constants.defaultLatLng.longitude.toString(), encryptClient)!,
+      };
+    } else {
+      return <String, String>{
+        cgmKey: EncryptUtils.encode(jsonEncode(cgmList), encryptClient)!,
+        mealKey: EncryptUtils.encode(jsonEncode(mealList), encryptClient)!,
+        insKey: EncryptUtils.encode(jsonEncode(insList), encryptClient)!,
         deviceKey: EncryptUtils.encode(deviceInfo!, encryptClient)!,
         obTimeKey: EncryptUtils.encode(
             TimeUtils.getFormattedTimeYYYYmmDDHHmmSS(dateTime), encryptClient)!,

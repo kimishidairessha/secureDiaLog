@@ -53,7 +53,7 @@ class HomePageService {
     String? webId = podInfo[Constants.webId];
     String? podURI = podInfo[Constants.podURI];
     String? containerURI = podInfo[Constants.containerURI];
-    String? surveyContainerURI = podInfo[Constants.surveyContainerURI];
+    String? surveyContainerURI = podInfo[Constants.monitorContainerURI];
     dynamic rsa = podInfo[Constants.rsa];
     dynamic pubKeyJwk = podInfo[Constants.pubKeyJwk];
 
@@ -125,6 +125,55 @@ class HomePageService {
     surveyDayInfoList.sort((s1, s2) => s1.date.compareTo(s2.date));
 
     return surveyDayInfoList;
+  }
+
+  /// Obtain a list of monitor info from a POD.
+
+  Future<Map<String, List<dynamic>>> getMonitorInfoList(
+      Map<dynamic, dynamic>? authData) async {
+    Map<String, dynamic> podInfo = SolidUtils.parseAuthData(authData);
+    String? accessToken = podInfo[Constants.accessToken];
+    String? webId = podInfo[Constants.webId];
+    String? podURI = podInfo[Constants.podURI];
+    String? containerURI = podInfo[Constants.containerURI];
+    String? monitorContainerURI = podInfo[Constants.monitorContainerURI];
+    dynamic rsa = podInfo[Constants.rsa];
+    dynamic pubKeyJwk = podInfo[Constants.pubKeyJwk];
+
+    EncryptClient? encryptClient =
+    await EncryptUtils.getClient(authData!, webId!);
+    try {
+      if (!SolidUtils.isContainerExist(
+          await homePageNet.readFile(podURI!, accessToken!, rsa, pubKeyJwk),
+          Constants.containerName)) {
+        return {};
+      }
+
+      if (!SolidUtils.isContainerExist(
+          await homePageNet.readFile(
+              containerURI!, accessToken, rsa, pubKeyJwk),
+          Constants.monitorContainerName)) {
+        return {};
+      }
+
+      String monitorContainerContent = await homePageNet.readFile(
+          monitorContainerURI!, accessToken, rsa, pubKeyJwk);
+
+      List<String> fileNameList = SolidUtils.getMonitorFileNameList(
+          monitorContainerContent, webId);
+
+      String fileName = fileNameList.first;
+      String fileURI = monitorContainerURI + fileName;
+      String fileContent =
+      await homePageNet.readFile(fileURI, accessToken, rsa, pubKeyJwk);
+      Map<String, List<dynamic>> latestData =
+      SolidUtils.parseMonitorFile(fileContent, encryptClient!);
+
+      return latestData;
+    } catch (e) {
+      debugPrint("Error on fetching monitor data: $e");
+      return {};
+    }
   }
 
   Future<void> deleteFileMatchingCriteria(
@@ -221,6 +270,74 @@ class HomePageService {
         predicate = SolidUtils.genPredicate(subject);
         sparqlQuery = SolidUtils.genSparqlQuery(
             Constants.insert, webId, predicate, surveyInfo[subject]!, null);
+        await homePageNet.updateFile(
+            curRecordFileURI, accessToken, rsa, pubKeyJwk, sparqlQuery);
+      });
+      setLastSurveyTime(
+          podInfo, TimeUtils.getFormattedTimeYYYYmmDDHHmmSS(dateTime));
+    } catch (e) {
+      debugPrint("Error on saving survey information: $e");
+      return false;
+    }
+    return true;
+  }
+
+  /// the method is to save the monitor information into a POD
+  /// @param cgmList - a list data of cgm
+  ///        mealList - a list data of meal
+  ///        insList - a list data of insulin
+  ///        authData - the authentication Data received after login
+  ///        dateTime - the timestamp collected when submitting the survey
+  /// @return isSuccess - TRUE is success and FALSE is failure
+  Future<bool> saveMonitorInfo(
+      List<String> cgmList,
+      List<String> mealList,
+      List<String> insList,
+      Map<dynamic, dynamic>? authData,
+      DateTime dateTime) async {
+    Map<String, dynamic> podInfo = SolidUtils.parseAuthData(authData);
+    String? accessToken = podInfo[Constants.accessToken];
+    String? webId = podInfo[Constants.webId];
+    String? podURI = podInfo[Constants.podURI];
+    String? containerURI = podInfo[Constants.containerURI];
+    String? monitorContainerURI = podInfo[Constants.monitorContainerURI];
+    dynamic rsa = podInfo[Constants.rsa];
+    dynamic pubKeyJwk = podInfo[Constants.pubKeyJwk];
+    EncryptClient? encryptClient =
+    await EncryptUtils.getClient(authData!, webId!);
+    Map<String, String> monitorInfo = await SurveyUtils.getFormattedMonitor(
+        cgmList,
+        mealList,
+        insList,
+        dateTime,
+        encryptClient!);
+    try {
+      if (!SolidUtils.isContainerExist(
+          await homePageNet.readFile(podURI!, accessToken!, rsa, pubKeyJwk),
+          Constants.containerName)) {
+        await homePageNet.mkdir(
+            podURI, accessToken, rsa, pubKeyJwk, Constants.containerName);
+      }
+      if (!SolidUtils.isContainerExist(
+          await homePageNet.readFile(
+              containerURI!, accessToken, rsa, pubKeyJwk),
+          Constants.monitorContainerName)) {
+        await homePageNet.mkdir(containerURI, accessToken, rsa, pubKeyJwk,
+            Constants.monitorContainerName);
+      }
+      String curSurveyFileName = TimeUtils.getFormattedTimeYYYYmmDD(dateTime) +
+          TimeUtils.getFormattedTimeHHmmSS(dateTime);
+      await homePageNet.touch(
+          monitorContainerURI!, accessToken, rsa, pubKeyJwk, curSurveyFileName);
+      String curRecordFileURI = SolidUtils.genCurRecordFileURI(
+          monitorContainerURI, curSurveyFileName, webId);
+      String sparqlQuery;
+      String predicate;
+      // start saving
+      monitorInfo.forEach((subject, value) async {
+        predicate = SolidUtils.genPredicate(subject);
+        sparqlQuery = SolidUtils.genSparqlQuery(
+            Constants.insert, webId, predicate, monitorInfo[subject]!, null);
         await homePageNet.updateFile(
             curRecordFileURI, accessToken, rsa, pubKeyJwk, sparqlQuery);
       });
