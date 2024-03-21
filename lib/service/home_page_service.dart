@@ -53,7 +53,7 @@ class HomePageService {
     String? webId = podInfo[Constants.webId];
     String? podURI = podInfo[Constants.podURI];
     String? containerURI = podInfo[Constants.containerURI];
-    String? surveyContainerURI = podInfo[Constants.monitorContainerURI];
+    String? surveyContainerURI = podInfo[Constants.surveyContainerURI];
     dynamic rsa = podInfo[Constants.rsa];
     dynamic pubKeyJwk = podInfo[Constants.pubKeyJwk];
 
