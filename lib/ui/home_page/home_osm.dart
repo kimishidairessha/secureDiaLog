@@ -102,21 +102,121 @@ class _HomeOSMState extends State<HomeOSM> {
     }
   }
 
-  LineChartData _buildChartData(List<dynamic> data, Color color) {
+  LineChartData _buildChartData(
+      List<dynamic> data, Color color, String leftTitle, String bottomTitle) {
     List<FlSpot> spots = [];
     for (int i = 0; i < data.length; i++) {
       spots.add(FlSpot(i.toDouble(), double.parse(data[i].toString())));
     }
 
     return LineChartData(
-      gridData: const FlGridData(show: false),
-      titlesData: const FlTitlesData(show: false),
-      borderData: FlBorderData(show: false),
+      minY: 0,
+      gridData: FlGridData(show: true),
+      titlesData: FlTitlesData(
+        show: true,
+        // Configuring bottom titles (X-axis)
+        bottomTitles: AxisTitles(
+          sideTitles: SideTitles(
+            showTitles: true,
+            reservedSize: 50, // Space for the titles
+            getTitlesWidget: (double value, TitleMeta meta) {
+              List<String> times = ["00:00", "03:00", "06:00", "09:00", "12:00", "15:00", "18:00", "21:00", "24:00"];
+              double interval = data.length / (times.length - 1); // Calculate the interval based on the number of labels
+
+              int index = (value / interval).round(); // Find the nearest index based on the current value
+              if (index >= 0 && index < times.length) {
+                return Text(times[index]);
+              }
+              return Text('');
+            },
+          ),
+        ),
+        // Configuring left titles (Y-axis)
+        leftTitles: AxisTitles(
+          sideTitles: SideTitles(
+            showTitles: true,
+            reservedSize: 30, // Space for the titles, adjust as needed
+            interval: 1, // Keep as 1 to check each value
+            getTitlesWidget: (double value, TitleMeta meta) {
+              // Display label only for every 50 units, adjust as needed
+              if (value % 50 == 0) {
+                return Text('${value.toInt()}', style: TextStyle(color: Colors.black, fontSize: 10),);
+              }
+              return Text('');
+            },
+          ),
+        ),
+        // Optionally hide top and right titles
+        topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+        rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+      ),
+      borderData: FlBorderData(show: true),
       lineBarsData: [
         LineChartBarData(
           spots: spots,
-          isCurved: true,
-          barWidth: 2,
+          isCurved: false,
+          dotData: FlDotData(show: false),
+          barWidth: 4,
+          color: color,
+        ),
+      ],
+    );
+  }
+
+  LineChartData _buildInsChartData(
+      List<dynamic> data, Color color, String leftTitle, String bottomTitle) {
+    List<FlSpot> spots = [];
+    for (int i = 0; i < data.length; i++) {
+      spots.add(FlSpot(i.toDouble(), double.parse(data[i].toString())));
+    }
+
+    return LineChartData(
+      minY: 0,
+      gridData: FlGridData(show: true),
+      titlesData: FlTitlesData(
+        show: true,
+        // Configuring bottom titles (X-axis)
+        bottomTitles: AxisTitles(
+          sideTitles: SideTitles(
+            showTitles: true,
+            reservedSize: 50, // Space for the titles
+            getTitlesWidget: (double value, TitleMeta meta) {
+              List<String> times = ["00:00", "03:00", "06:00", "09:00", "12:00", "15:00", "18:00", "21:00", "24:00"];
+              double interval = data.length / (times.length - 1); // Calculate the interval based on the number of labels
+
+              int index = (value / interval).round(); // Find the nearest index based on the current value
+              if (index >= 0 && index < times.length) {
+                return Text(times[index]);
+              }
+              return Text('');
+            },
+          ),
+        ),
+        // Configuring left titles (Y-axis)
+        leftTitles: AxisTitles(
+          sideTitles: SideTitles(
+            showTitles: true,
+            getTitlesWidget: (double value, TitleMeta meta) {
+              String formattedValue = value.toStringAsFixed(2);
+              return Padding(
+                padding: const EdgeInsets.only(right: 5.0), // Adjust padding as needed
+                child: Text(formattedValue, style: TextStyle(color: Colors.black, fontSize: 10)),
+              );
+            },
+            reservedSize: 30, // Adjust as needed for the formatted text
+          ),
+        ),
+        // Optionally hide top and right titles
+        topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+        rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+      ),
+      borderData: FlBorderData(show: true),
+      lineBarsData: [
+        LineChartBarData(
+          spots: spots,
+          isCurved: false,
+          dotData: FlDotData(show: false),
+          barWidth: 4,
           color: color,
         ),
       ],
@@ -206,17 +306,65 @@ class _HomeOSMState extends State<HomeOSM> {
                         child: const Text("Import from CSV",
                             style: TextStyle(color: Colors.white)),
                       ),
-                      BaseWidget.getPadding(20),
+                      BaseWidget.getPadding(15),
+                      Center(
+                        child: Container(
+                          constraints: BoxConstraints(
+                            maxWidth: MediaQuery.of(context).size.width,
+                          ),
+                          child: const Text(
+                            "Glucose data [mg/dL]",
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontFamily: "KleeOne",
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                      BaseWidget.getPadding(10),
                       // CGM Chart
                       SizedBox(
                         height: 200,
-                        child: LineChart(_buildChartData(cgmData, Colors.blue)),
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: LineChart(
+                              _buildChartData(
+                                  cgmData,
+                                  Colors.blue,
+                                  "CGM",
+                                  "Time")),
+                        ),
                       ),
-                      BaseWidget.getPadding(20),
+                      BaseWidget.getPadding(15),
+                      Center(
+                        child: Container(
+                          constraints: BoxConstraints(
+                            maxWidth: MediaQuery.of(context).size.width,
+                          ),
+                          child: const Text(
+                            "Insulin data [U/min]",
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontFamily: "KleeOne",
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                      BaseWidget.getPadding(10),
                       // INS Chart
                       SizedBox(
                         height: 200,
-                        child: LineChart(_buildChartData(insData, Colors.red)),
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: LineChart(
+                              _buildInsChartData(
+                                  insData,
+                                  Colors.red,
+                                  "INS",
+                                  "Time")),
+                        ),
                       ),
                       BaseWidget.getPadding(70),
                     ],
