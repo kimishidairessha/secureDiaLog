@@ -20,6 +20,8 @@
 ///
 /// Authors: Bowen Yang, Ye Duan, Graham Williams
 
+import 'dart:convert';
+
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:securedialog/model/survey_info.dart';
 import 'package:securedialog/constants/app.dart';
@@ -107,6 +109,51 @@ class SolidUtils {
     return surveyInfo;
   }
 
+  static Map<String, List<dynamic>> parseMonitorFile(
+      String content, EncryptClient encryptClient) {
+    List<dynamic> cgmList = [];
+    List<dynamic> mealList = [];
+    List<dynamic> insList = [];
+    Map<String, List<dynamic>> dataMap = {};
+    List<String> lines = content.split("\n");
+
+    for (int i = 0; i < lines.length; i++) {
+      String line = lines[i];
+      String val = "";
+      String key = "";
+
+      if (line.contains(" \"")) {
+        key = line.split(" \"")[0];
+        val = line.split(" \"")[1];
+      } else {
+        continue;
+      }
+
+      key = key.split("http://xmlns.com/foaf/0.1/").last;
+      key = key.substring(0, key.length - 1); // remove the last character
+      key = EncryptUtils.decode(key, encryptClient)!;
+
+      // Decrypt the value
+      val = val.replaceAll("\".", "").replaceAll("\";", "").trim();
+      String decryptedValue = EncryptUtils.decode(val, encryptClient)!;
+
+      if (Constants.cgmKey == key){
+        cgmList = jsonDecode(decryptedValue);
+      } else if (Constants.mealKey == key){
+        mealList = jsonDecode(decryptedValue);
+      } else if (Constants.insKey == key){
+        insList = jsonDecode(decryptedValue);
+      }
+    }
+
+    // Assign lists to the corresponding keys in the map
+    dataMap[Constants.cgmKey] = cgmList;
+    dataMap[Constants.mealKey] = mealList;
+    dataMap[Constants.insKey] = insList;
+
+    return dataMap;
+  }
+
   static List<String> getSurveyFileNameList(
       String content, String webId, int num) {
     List<String> nameList = [];
@@ -134,6 +181,32 @@ class SolidUtils {
     }
     return nameList;
   }
+
+  static List<String> getMonitorFileNameList(
+      String content, String webId) {
+    List<String> nameList = [];
+    if (_isSolidCommunityHost(webId)) {
+      // solid community needs to be parsed differently
+      List<String> lines = content.split("\n");
+      for (String line in lines) {
+        if (line.contains(".ttl>") && !line.contains(".ttl>,")) {
+          String fileName = line.substring(1, 19);
+          nameList.add(fileName);
+        }
+      }
+    } else {
+      Graph graph = Graph();
+      graph.parseTurtle(content);
+      graph.groups.forEach((key, value) {
+        if (key.value.trim() != "") {
+          nameList.add(key.value);
+        }
+      });
+    }
+    nameList.sort((a, b) => b.compareTo(a));
+    return nameList;
+  }
+
 
   /// check if the container the app need to use is already exist, if it is, no need to create
   /// a new one, if not, the app need to create a new container
@@ -167,6 +240,8 @@ class SolidUtils {
     String geoContainerURI = containerURI + Constants.relativeGeoContainerURI;
     String surveyContainerURI =
         containerURI + Constants.relativeSurveyContainerURI;
+    String monitorContainerURI =
+        containerURI + Constants.relativeMonitorContainerURI;
     dynamic rsa = authData[Constants.rsaInfo][Constants.rsa];
     dynamic pubKeyJwk = authData[Constants.rsaInfo][Constants.pubKeyJwk];
     return <String, dynamic>{
@@ -178,6 +253,7 @@ class SolidUtils {
       Constants.containerURI: containerURI,
       Constants.geoContainerURI: geoContainerURI,
       Constants.surveyContainerURI: surveyContainerURI,
+      Constants.monitorContainerURI: monitorContainerURI,
     };
   }
 
