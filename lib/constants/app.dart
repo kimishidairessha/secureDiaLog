@@ -60,6 +60,7 @@ class Constants {
   static const String containerURI = "containerURI";
   static const String geoContainerURI = "geoContainerURI";
   static const String surveyContainerURI = "surveyContainerURI";
+  static const String monitorContainerURI = "monitorContainerURI";
   static const String rsaInfo = "rsaInfo";
   static const String rsa = "rsa";
   static const String pubKeyJwk = "pubKeyJwk";
@@ -80,6 +81,10 @@ class Constants {
   static const String relativeSurveyContainerURI = "survey/";
   static const String surveyContainerName = "survey";
 
+  // Monitor Container Info
+  static const String relativeMonitorContainerURI = "monitor/";
+  static const String monitorContainerName = "monitor";
+
   // TTL File Info
   static const String ttlSuffix = ".ttl";
   static const String commonFileName = "common";
@@ -96,6 +101,9 @@ class Constants {
   static const String q7Key = "heartRate";
   static const String obTimeKey = "obTime";
   static const String deviceKey = "device";
+  static const String cgmKey = "cgm";
+  static const String mealKey = "meal";
+  static const String insKey = "ins";
 
   // Common File Keys
   static const String lastObTimeKey = "lastObTime";
