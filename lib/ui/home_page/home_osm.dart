@@ -30,6 +30,7 @@ import 'package:flutter/material.dart';
 import 'package:securedialog/constants/app.dart';
 import 'package:securedialog/service/home_page_service.dart';
 import 'package:securedialog/utils/base_widget.dart';
+import 'package:path/path.dart' as p;
 
 class HomeOSM extends StatefulWidget {
   final Map<dynamic, dynamic>? authData;
@@ -50,57 +51,87 @@ class _HomeOSMState extends State<HomeOSM> {
 
   Future<void> importFromCsv() async {
     try {
-      // Let the user pick a CSV file
-      FilePickerResult? result = await FilePicker.platform.pickFiles(
-        type: FileType.custom,
-        allowedExtensions: ['csv'],
-        withData: true,
-      );
+      if (kIsWeb) {
+        // Web version: allow users to select multiple files
+        FilePickerResult? result = await FilePicker.platform.pickFiles(
+          type: FileType.custom,
+          allowedExtensions: ['csv'],
+          allowMultiple: true,
+          withData: true,
+        );
 
-      if (result != null) {
-        PlatformFile pickedFile = result.files.first;
-        String csvString;
-
-        if (kIsWeb) {
-          // Web platform uses bytes
-          final bytes = pickedFile.bytes;
-          csvString = String.fromCharCodes(bytes!);
-        } else {
-          // Mobile and desktop platforms use file paths
-          File file = File(pickedFile.path!);
-          csvString = await file.readAsString();
+        if (result != null) {
+          for (var pickedFile in result.files) {
+            String csvString = String.fromCharCodes(pickedFile.bytes!);
+            DateTime fileDate = _extractDateFromFileName(pickedFile.name);
+            await processFromCsv(csvString, fileDate);
+          }
         }
+      } else {
+        // Non-web version: allow users to select a directory
+        String? selectedDirectory = await FilePicker.platform.getDirectoryPath();
 
-        List<List<dynamic>> rows =
-        const CsvToListConverter().convert(csvString);
+        if (selectedDirectory != null) {
+          Directory directory = Directory(selectedDirectory);
+          List<FileSystemEntity> files = directory.listSync(); // Get all files in the directory
 
-        List<String> cgmList = [];
-        List<String> mealList = [];
-        List<String> insList = [];
-        // Process and collect data for each row
-        for (List<dynamic> row in rows.skip(1)) {
-          cgmList.add(row[0].toString());
-          mealList.add(row[1].toString());
-          insList.add(row[2].toString());
+          for (var file in files) {
+            if (file.path.endsWith('.csv')) {
+              String csvString = await File(file.path).readAsString();
+              DateTime fileDate = _extractDateFromFileName(p.basename(file.path)); // Extract date from filename
+              await processFromCsv(csvString, fileDate);
+            }
+          }
         }
-
-        // Save the data to pod
-        DateTime currentDate = DateTime.now();
-        await homePageService.saveMonitorInfo(
-            cgmList,
-            mealList,
-            insList,
-            widget.authData,
-            currentDate);
-
-        setState(() {
-          // Update the UI with the new data
-        });
       }
     } catch (e) {
       debugPrint("Error while importing CSV: $e");
     }
   }
+
+  Future processFromCsv(String csvString, DateTime fileDate) async {
+    List<List<dynamic>> rows =
+    const CsvToListConverter().convert(csvString);
+
+    List<String> cgmList = [];
+    List<String> mealList = [];
+    List<String> insList = [];
+    // Process and collect data for each row
+    for (List<dynamic> row in rows.skip(1)) {
+      cgmList.add(row[0].toString());
+      mealList.add(row[1].toString());
+      insList.add(row[2].toString());
+    }
+
+    // Save the data to pod
+    await homePageService.saveMonitorInfo(
+        cgmList,
+        mealList,
+        insList,
+        widget.authData,
+        fileDate);
+
+    setState(() {
+      // Update the UI with the new data
+    });
+  }
+
+  DateTime _extractDateFromFileName(String fileName) {
+    RegExp exp = RegExp(r'(\d{8})'); // Regex to find date pattern YYYYMMDD
+    var matches = exp.firstMatch(fileName);
+    String dateString = matches?.group(1) ?? '';
+    if (dateString.isNotEmpty) {
+      // Assuming the file name includes date as 'YYYYMMDD'
+      String formattedDate =
+          "${dateString.substring(0, 4)}-"
+          "${dateString.substring(4, 6)}-"
+          "${dateString.substring(6, 8)} 00:00:00";
+      return DateTime.parse(formattedDate);
+    }
+    throw Exception("Invalid date format in the file name.");
+  }
+
+
 
   LineChartData _buildChartData(
       List<dynamic> data, Color color, String leftTitle, String bottomTitle) {
