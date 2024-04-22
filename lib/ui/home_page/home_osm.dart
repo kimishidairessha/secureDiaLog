@@ -43,10 +43,36 @@ class HomeOSM extends StatefulWidget {
 
 class _HomeOSMState extends State<HomeOSM> {
   final HomePageService homePageService = HomePageService();
+  DateTime? startDate;
+  DateTime? endDate;
+  Map<String, Map<String, List<dynamic>>> monitorData = {};
 
   @override
   void initState() {
     super.initState();
+  }
+
+  void pickDateRange() async {
+    final DateTimeRange? picked = await showDateRangePicker(
+      context: context,
+      firstDate: DateTime(2020),
+      lastDate: DateTime.now(),
+      initialDateRange: startDate != null && endDate != null
+          ? DateTimeRange(start: startDate!, end: endDate!)
+          : DateTimeRange(start: DateTime.now().subtract(Duration(days: 7)), end: DateTime.now()),
+    );
+    if (picked != null && picked.start.difference(picked.end).inDays.abs() <= 7) {
+      startDate = picked.start;
+      endDate = picked.end;
+      fetchData();
+    }
+  }
+
+  void fetchData() async {
+    if (startDate != null && endDate != null) {
+      monitorData = await homePageService.getMonitorLists(widget.authData, startDate!, endDate!);
+      setState(() {});
+    }
   }
 
   Future<void> importFromCsv() async {
@@ -397,7 +423,96 @@ class _HomeOSMState extends State<HomeOSM> {
                                   "Time")),
                         ),
                       ),
-                      BaseWidget.getPadding(70),
+                      BaseWidget.getPadding(20),
+                      ElevatedButton(
+                        onPressed: pickDateRange,
+                        child: Text('Select Date Range'),
+                        style: ElevatedButton.styleFrom(primary: Colors.teal[400]),
+                      ),
+                      if (monitorData.isNotEmpty) ...[
+                        for (String date in monitorData.keys) ...[
+                          Padding(
+                            padding: const EdgeInsets.only(top: 20),
+                            child: Text(
+                              'Data for $date',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18,
+                              ),
+                            ),
+                          ),
+                          if (monitorData[date] != null) ...[
+                            // Glucose Data Chart
+                            Center(
+                              child: Container(
+                                constraints: BoxConstraints(
+                                  maxWidth: MediaQuery.of(context).size.width,
+                                ),
+                                child: Text(
+                                  "Glucose data [mg/dL]",
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontFamily: "KleeOne",
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: SizedBox(
+                                height: 200,
+                                child: LineChart(
+                                    _buildChartData(
+                                        monitorData[date]![Constants.cgmKey] ?? [],
+                                        Colors.blue,
+                                        "CGM",
+                                        "Time"
+                                    )
+                                ),
+                              ),
+                            ),
+
+                            // Insulin Data Chart
+                            Center(
+                              child: Container(
+                                constraints: BoxConstraints(
+                                  maxWidth: MediaQuery.of(context).size.width,
+                                ),
+                                child: Text(
+                                  "Insulin data [U/min]",
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontFamily: "KleeOne",
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: SizedBox(
+                                height: 200,
+                                child: LineChart(
+                                    _buildChartData(
+                                        monitorData[date]![Constants.insKey] ?? [],
+                                        Colors.red,
+                                        "INS",
+                                        "Time"
+                                    )
+                                ),
+                              ),
+                            ),
+                          ]
+                        ]
+                      ] else
+                        Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: Text(
+                            'No data available for the selected range.',
+                            style: TextStyle(fontSize: 16),
+                          ),
+                        ),
                     ],
                   );
                 }

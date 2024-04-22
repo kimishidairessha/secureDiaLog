@@ -68,6 +68,7 @@ dependencies:
   workmanager: ^0.5.2
   provider: ^6.1.2
   path: ^1.8.0
+  intl: ^0.18.1
 
 dev_dependencies:
 
