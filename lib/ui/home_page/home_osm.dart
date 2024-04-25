@@ -31,6 +31,7 @@ import 'package:securedialog/constants/app.dart';
 import 'package:securedialog/service/home_page_service.dart';
 import 'package:securedialog/utils/base_widget.dart';
 import 'package:path/path.dart' as p;
+import 'package:securedialog/utils/time_utils.dart';
 
 class HomeOSM extends StatefulWidget {
   final Map<dynamic, dynamic>? authData;
@@ -59,7 +60,7 @@ class _HomeOSMState extends State<HomeOSM> {
       lastDate: DateTime.now(),
       initialDateRange: startDate != null && endDate != null
           ? DateTimeRange(start: startDate!, end: endDate!)
-          : DateTimeRange(start: DateTime.now().subtract(Duration(days: 7)), end: DateTime.now()),
+          : DateTimeRange(start: DateTime.now().subtract(const Duration(days: 7)), end: DateTime.now()),
     );
     if (picked != null && picked.start.difference(picked.end).inDays.abs() <= 7) {
       startDate = picked.start;
@@ -168,7 +169,7 @@ class _HomeOSMState extends State<HomeOSM> {
 
     return LineChartData(
       minY: 0,
-      gridData: FlGridData(show: true),
+      gridData: const FlGridData(show: true),
       titlesData: FlTitlesData(
         show: true,
         // Configuring bottom titles (X-axis)
@@ -184,7 +185,7 @@ class _HomeOSMState extends State<HomeOSM> {
               if (index >= 0 && index < times.length) {
                 return Text(times[index]);
               }
-              return Text('');
+              return const Text('');
             },
           ),
         ),
@@ -197,22 +198,22 @@ class _HomeOSMState extends State<HomeOSM> {
             getTitlesWidget: (double value, TitleMeta meta) {
               // Display label only for every 50 units, adjust as needed
               if (value % 50 == 0) {
-                return Text('${value.toInt()}', style: TextStyle(color: Colors.black, fontSize: 10),);
+                return Text('${value.toInt()}', style: const TextStyle(color: Colors.black, fontSize: 10),);
               }
-              return Text('');
+              return const Text('');
             },
           ),
         ),
         // Optionally hide top and right titles
-        topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-        rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+        topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+        rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
       ),
       borderData: FlBorderData(show: true),
       lineBarsData: [
         LineChartBarData(
           spots: spots,
           isCurved: false,
-          dotData: FlDotData(show: false),
+          dotData: const FlDotData(show: false),
           barWidth: 4,
           color: color,
         ),
@@ -229,7 +230,7 @@ class _HomeOSMState extends State<HomeOSM> {
 
     return LineChartData(
       minY: 0,
-      gridData: FlGridData(show: true),
+      gridData: const FlGridData(show: true),
       titlesData: FlTitlesData(
         show: true,
         // Configuring bottom titles (X-axis)
@@ -245,7 +246,7 @@ class _HomeOSMState extends State<HomeOSM> {
               if (index >= 0 && index < times.length) {
                 return Text(times[index]);
               }
-              return Text('');
+              return const Text('');
             },
           ),
         ),
@@ -257,22 +258,22 @@ class _HomeOSMState extends State<HomeOSM> {
               String formattedValue = value.toStringAsFixed(2);
               return Padding(
                 padding: const EdgeInsets.only(right: 5.0), // Adjust padding as needed
-                child: Text(formattedValue, style: TextStyle(color: Colors.black, fontSize: 10)),
+                child: Text(formattedValue, style: const TextStyle(color: Colors.black, fontSize: 10)),
               );
             },
             reservedSize: 30, // Adjust as needed for the formatted text
           ),
         ),
         // Optionally hide top and right titles
-        topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-        rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+        topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+        rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
       ),
       borderData: FlBorderData(show: true),
       lineBarsData: [
         LineChartBarData(
           spots: spots,
           isCurved: false,
-          dotData: FlDotData(show: false),
+          dotData: const FlDotData(show: false),
           barWidth: 4,
           color: color,
         ),
@@ -423,24 +424,50 @@ class _HomeOSMState extends State<HomeOSM> {
                                   "Time")),
                         ),
                       ),
-                      BaseWidget.getPadding(20),
-                      ElevatedButton(
-                        onPressed: pickDateRange,
-                        child: Text('Select Date Range'),
-                        style: ElevatedButton.styleFrom(primary: Colors.teal[400]),
+                      BaseWidget.getPadding(10),
+                      Card(
+                        color: Colors.lime[50],
+                        margin: const EdgeInsets.all(15.0),
+                        elevation: 4,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(
+                              15), // Rounded corners with radius of 15
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(15.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // Text
+                              BaseWidget.getQuestionText(Constants.monitorText),
+                              BaseWidget.getPadding(8.0),
+                              // Button
+                              ElevatedButton(
+                                onPressed: pickDateRange,
+                                style: ButtonStyle(
+                                  backgroundColor:
+                                  MaterialStateProperty.all(Colors.teal[400]),
+                                ),
+                                child: const Text('Select Date Range'),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
                       if (monitorData.isNotEmpty) ...[
                         for (String date in monitorData.keys) ...[
                           Padding(
                             padding: const EdgeInsets.only(top: 20),
                             child: Text(
-                              'Data for $date',
-                              style: TextStyle(
+                              'Data for ${TimeUtils.reformatDateIncludeYear(date)}',
+                              style: const TextStyle(
                                 fontWeight: FontWeight.bold,
-                                fontSize: 18,
+                                fontSize: 25,
+                                fontFamily: "KleeOne",
                               ),
                             ),
                           ),
+                          BaseWidget.getPadding(8.0),
                           if (monitorData[date] != null) ...[
                             // Glucose Data Chart
                             Center(
@@ -448,7 +475,7 @@ class _HomeOSMState extends State<HomeOSM> {
                                 constraints: BoxConstraints(
                                   maxWidth: MediaQuery.of(context).size.width,
                                 ),
-                                child: Text(
+                                child: const Text(
                                   "Glucose data [mg/dL]",
                                   style: TextStyle(
                                     fontSize: 20,
@@ -479,7 +506,7 @@ class _HomeOSMState extends State<HomeOSM> {
                                 constraints: BoxConstraints(
                                   maxWidth: MediaQuery.of(context).size.width,
                                 ),
-                                child: Text(
+                                child: const Text(
                                   "Insulin data [U/min]",
                                   style: TextStyle(
                                     fontSize: 20,
@@ -494,7 +521,7 @@ class _HomeOSMState extends State<HomeOSM> {
                               child: SizedBox(
                                 height: 200,
                                 child: LineChart(
-                                    _buildChartData(
+                                    _buildInsChartData(
                                         monitorData[date]![Constants.insKey] ?? [],
                                         Colors.red,
                                         "INS",
@@ -506,8 +533,8 @@ class _HomeOSMState extends State<HomeOSM> {
                           ]
                         ]
                       ] else
-                        Padding(
-                          padding: const EdgeInsets.all(20.0),
+                        const Padding(
+                          padding: EdgeInsets.all(20.0),
                           child: Text(
                             'No data available for the selected range.',
                             style: TextStyle(fontSize: 16),
