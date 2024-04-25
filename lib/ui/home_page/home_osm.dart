@@ -384,6 +384,7 @@ class _HomeOSMState extends State<HomeOSM> {
                       // CGM Chart
                       SizedBox(
                         height: 200,
+                        width: 500,
                         child: Padding(
                           padding: const EdgeInsets.all(16.0),
                           child: LineChart(
@@ -414,6 +415,7 @@ class _HomeOSMState extends State<HomeOSM> {
                       // INS Chart
                       SizedBox(
                         height: 200,
+                        width: 500,
                         child: Padding(
                           padding: const EdgeInsets.all(16.0),
                           child: LineChart(
@@ -489,6 +491,7 @@ class _HomeOSMState extends State<HomeOSM> {
                               padding: const EdgeInsets.all(16.0),
                               child: SizedBox(
                                 height: 200,
+                                width: 500,
                                 child: LineChart(
                                     _buildChartData(
                                         monitorData[date]![Constants.cgmKey] ?? [],
@@ -520,6 +523,7 @@ class _HomeOSMState extends State<HomeOSM> {
                               padding: const EdgeInsets.all(16.0),
                               child: SizedBox(
                                 height: 200,
+                                width: 500,
                                 child: LineChart(
                                     _buildInsChartData(
                                         monitorData[date]![Constants.insKey] ?? [],
