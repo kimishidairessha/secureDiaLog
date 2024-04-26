@@ -80,12 +80,12 @@ Solid server.
 
 That then brings us to the app's home screen from where you can
 navigate to complete a survey, view the analysis charts, review the
-actual data collected, visit your location, or update your app
+actual data collected, monitor your data from CAPSML, or update your app
 settings.
 
 <div align="center">
 	<img
-	src="https://github.com/kimishidairessha/secureDiaLog/blob/main/images/home.png"
+	src="https://github.com/kimishidairessha/secureDiaLog/blob/main/images/home2.png"
 	alt="Home Screen" width="400">
 </div>
 
@@ -127,25 +127,29 @@ from the user's device.
 	alt="Data Screen" width="400">
 </div>
 
-### App Map Screen
+### App Monitor Screen
 
-Visual representation of location information, enhancing the context of health data.
+This Page is designed to facilitate seamless data management and secure storage. 
+It allows users to efficiently collect and store critical data from CAPSML, 
+ensuring all information is encrypted before being securely stored in Solid PODs. 
+This page prominently displays glucose and insulin data, providing users with the 
+flexibility to select specific dates for viewing historical data. This feature enhances
+user engagement by offering a personalized and secure overview of their health metrics.
 
 <div align="center">
 	<img
-	src="https://github.com/kimishidairessha/secureDiaLog/blob/main/images/map.PNG"
+	src="https://github.com/kimishidairessha/secureDiaLog/blob/main/images/monitor.png"
 	alt="Map Screen" width="400">
 </div>
 
 ### App Settings Screen
 
-Users can record their encryption key and WebID on their devices. Options to hide 
-location data and adjust the frequency of location capturing. Displays the time 
+Users can record their encryption key and WebID on their devices. Displays the time 
 of the last completed survey. Secure and easy logout process.
 
 <div align="center">
 	<img
-	src="https://github.com/kimishidairessha/secureDiaLog/blob/main/images/settings.PNG"
+	src="https://github.com/kimishidairessha/secureDiaLog/blob/main/images/set.png"
 	alt="Settings Screen" width="400">
 </div>
 
