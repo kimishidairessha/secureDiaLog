@@ -28,14 +28,17 @@ help individuals manage their diabetes.
 This software engineering and artefact-oriented development-based
 project delivers a location-aware and data recording app. Flutter/Dart
 are used for the front end with Solid server technology for the
-backend to store data in a privacy focussed way. The app can actively
-collect location pings regularly, allow the input of location based
-observations, and provide graphical analyses of the collected data.
+backend to store data in a privacy focussed way. The app can import
+glucose and insulin data from the Controlling Artificial Pancreas
+Systems using Machine Learning (CAPSML), allow the input of files
+and provide graphical analyses of the collected data.
 
 ## The App
 
-The application records users' personal data through a daily
-questionnaire.  The historical data is displayed in real-time charts
+The application collects users' personal data via daily questionnaires
+and imported CSV files. It also gathers data from CAPSML, securely 
+encrypts this information, and stores it in Solid PODs for display 
+within the app. The historical data is displayed in real-time charts
 and stored encrypted in a Solid POD. Users have complete control over
 their data, including sharing the data with other POD users. With an
 open format for storing the data, anyone can develop an app to add
@@ -150,11 +153,10 @@ of the last completed survey. Secure and easy logout process.
 
 * Data storage is private to the user
 * Data on the server is encrypted
-
+* Achieving Reliable Data Transmission
 * Daily questionnaires for data collection
 * Real-time chart visualizations
 * Complete user data control
-* Diabetes status analytics
 
 ## Credits
 
