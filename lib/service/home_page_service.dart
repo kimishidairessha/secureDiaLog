@@ -131,7 +131,7 @@ class HomePageService {
 
   /// Obtain a list of monitor info from a POD.
 
-  Future<Map<String, List<dynamic>>> getMonitorInfoList(
+  Future<Map<String, Map<String, List<dynamic>>>> getMonitorInfoList(
       Map<dynamic, dynamic>? authData) async {
     Map<String, dynamic> podInfo = SolidUtils.parseAuthData(authData);
     String? accessToken = podInfo[Constants.accessToken];
@@ -171,7 +171,13 @@ class HomePageService {
       Map<String, List<dynamic>> latestData =
       SolidUtils.parseMonitorFile(fileContent, encryptClient!);
 
-      return latestData;
+      DateFormat dateFormat = DateFormat('yyyyMMdd');
+      Map<String, Map<String, List<dynamic>>> DataWithDate = {};
+      DateTime fileDate = DateTime.parse(fileName.substring(0, 8));
+      String dateString = dateFormat.format(fileDate);
+      DataWithDate[dateString] = latestData;
+
+      return DataWithDate;
     } catch (e) {
       debugPrint("Error on fetching monitor data: $e");
       return {};

@@ -20,6 +20,8 @@
 ///
 /// Authors: Ye Duan
 
+// ignore_for_file: unnecessary_null_comparison
+
 import 'dart:io';
 
 import 'package:csv/csv.dart';
@@ -287,7 +289,7 @@ class _HomeOSMState extends State<HomeOSM> {
       color: Constants.backgroundColor,
       child: SingleChildScrollView(
         child: SafeArea(
-          child: FutureBuilder<Map<String, List<dynamic>>>(
+          child: FutureBuilder<Map<String, Map<String, List<dynamic>>>>(
             future: homePageService.getMonitorInfoList(
                 widget.authData),
             builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -332,9 +334,57 @@ class _HomeOSMState extends State<HomeOSM> {
                   );
                 } else {
                   // request success
-                  Map<String, List<dynamic>> monitorInfoList = snapshot.data;
-                  List<dynamic> cgmData = monitorInfoList[Constants.cgmKey] ?? [];
-                  List<dynamic> insData = monitorInfoList[Constants.insKey] ?? [];
+                  Map<String, Map<String, List<dynamic>>> monitorInfoList =
+                      snapshot.data;
+                  List<String> dateStrings = monitorInfoList.keys.toList();
+                  String firstDateString =
+                  dateStrings.isNotEmpty ? dateStrings.first : "No Date";
+                  List<dynamic> cgmData =
+                      monitorInfoList[firstDateString]?[Constants.cgmKey] ?? [];
+                  List<dynamic> insData =
+                      monitorInfoList[firstDateString]?[Constants.insKey] ?? [];
+
+                  if(monitorInfoList == null){
+                    return Column(
+                      children: <Widget>[
+                        BaseWidget.getPadding(15.0),
+                        Center(
+                          child: Container(
+                            constraints: BoxConstraints(
+                              maxWidth: MediaQuery.of(context).size.width,
+                            ),
+                            child: const Text(
+                              "Monitor data in your Pod",
+                              style: TextStyle(
+                                fontSize: 30,
+                                fontFamily: "KleeOne",
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                        BaseWidget.getPadding(35),
+                        Container(
+                          height: 200,
+                          width: MediaQuery.of(context).size.width,
+                          alignment: Alignment.center,
+                          child: const Text(
+                            """Ops, something wrong when fetching your reports' 
+                            data (::>_<::)\nThe data analysis function will 
+                            only start working after importing at least one 
+                            csv file from CAPSML""",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontFamily: "KleeOne",
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        BaseWidget.getPadding(80),
+                      ]
+                    );
+                  }
 
                   return Column(
                     children: <Widget>[
@@ -363,6 +413,17 @@ class _HomeOSMState extends State<HomeOSM> {
                         ),
                         child: const Text("Import from CSV",
                             style: TextStyle(color: Colors.white)),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 20),
+                        child: Text(
+                          'Data for ${TimeUtils.reformatDateIncludeYear(firstDateString)}',
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 25,
+                            fontFamily: "KleeOne",
+                          ),
+                        ),
                       ),
                       BaseWidget.getPadding(15),
                       Center(
