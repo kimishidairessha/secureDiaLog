@@ -36,6 +36,8 @@ import 'package:securedialog/utils/geo_utils.dart';
 import 'package:securedialog/utils/solid_utils.dart';
 import 'package:securedialog/utils/survey_utils.dart';
 import 'package:securedialog/utils/time_utils.dart';
+import 'package:intl/intl.dart';
+
 
 /// A model-view layer for the home page including all needed services.
 
@@ -129,7 +131,7 @@ class HomePageService {
 
   /// Obtain a list of monitor info from a POD.
 
-  Future<Map<String, List<dynamic>>> getMonitorInfoList(
+  Future<Map<String, Map<String, List<dynamic>>>> getMonitorInfoList(
       Map<dynamic, dynamic>? authData) async {
     Map<String, dynamic> podInfo = SolidUtils.parseAuthData(authData);
     String? accessToken = podInfo[Constants.accessToken];
@@ -169,12 +171,84 @@ class HomePageService {
       Map<String, List<dynamic>> latestData =
       SolidUtils.parseMonitorFile(fileContent, encryptClient!);
 
-      return latestData;
+      DateFormat dateFormat = DateFormat('yyyyMMdd');
+      Map<String, Map<String, List<dynamic>>> DataWithDate = {};
+      DateTime fileDate = DateTime.parse(fileName.substring(0, 8));
+      String dateString = dateFormat.format(fileDate);
+      DataWithDate[dateString] = latestData;
+
+      return DataWithDate;
     } catch (e) {
       debugPrint("Error on fetching monitor data: $e");
       return {};
     }
   }
+
+  Future<Map<String, Map<String, List<dynamic>>>> getMonitorLists(
+      Map<dynamic, dynamic>? authData, DateTime startDate, DateTime endDate) async {
+    Map<String, dynamic> podInfo = SolidUtils.parseAuthData(authData);
+    String? accessToken = podInfo[Constants.accessToken];
+    String? webId = podInfo[Constants.webId];
+    String? podURI = podInfo[Constants.podURI];
+    String? containerURI = podInfo[Constants.containerURI];
+    String? monitorContainerURI = podInfo[Constants.monitorContainerURI];
+    dynamic rsa = podInfo[Constants.rsa];
+    dynamic pubKeyJwk = podInfo[Constants.pubKeyJwk];
+
+    EncryptClient? encryptClient = await EncryptUtils.getClient(authData!, webId!);
+    try {
+      if (!SolidUtils.isContainerExist(
+          await homePageNet.readFile(podURI!, accessToken!, rsa, pubKeyJwk),
+          Constants.containerName)) {
+        return {};
+      }
+
+      if (!SolidUtils.isContainerExist(
+          await homePageNet.readFile(
+              containerURI!, accessToken, rsa, pubKeyJwk),
+          Constants.monitorContainerName)) {
+        return {};
+      }
+
+      String monitorContainerContent = await homePageNet.readFile(
+          monitorContainerURI!, accessToken, rsa, pubKeyJwk);
+
+      List<String> fileNameList = SolidUtils.getMonitorFileNameList(
+          monitorContainerContent, webId);
+
+      DateFormat dateFormat = DateFormat('yyyyMMdd');
+      Map<String, Map<String, List<dynamic>>> allDataByDate = {};
+
+      for (String fileName in fileNameList) {
+        DateTime fileDate = DateTime.parse(fileName.substring(0, 8));
+        if (fileDate.isAfter(endDate) || fileDate.isBefore(startDate)) continue;
+
+        String dateString = dateFormat.format(fileDate);
+        String fileURI = monitorContainerURI + fileName;
+        String fileContent = await homePageNet.readFile(fileURI, accessToken, rsa, pubKeyJwk);
+        Map<String, List<dynamic>> fileData = SolidUtils.parseMonitorFile(fileContent, encryptClient!);
+
+        // Initialize the map for the date if it doesn't exist
+        if (!allDataByDate.containsKey(dateString)) {
+          allDataByDate[dateString] = {};
+        }
+
+        fileData.forEach((key, value) {
+          if (!allDataByDate[dateString]!.containsKey(key)) {
+            allDataByDate[dateString]![key] = value;
+          } else {
+            // Safely access the list and add all new items
+            allDataByDate[dateString]![key]!.addAll(value);
+          }
+        });
+      }
+      return allDataByDate;
+    } catch (e) {
+      debugPrint("Error on fetching monitor data: $e");
+      return {};
+    }
+  }
+
 
   Future<void> deleteFileMatchingCriteria(
       Map<dynamic, dynamic>? authData, String criteria) async {

@@ -106,8 +106,7 @@ class _HomeSettingsState extends State<HomeSettings> {
   Widget build(BuildContext context) {
     return Container(
       color: Constants.backgroundColor,
-      child: SingleChildScrollView(
-        child: Column(
+      child: Column(
           children: [
             const SizedBox(height: 8),
             const Center(
@@ -372,10 +371,8 @@ class _HomeSettingsState extends State<HomeSettings> {
                 return const LoginPage();
               }));
             }, "Logout", 300, 50),
-            BaseWidget.getPadding(101),
           ],
         ),
-      ),
     );
   }
 }

@@ -140,6 +140,8 @@ class Constants {
   static const String dateText =
       "If this is a history report please click the button below to edit the "
       "date and time.";
+  static const String monitorText = "Choose a date range to view your glucose "
+      "and insulin history (up to 7 days).";
 
   // Geo Info Saving Interval (seconds)
   static const int interval = 60;

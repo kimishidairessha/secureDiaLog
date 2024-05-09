@@ -28,14 +28,17 @@ help individuals manage their diabetes.
 This software engineering and artefact-oriented development-based
 project delivers a location-aware and data recording app. Flutter/Dart
 are used for the front end with Solid server technology for the
-backend to store data in a privacy focussed way. The app can actively
-collect location pings regularly, allow the input of location based
-observations, and provide graphical analyses of the collected data.
+backend to store data in a privacy focussed way. The app can import
+glucose and insulin data from the Controlling Artificial Pancreas
+Systems using Machine Learning (CAPSML), allow the input of files
+and provide graphical analyses of the collected data.
 
 ## The App
 
-The application records users' personal data through a daily
-questionnaire.  The historical data is displayed in real-time charts
+The application collects users' personal data via daily questionnaires
+and imported CSV files. It also gathers data from CAPSML, securely 
+encrypts this information, and stores it in Solid PODs for display 
+within the app. The historical data is displayed in real-time charts
 and stored encrypted in a Solid POD. Users have complete control over
 their data, including sharing the data with other POD users. With an
 open format for storing the data, anyone can develop an app to add
@@ -77,12 +80,12 @@ Solid server.
 
 That then brings us to the app's home screen from where you can
 navigate to complete a survey, view the analysis charts, review the
-actual data collected, visit your location, or update your app
+actual data collected, monitor your data from CAPSML, or update your app
 settings.
 
 <div align="center">
 	<img
-	src="https://github.com/kimishidairessha/secureDiaLog/blob/main/images/home.png"
+	src="https://github.com/kimishidairessha/secureDiaLog/blob/main/images/home2.png"
 	alt="Home Screen" width="400">
 </div>
 
@@ -124,25 +127,29 @@ from the user's device.
 	alt="Data Screen" width="400">
 </div>
 
-### App Map Screen
+### App Monitor Screen
 
-Visual representation of location information, enhancing the context of health data.
+This Page is designed to facilitate seamless data management and secure storage. 
+It allows users to efficiently collect and store critical data from CAPSML, 
+ensuring all information is encrypted before being securely stored in Solid PODs. 
+This page prominently displays glucose and insulin data, providing users with the 
+flexibility to select specific dates for viewing historical data. This feature enhances
+user engagement by offering a personalized and secure overview of their health metrics.
 
 <div align="center">
 	<img
-	src="https://github.com/kimishidairessha/secureDiaLog/blob/main/images/map.PNG"
+	src="https://github.com/kimishidairessha/secureDiaLog/blob/main/images/monitor.png"
 	alt="Map Screen" width="400">
 </div>
 
 ### App Settings Screen
 
-Users can record their encryption key and WebID on their devices. Options to hide 
-location data and adjust the frequency of location capturing. Displays the time 
+Users can record their encryption key and WebID on their devices. Displays the time 
 of the last completed survey. Secure and easy logout process.
 
 <div align="center">
 	<img
-	src="https://github.com/kimishidairessha/secureDiaLog/blob/main/images/settings.PNG"
+	src="https://github.com/kimishidairessha/secureDiaLog/blob/main/images/set.png"
 	alt="Settings Screen" width="400">
 </div>
 
@@ -150,11 +157,10 @@ of the last completed survey. Secure and easy logout process.
 
 * Data storage is private to the user
 * Data on the server is encrypted
-
+* Achieving Reliable Data Transmission
 * Daily questionnaires for data collection
 * Real-time chart visualizations
 * Complete user data control
-* Diabetes status analytics
 
 ## Credits
 
