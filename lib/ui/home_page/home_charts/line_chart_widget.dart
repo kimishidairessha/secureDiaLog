@@ -69,7 +69,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
       }
     }
     return SideTitleWidget(
-      axisSide: meta.axisSide,
+      meta: meta,
       space: 10,
       child: text,
     );
@@ -206,7 +206,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
               }
             },
             touchTooltipData: BarTouchTooltipData(
-              tooltipBgColor: Colors.green[600],
+              //tooltipBgColor: Colors.green[600],
               getTooltipItem: (group, groupIndex, rod, rodIndex) {
                 int adjustedGroupIndex = groupIndex;
                 String time = widget.timeList[adjustedGroupIndex];
@@ -285,7 +285,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
                   }
                 },
                 touchTooltipData: BarTouchTooltipData(
-                  tooltipBgColor: Colors.green[600],
+                  //tooltipBgColor: Colors.green[600],
                   getTooltipItem: (group, groupIndex, rod, rodIndex) {
                     int adjustedGroupIndex = groupIndex + firstVisibleDataIndex;
                     String time = widget.timeList[adjustedGroupIndex];
